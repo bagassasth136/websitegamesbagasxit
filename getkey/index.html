@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer-when-downgrade">
+<title>BAGASXIT · KEY SYSTEM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow-x: hidden; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #06060B;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    color: #E5E7EB;
+  }
+
+  /* ===== BOOT SCREEN ===== */
+  #boot {
+    position: fixed;
+    inset: 0;
+    background: #06060B;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s, visibility 0.6s;
+  }
+  #boot.hide { opacity: 0; visibility: hidden; }
+  #boot .logo-big {
+    font-family: 'Inter', sans-serif;
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, #A855F7, #06B6D4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    position: relative;
+    animation: glitch 2.5s infinite;
+  }
+  @keyframes glitch {
+    0%, 90%, 100% { transform: translate(0, 0); filter: none; }
+    92% { transform: translate(-2px, 1px); filter: hue-rotate(30deg); }
+    94% { transform: translate(2px, -1px); filter: hue-rotate(-30deg); }
+    96% { transform: translate(-1px, 2px); }
+    98% { transform: translate(1px, -2px); filter: hue-rotate(60deg); }
+  }
+  #boot .sub {
+    color: #6B7280;
+    font-size: 11px;
+    letter-spacing: 6px;
+    margin-bottom: 36px;
+    font-weight: 600;
+  }
+  #boot .load-bar {
+    width: 220px;
+    height: 3px;
+    background: #1F1F2E;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+  #boot .load-bar::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -40%;
+    width: 40%; height: 100%;
+    background: linear-gradient(90deg, transparent, #A855F7, #06B6D4, transparent);
+    animation: loadSlide 1.4s infinite;
+  }
+  @keyframes loadSlide {
+    0% { left: -40%; }
+    100% { left: 100%; }
+  }
+  #boot .load-text {
+    color: #6B7280;
+    font-size: 10px;
+    letter-spacing: 3px;
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 14px;
+  }
+
+  /* ===== BACKGROUND ===== */
+  #bgCanvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  /* Aurora */
+  .aurora {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .aurora::before, .aurora::after {
+    content: '';
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.35;
+  }
+  .aurora::before {
+    background: radial-gradient(circle, #7C3AED, transparent 70%);
+    top: -30%; left: -20%;
+    animation: auroraMove1 14s ease-in-out infinite alternate;
+  }
+  .aurora::after {
+    background: radial-gradient(circle, #06B6D4, transparent 70%);
+    bottom: -30%; right: -20%;
+    animation: auroraMove2 18s ease-in-out infinite alternate;
+  }
+  @keyframes auroraMove1 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(80px, 60px) scale(1.15); }
+  }
+  @keyframes auroraMove2 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-80px, -60px) scale(1.15); }
+  }
+
+  /* ===== CONTAINER ===== */
+  .container {
+    position: relative;
+    z-index: 2;
+    max-width: 440px;
+    width: 100%;
+    background: rgba(15, 15, 25, 0.75);
+    border-radius: 28px;
+    padding: 36px 28px 30px;
+    border: 1px solid rgba(124, 58, 237, 0.25);
+    text-align: center;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.03) inset,
+      0 30px 80px rgba(0,0,0,0.6),
+      0 0 60px rgba(124, 58, 237, 0.15);
+    animation: riseIn 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(24px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Brand */
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .brand-mark {
+    width: 38px; height: 38px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #A855F7, #06B6D4);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.5);
+    position: relative;
+  }
+  .brand-mark::after {
+    content: 'B';
+    font-weight: 900;
+    font-size: 20px;
+    color: #fff;
+  }
+  .logo {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    background: linear-gradient(135deg, #fff 0%, #C4B5FD 50%, #67E8F9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle {
+    color: #6B7280;
+    font-size: 10px;
+    letter-spacing: 4px;
+    margin-bottom: 22px;
+    font-weight: 600;
+  }
+
+  /* Steps */
+  .steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .step-dot {
+    width: 28px; height: 4px;
+    border-radius: 4px;
+    background: #1F1F2E;
+    transition: all 0.4s;
+  }
+  .step-dot.active { background: linear-gradient(90deg, #A855F7, #06B6D4); box-shadow: 0 0 12px rgba(124, 58, 237, 0.6); }
+  .step-dot.done { background: #10B981; }
+
+  /* Key box */
+  .key-box {
+    background: linear-gradient(180deg, rgba(10,10,18,0.9), rgba(15,15,25,0.9));
+    border-radius: 20px;
+    padding: 30px 20px;
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s;
+  }
+  .key-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #A855F7, #06B6D4, transparent);
+    opacity: 0.6;
+  }
+  .key-box.active {
+    border-color: rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 40px rgba(16, 185, 129, 0.2), 0 0 0 1px rgba(16,185,129,0.15) inset;
+  }
+  .key-box.active::before {
+    background: linear-gradient(90deg, transparent, #10B981, #34D399, transparent);
+  }
+  /* Holographic shine */
+  .key-box.active .shine {
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.12) 50%, transparent 70%);
+    animation: shineMove 2.4s ease-out 1;
+    pointer-events: none;
+  }
+  @keyframes shineMove {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  .key-label {
+    color: #6B7280;
+    font-size: 9px;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .key-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 26px;
+    font-weight: 800;
+    color: #10B981;
+    letter-spacing: 2px;
+    word-break: break-all;
+    margin: 12px 0;
+    text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .key-value.locked {
+    color: #4B5563;
+    text-shadow: none;
+    font-size: 18px;
+    letter-spacing: 3px;
+  }
+  .key-value .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 24px;
+    background: #10B981;
+    margin-left: 3px;
+    animation: blink 0.7s step-end infinite;
+  }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  /* Progress ring */
+  .timer-wrap {
+    margin-top: 12px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 90px;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .timer-wrap.show { opacity: 1; }
+  .timer-wrap svg {
+    position: absolute;
+    inset: 0;
+    transform: rotate(-90deg);
+  }
+  .timer-ring-bg { fill: none; stroke: #1F1F2E; stroke-width: 3; }
+  .timer-ring-fg {
+    fill: none;
+    stroke: #10B981;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 251.2;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear;
+    filter: drop-shadow(0 0 4px rgba(16,185,129,0.6));
+  }
+  .timer-text {
+    position: relative;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 800;
+    color: #34D399;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .timer-text .label {
+    display: block;
+    font-size: 8px;
+    color: #6B7280;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-family: 'Inter', sans-serif;
+    margin-top: 2px;
+  }
+
+  .key-timer {
+    color: #6B7280;
+    font-size: 11px;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  /* Buttons */
+  .btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    letter-spacing: 1.2px;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn:active { transform: scale(0.97); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #A855F7 0%, #6366F1 100%);
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(124, 58, 237, 0.45), 0 0 0 1px rgba(255,255,255,0.1) inset;
+    display: none;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    transition: left 0.6s;
+  }
+  .btn-primary:hover::after { left: 100%; }
+
+  .btn-copy {
+    background: linear-gradient(135deg, #10B981, #059669);
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4), 0 0 0 1px rgba(255,255,255,0.1) inset;
+    display: none;
+    margin-top: 10px;
+  }
+
+  /* Turnstile */
+  .turnstile-box {
+    background: rgba(10, 10, 18, 0.6);
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70px;
+  }
+
+  .info {
+    color: #9CA3AF;
+    font-size: 12px;
+    margin-top: 18px;
+    line-height: 1.6;
+    min-height: 38px;
+  }
+
+  .footer {
+    color: #4B5563;
+    font-size: 10px;
+    margin-top: 26px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(124, 58, 237, 0.1);
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+  .footer a {
+    color: #A855F7;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer a:hover { color: #67E8F9; }
+
+  .hidden { display: none !important; }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-140%);
+    background: linear-gradient(135deg, #10B981, #059669);
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 12px 40px rgba(16, 185, 129, 0.5), 0 0 0 1px rgba(255,255,255,0.1) inset;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 9999;
+    letter-spacing: 0.3px;
+    font-family: 'Inter', sans-serif;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+  #toast.err {
+    background: linear-gradient(135deg, #EF4444, #B91C1C);
+    box-shadow: 0 12px 40px rgba(239, 68, 68, 0.5);
+  }
+
+  @media (max-width: 420px) {
+    .container { padding: 30px 22px 26px; }
+    .key-value { font-size: 22px; }
+    .logo { font-size: 23px; }
+    #boot .logo-big { font-size: 34px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BOOT SCREEN -->
+<div id="boot">
+  <div class="logo-big">BAGASXIT</div>
+  <div class="sub">OFFICIAL WEBSITE</div>
+  <div class="load-bar"></div>
+  <div class="load-text" id="loadText">Initializing...</div>
+</div>
+
+<canvas id="bgCanvas"></canvas>
+<div class="aurora"></div>
+
+<div id="toast"></div>
+
+<div class="container">
+  <div class="brand">
+    <div class="brand-mark"></div>
+    <div class="logo">BAGASXIT</div>
+  </div>
+  <div class="subtitle">KEY SYSTEM</div>
+
+  <div class="steps">
+    <div class="step-dot active" id="step1"></div>
+    <div class="step-dot" id="step2"></div>
+  </div>
+
+  <div class="key-box" id="keyBox">
+    <div class="shine" id="shine"></div>
+    <div class="key-label">YOUR LICENSE KEY</div>
+    <div class="key-value locked" id="keyDisplay">LOCKED</div>
+    <div class="timer-wrap" id="timerWrap">
+      <svg viewBox="0 0 90 90">
+        <circle class="timer-ring-bg" cx="45" cy="45" r="40"></circle>
+        <circle class="timer-ring-fg" id="timerRing" cx="45" cy="45" r="40"></circle>
+      </svg>
+      <div class="timer-text">
+        <span id="timerText">--:--</span>
+        <span class="label">REMAINING</span>
+      </div>
+    </div>
+    <div class="key-timer" id="keyTimer">Complete steps to get your key</div>
+  </div>
+
+  <div class="turnstile-box" id="turnstileBox">
+    <div id="cf-turnstile-container"></div>
+  </div>
+
+  <button class="btn btn-primary" id="getBtn">CONTINUE →</button>
+  <button class="btn btn-copy" id="copyBtn">📋 COPY KEY</button>
+
+  <div class="info" id="statusInfo">Complete the security check above to continue.</div>
+
+  <div class="footer">
+    <a href="https://t.me/BagasXIT">TELEGRAM</a> &nbsp;·&nbsp;
+    <a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P">WHATSAPP</a>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstile" async defer></script>
+
+<script>
+  // ===== BOOT SCREEN =====
+  (function() {
+    var texts = ['Initializing...', 'Loading modules...', 'Verifying system...', 'Ready.'];
+    var idx = 0;
+    var loadEl = document.getElementById('loadText');
+    var bootEl = document.getElementById('boot');
+
+    var intv = setInterval(function() {
+      idx++;
+      if (idx < texts.length) loadEl.textContent = texts[idx];
+    }, 400);
+
+    setTimeout(function() {
+      clearInterval(intv);
+      loadEl.textContent = texts[texts.length - 1];
+      setTimeout(function() { bootEl.classList.add('hide'); }, 250);
+    }, 1700);
+  })();
+
+  // ===== BACKGROUND PARTIKEL =====
+  (function() {
+    var canvas = document.getElementById('bgCanvas');
+    var ctx = canvas.getContext('2d');
+    var particles = [];
+    var W, H;
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+    for (var i = 0; i < 40; i++) {
+      particles.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4, r: Math.random()*1.6+0.4 });
+    }
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > W) p.vx *= -1;
+        if (p.y < 0 || p.y > H) p.vy *= -1;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(139, 92, 246, 0.7)'; ctx.fill();
+      }
+      for (var a = 0; a < particles.length; a++) {
+        for (var b = a + 1; b < particles.length; b++) {
+          var dx = particles[a].x - particles[b].x, dy = particles[a].y - particles[b].y;
+          var dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < 130) {
+            ctx.beginPath(); ctx.moveTo(particles[a].x, particles[a].y); ctx.lineTo(particles[b].x, particles[b].y);
+            ctx.strokeStyle = 'rgba(139, 92, 246, ' + (0.15 * (1 - dist/130)) + ')';
+            ctx.lineWidth = 0.6; ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  // ===== FIREBASE =====
+  var _fb = {
+    a: 'QUl6YVN5Q24zdkZKcHkzN3RKZnl1X1AxeFlaNWpDVWNHVkN0VDNV',
+    b: 'YmFnYXN4aXQtb2ZmaWNpYWwuZmlyZWJhc2VhcHAuY29t',
+    c: 'aHR0cHM6Ly9iYWdhc3hpdC1vZmZpY2lhbC1kZWZhdWx0LXJ0ZGIuZmlyZWJhc2Vpby5jb20=',
+    d: 'YmFnYXN4aXQtb2ZmaWNpYWw=',
+    e: 'YmFnYXN4aXQtb2ZmaWNpYWwuZmlyZWJhc2VzdG9yYWdlLmFwcA==',
+    f: 'NjEzNDYyNDg1MTkx',
+    g: 'MTo2MTM0NjI0ODUxOTE6d2ViOmY1NmFiNDBhNTNjMzQ0MTYwNGY2ZTI='
+  };
+  var _sk = 'MHg0QUFBQUFBRkFzWVoxZ1BncUdXaDRx';
+
+  var firebaseConfig = {
+    apiKey: atob(_fb.a), authDomain: atob(_fb.b), databaseURL: atob(_fb.c),
+    projectId: atob(_fb.d), storageBucket: atob(_fb.e),
+    messagingSenderId: atob(_fb.f), appId: atob(_fb.g)
+  };
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  var db = firebase.database();
+  var auth = firebase.auth();
+  auth.signInAnonymously().catch(function(err) { console.error("Auth failed:", err); });
+
+  var SHORTLINK_URLS = [
+    atob('aHR0cHM6Ly9tb3ZlMmxpbmsuY28vMjhhMGU2MDQ='),
+    atob('aHR0cHM6Ly9tb3ZlMmxpbmsuY28vNjAzMDBhNjc='),
+    atob('aHR0cHM6Ly9tb3ZlMmxpbmsuY28vYjNiYmU2MzU='),
+    atob('aHR0cHM6Ly9tb3ZlMmxpbmsuY28vZjM1NzdhMjY='),
+    atob('aHR0cHM6Ly9tb3ZlMmxpbmsuY28vNGY1ZmJhMzY='),
+    atob('aHR0cHM6Ly9tb3ZlMmxpbmsuY28vMWE3ZjJhZjQ='),
+    atob('aHR0cHM6Ly9tb3ZlMmxpbmsuY28vN2JiMzBjMWE='),
+    atob('aHR0cHM6Ly9tb3ZlMmxpbmsuY28vZWU0OWM1NjQ='),
+    atob('aHR0cHM6Ly9tb3ZlMmxpbmsuY28vZjQ3NjcyODM='),
+    atob('aHR0cHM6Ly9tb3ZlMmxpbmsuY28vYTU3ZjM3NTA=')
+  ];
+
+  var DURATION_HOURS = 5;
+  var WAITING_KEY = 'bagasxit_waiting';
+  var USER_KEY_STORE = 'bagasxit_user_key';
+  var LAST_GEN_KEY = 'bagasxit_last_gen';
+
+  var keyBox = document.getElementById('keyBox');
+  var keyDisplay = document.getElementById('keyDisplay');
+  var keyTimer = document.getElementById('keyTimer');
+  var getBtn = document.getElementById('getBtn');
+  var copyBtn = document.getElementById('copyBtn');
+  var statusInfo = document.getElementById('statusInfo');
+  var turnstileBox = document.getElementById('turnstileBox');
+  var toastEl = document.getElementById('toast');
+  var step1 = document.getElementById('step1');
+  var step2 = document.getElementById('step2');
+  var timerWrap = document.getElementById('timerWrap');
+  var timerRing = document.getElementById('timerRing');
+  var timerText = document.getElementById('timerText');
+  var shine = document.getElementById('shine');
+
+  var currentKey = "";
+  var turnstileWidgetId = null;
+  var currentStep = 1;
+  var countdownInterval = null;
+  var RING_CIRCUM = 251.2;
+
+  function showToast(msg, isErr) {
+    toastEl.textContent = msg;
+    toastEl.className = isErr ? 'err show' : 'show';
+    setTimeout(function() { toastEl.className = isErr ? 'err' : ''; }, 2400);
+  }
+
+  window.onloadTurnstile = function() { renderTurnstile(); };
+
+  function renderTurnstile() {
+    var container = document.getElementById('cf-turnstile-container');
+    if (window.turnstile && container && turnstileWidgetId === null) {
+      turnstileWidgetId = turnstile.render('#cf-turnstile-container', {
+        sitekey: atob(_sk), callback: onTurnstileSuccess, theme: 'dark'
+      });
+    }
+  }
+
+  function onTurnstileSuccess() {
+    if (currentStep === 1) {
+      turnstileBox.style.display = "none";
+      getBtn.style.display = "block";
+      statusInfo.textContent = "✅ Verification complete. Click CONTINUE to proceed.";
+    } else if (currentStep === 2) {
+      turnstileBox.style.display = "none";
+      statusInfo.textContent = "✅ Final verification complete!";
+      handleGenerate();
+    }
+  }
+
+  function init() {
+    var params = new URLSearchParams(window.location.search);
+    var versionParam = params.get('v');
+    var isWaiting = localStorage.getItem(WAITING_KEY);
+    var referrer = document.referrer.toLowerCase();
+    var isFromShortlink = referrer.includes('move2link');
+    var waitingValid = false;
+    if (isWaiting) {
+      var elapsed = Date.now() - parseInt(isWaiting);
+      if (elapsed < 5 * 60 * 1000) waitingValid = true;
+      else localStorage.removeItem(WAITING_KEY);
+    }
+    if (versionParam && (waitingValid || isFromShortlink)) {
+      localStorage.removeItem(WAITING_KEY);
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+      currentStep = 2;
+      step1.className = 'step-dot done';
+      step2.className = 'step-dot active';
+      turnstileBox.style.display = "flex";
+      getBtn.style.display = "none";
+      statusInfo.textContent = "🔒 Complete the final security check to reveal your key.";
+      if (window.turnstile && turnstileWidgetId !== null) {
+        turnstile.reset(turnstileWidgetId);
+      }
+    } else {
+      checkExistingKey();
+    }
+  }
+
+  function checkExistingKey() {
+    var savedKey = localStorage.getItem(USER_KEY_STORE);
+    if (!savedKey) return;
+    db.ref('keys/' + savedKey).once('value').then(function(snap) {
+      var data = snap.val();
+      if (data && data.expires_at > Date.now() && data.is_active) {
+        currentKey = savedKey;
+        showActiveKey(savedKey, data.expires_at);
+      } else {
+        localStorage.removeItem(USER_KEY_STORE);
+      }
+    });
+  }
+
+  getBtn.onclick = function() {
+    var lastGen = localStorage.getItem(LAST_GEN_KEY);
+    if (false && lastGen && (Date.now() - parseInt(lastGen)) < 5 * 3600 * 1000) {
+      var sisaJam = Math.ceil((5 * 3600 * 1000 - (Date.now() - parseInt(lastGen))) / 3600000);
+      statusInfo.textContent = "⚠️ Please wait " + sisaJam + " more hour(s) before generating a new key.";
+      return;
+    }
+    localStorage.setItem(WAITING_KEY, Date.now().toString());
+    var todayStr = new Date().toISOString().slice(0, 10);
+    var usedHistory = JSON.parse(localStorage.getItem('used_links_history') || '{}');
+    if (usedHistory.date !== todayStr) usedHistory = { date: todayStr, links: [] };
+    var unusedLinks = SHORTLINK_URLS.filter(function(link) {
+      return !usedHistory.links.includes(link);
+    });
+    var targetUrl;
+    if (unusedLinks.length > 0) {
+      targetUrl = unusedLinks[Math.floor(Math.random() * unusedLinks.length)];
+    } else {
+      usedHistory.links = [];
+      targetUrl = SHORTLINK_URLS[Math.floor(Math.random() * SHORTLINK_URLS.length)];
+    }
+    usedHistory.links.push(targetUrl);
+    localStorage.setItem('used_links_history', JSON.stringify(usedHistory));
+    statusInfo.textContent = "🔗 Redirecting to verification...";
+    setTimeout(function() { window.location.href = targetUrl; }, 500);
+  };
+
+  function handleGenerate() {
+    statusInfo.textContent = "⚙️ Generating your key...";
+    var randomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+    var newKey = "BX-" + randomCode;
+    var now = Date.now();
+    var durationMs = DURATION_HOURS * 3600 * 1000;
+    var payload = {
+      key: newKey, created_at: firebase.database.ServerValue.TIMESTAMP,
+      expires_at: now + durationMs, duration_ms: durationMs, is_active: true,
+      hwid: "", assigned_to: "Auto-Gen", source: "web", reset_count: 0, last_reset: 0
+    };
+    function writeKey() {
+      db.ref('keys/' + newKey).set(payload).then(function() {
+        localStorage.setItem(USER_KEY_STORE, newKey);
+        localStorage.setItem(LAST_GEN_KEY, now.toString());
+        currentKey = newKey;
+        showActiveKey(newKey, now + durationMs);
+      }).catch(function(err) {
+        statusInfo.textContent = "❌ Error: " + err.message;
+        showToast('❌ ' + err.message, true);
+      });
+    }
+    if (auth.currentUser) writeKey();
+    else auth.signInAnonymously().then(writeKey).catch(function(err) {
+      statusInfo.textContent = "❌ Auth error: " + err.message;
+    });
+  }
+
+  // ===== TYPING EFFECT =====
+  function typeKey(fullKey, callback) {
+    var i = 0;
+    keyDisplay.classList.remove('locked');
+    keyDisplay.innerHTML = '';
+    var textSpan = document.createElement('span');
+    var cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    keyDisplay.appendChild(textSpan);
+    keyDisplay.appendChild(cursor);
+
+    var intv = setInterval(function() {
+      i++;
+      textSpan.textContent = fullKey.substring(0, i);
+      if (i >= fullKey.length) {
+        clearInterval(intv);
+        setTimeout(function() { cursor.remove(); if (callback) callback(); }, 400);
+      }
+    }, 70);
+  }
+
+  function showActiveKey(key, expiresAt) {
+    statusInfo.textContent = "✅ Key active. Copy and paste it into BAGASXIT app.";
+    turnstileBox.style.display = "none";
+    getBtn.style.display = "none";
+    copyBtn.style.display = "block";
+    keyBox.classList.add('active');
+    step2.className = 'step-dot done';
+
+    // Typing + shine
+    typeKey(key, function() {
+      navigator.clipboard.writeText(key).then(function() {
+        showToast('✅ Key copied to clipboard');
+      }).catch(function() {});
+    });
+
+    // Re-trigger shine
+    shine.style.animation = 'none';
+    setTimeout(function() { shine.style.animation = 'shineMove 2.4s ease-out 1'; }, 20);
+
+    // Timer countdown + progress ring
+    timerWrap.classList.add('show');
+    keyTimer.textContent = "Key aktif";
+
+    if (countdownInterval) clearInterval(countdownInterval);
+    var totalMs = expiresAt - Date.now();
+
+    function tick() {
+      var ms = expiresAt - Date.now();
+      if (ms <= 0) {
+        timerText.textContent = 'EXPIRED';
+        timerRing.style.strokeDashoffset = RING_CIRCUM;
+        clearInterval(countdownInterval);
+        return;
+      }
+      var h = Math.floor(ms / 3600000);
+      var m = Math.floor((ms % 3600000) / 60000);
+      var s = Math.floor((ms % 60000) / 1000);
+      timerText.textContent = (h > 0 ? h + 'h ' : '') + (m < 10 ? '0' + m : m) + 'm';
+      var ratio = ms / totalMs;
+      timerRing.style.strokeDashoffset = RING_CIRCUM * (1 - ratio);
+    }
+    tick();
+    countdownInterval = setInterval(tick, 1000);
+  }
+
+  copyBtn.onclick = function() {
+    navigator.clipboard.writeText(keyDisplay.textContent.replace(/[^A-Z0-9-]/g, '')).then(function() {
+      showToast('✅ Key copied');
+      copyBtn.textContent = "✅ COPIED!";
+      setTimeout(function() { copyBtn.textContent = "📋 COPY KEY"; }, 2000);
+    });
+  };
+
+  init();
+</script>
+</body>
+</html>
