@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAGASXIT MODS</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#7c3aed">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter','Segoe UI',sans-serif}
+        body{background:#0b071e;color:#fff;scroll-behavior:smooth}
+        ::-webkit-scrollbar{width:6px;height:6px}
+        ::-webkit-scrollbar-track{background:#0b071e}
+        ::-webkit-scrollbar-thumb{background:#7c3aed;border-radius:10px}
+        ::-webkit-scrollbar-thumb:hover{background:#a78bfa}
+        .header{background:rgba(11,7,30,0.75);backdrop-filter:blur(12px);border-bottom:1px solid rgba(124,58,237,0.3);padding:10px 16px;position:sticky;top:0;z-index:100}
+        .header-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:nowrap;gap:8px}
+        .logo{font-size:20px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;line-height:1.1;background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;flex-shrink:0}
+        .logo small{font-size:8px;letter-spacing:2px;-webkit-text-fill-color:#a78bfa;font-weight:300}
+        .nav-menu{display:flex;gap:4px;align-items:center;flex-wrap:nowrap}
+        .nav-menu a{color:#cbd5e1;text-decoration:none;font-size:12px;padding:4px 10px;border-radius:16px;transition:.3s;font-weight:500;white-space:nowrap}
+        .nav-menu a:hover{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff}
+        .nav-menu a.active-nav{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff}
+        .btn-login-nav{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;padding:4px 12px;border-radius:16px;font-weight:bold;cursor:pointer;font-size:12px;white-space:nowrap;transition:transform .2s}
+        .btn-login-nav:hover{transform:scale(1.05)}
+        .page{display:none;animation:fadeIn .4s ease}
+        .page.active{display:block}
+        @keyframes fadeIn{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+        .carousel-container{max-width:1200px;margin:12px auto 8px;padding:0 16px;position:relative;overflow:hidden;border-radius:14px}
+        .carousel-slide{display:none;background:linear-gradient(135deg,#1e114d,#110935);border-radius:14px;padding:20px 24px;border:1px solid #3b2393;min-height:150px;cursor:pointer;animation:fadeSlide .6s ease;align-items:center;justify-content:space-between;flex-wrap:wrap}
+        .carousel-slide.active{display:flex}
+        @keyframes fadeSlide{0%{opacity:0;transform:translateX(30px)}100%{opacity:1;transform:translateX(0)}}
+        .slide-content{flex:1;min-width:160px;z-index:2}
+        .slide-content .slide-badge{background:linear-gradient(135deg,#ff9f43,#ff6b6b);padding:2px 10px;border-radius:4px;font-size:9px;font-weight:bold;display:inline-block;margin-bottom:6px;color:#fff}
+        .slide-content h2{font-size:20px;margin-bottom:4px}
+        .slide-content p{color:#cbd5e1;font-size:12px;max-width:70%;line-height:1.5}
+        .slide-img{width:80px;height:80px;border-radius:14px;object-fit:cover;border:2px solid #7c3aed}
+        .carousel-dots{display:flex;justify-content:center;gap:8px;margin-top:8px}
+        .carousel-dots .dot{width:8px;height:8px;border-radius:50%;background:#2e2067;cursor:pointer;transition:.3s;border:none}
+        .carousel-dots .dot.active{background:#8b5cf6;width:24px;border-radius:6px}
+        .search-section{max-width:1200px;margin:12px auto 4px;padding:0 16px;position:relative}
+        .search-wrapper{display:flex;align-items:center;background:#160f38;border:1px solid #2e2067;border-radius:10px;transition:.3s}
+        .search-wrapper:focus-within{border-color:#8b5cf6;box-shadow:0 0 12px rgba(139,92,246,.15)}
+        .search-bar{width:100%;padding:12px 16px;background:transparent;border:none;color:#fff;font-size:13px;outline:none}
+        .search-bar::placeholder{color:#94a3b8}
+        .search-clear{background:transparent;border:none;color:#94a3b8;font-size:16px;padding:0 12px;cursor:pointer;display:none;transition:.3s}
+        .search-clear:hover{color:#fff}
+        .search-clear.show{display:block}
+        .search-suggestions{display:none;position:absolute;top:100%;left:0;right:0;background:#160f38;border:1px solid #2e2067;border-top:none;border-radius:0 0 10px 10px;max-height:200px;overflow-y:auto;z-index:50}
+        .search-suggestions.active{display:block}
+        .search-suggestions .s-item{padding:8px 16px;cursor:pointer;color:#cbd5e1;font-size:12px;transition:.2s;display:flex;justify-content:space-between;align-items:center}
+        .search-suggestions .s-item:hover{background:#2e2067;color:#fff}
+        .search-suggestions .s-item .count{font-size:10px;color:#94a3b8}
+        .hot-search{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}
+        .hot-search .label{font-size:12px;color:#94a3b8;font-weight:500}
+        .hot-search .keyword{font-size:12px;color:#a78bfa;background:#160f38;padding:4px 12px;border-radius:12px;border:1px solid #2e2067;cursor:pointer;transition:.3s}
+        .hot-search .keyword:hover{background:#7c3aed;color:#fff;border-color:#7c3aed}
+        .main-content{max-width:1200px;margin:0 auto;padding:0 16px 20px}
+        .trending-section{margin:16px 0}
+        .trending-section h2{font-size:16px;font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:10px}
+        .trending-section h2 span{color:#f59e0b}
+        .trending-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+        .trending-card{background:linear-gradient(145deg,#1a1045,#2a1a5a);border:2px solid #f59e0b;border-radius:12px;overflow:hidden;cursor:pointer;transition:.3s;position:relative}
+        .trending-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(245,158,11,.2)}
+        .trending-card .rank{position:absolute;top:6px;left:6px;background:#f59e0b;color:#000;font-size:10px;font-weight:bold;padding:2px 8px;border-radius:10px}
+        .trending-card .thumb{width:100%;aspect-ratio:1/1;object-fit:cover}
+        .trending-card .info{padding:6px 8px 8px}
+        .trending-card .info h4{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}
+        .trending-card .info .meta{font-size:9px;color:#94a3b8}
+        .filter-wrapper{display:flex;align-items:center;gap:10px;margin:12px 0 16px;flex-wrap:wrap}
+        .filter-wrapper .filter-label{font-size:12px;color:#94a3b8;font-weight:500}
+        .categories-tabs{display:flex;gap:6px;flex-wrap:wrap}
+        .cat-tab{background:#160f38;padding:4px 14px;border-radius:16px;font-size:11px;cursor:pointer;border:1px solid #2e2067;color:#a78bfa;transition:.3s;font-weight:500;white-space:nowrap}
+        .cat-tab.active{background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(124,58,237,.3)}
+        .cat-tab.categories-tab{background:#1c1245;border-color:#3b2393}
+        .cat-tab.categories-tab:hover{background:#7c3aed;color:#fff}
+        .section-header{display:flex;justify-content:space-between;align-items:center;margin:16px 0 10px;flex-wrap:wrap;gap:6px}
+        .section-header h2{font-size:16px;font-weight:700;display:flex;align-items:center;gap:6px}
+        .section-header h2 span{color:#8b5cf6}
+        .section-header a{color:#a78bfa;font-size:11px;text-decoration:none;font-weight:500}
+        .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:10px}
+        .game-card{background:linear-gradient(145deg,#130b35,#1a1045);border:1px solid #25165c;border-radius:12px;overflow:hidden;cursor:pointer;transition:.3s;position:relative}
+        .game-card:hover{transform:translateY(-3px);border-color:#7c3aed;box-shadow:0 6px 20px rgba(124,58,237,.15)}
+        .game-card .thumb{width:100%;aspect-ratio:1/1;object-fit:cover;background:#25165c;transition:transform .4s}
+        .game-card:hover .thumb{transform:scale(1.05)}
+        .game-card .info{padding:6px 8px 8px}
+        .game-card .info h4{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff;margin-bottom:1px}
+        .game-card .info .version{font-size:8px;color:#a78bfa}
+        .game-card .info .rating-row{display:flex;align-items:center;gap:4px;margin:2px 0}
+        .game-card .info .rating-row .stars{color:#f59e0b;font-size:9px}
+        .game-card .info .rating-row .downloads{color:#94a3b8;font-size:8px}
+        .game-card .info .badge-type{font-size:7px;font-weight:bold;padding:1px 6px;border-radius:3px;color:#fff;text-transform:uppercase;display:inline-block;margin-top:2px}
+        .badge-ff{background:#ef4444}.badge-gold{background:#f59e0b}.badge-money{background:#10b981}.badge-skins{background:#ec4899}.badge-menu{background:#8b5cf6}
+        .badge-working{display:inline-block;background:#10b981;color:#fff;font-size:7px;font-weight:bold;padding:1px 6px;border-radius:3px;text-transform:uppercase;margin-top:2px}
+        .fav-badge{position:absolute;top:6px;right:6px;background:#ef4444;color:#fff;font-size:10px;padding:2px 6px;border-radius:10px;font-weight:bold;display:none}
+        .fav-badge.show{display:block}
+        .install-box{background:linear-gradient(135deg,#0f0a2a,#150d3d);border:1px solid #231854;border-radius:12px;padding:14px 16px;margin:20px 0}
+        .install-box h3{font-size:14px;margin-bottom:8px}
+        .install-step{display:flex;gap:8px;margin-bottom:6px;font-size:11px;color:#cbd5e1;line-height:1.4;align-items:flex-start}
+        .install-step:last-child{margin-bottom:0}
+        .step-num{background:#a78bfa;color:#000;font-weight:bold;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:1px}
+        #detailPage{display:none;background:#070414;min-height:100vh;position:fixed;top:0;left:0;width:100%;height:100%;z-index:999;padding:16px 12px;overflow-y:auto;opacity:0;transition:opacity .25s}
+        #detailPage.active{display:block;opacity:1}
+        .back-nav{display:inline-flex;align-items:center;gap:4px;color:#a78bfa;font-size:13px;margin-bottom:16px;cursor:pointer;font-weight:bold;background:#160f38;padding:4px 12px;border-radius:16px;border:1px solid #2e2067}
+        .app-header-detail{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+        .app-icon-detail{width:64px;height:64px;border-radius:14px;object-fit:cover;background:#130b35;border:1px solid #25165c}
+        .app-title-info h2{font-size:18px;color:#fff;margin-bottom:2px;font-weight:700}
+        .app-title-info .app-dev{font-size:11px;color:#a78bfa;font-weight:500}
+        .app-title-info .app-meta{font-size:11px;color:#94a3b8;margin-top:2px}
+        .app-desc-detail{font-size:13px;color:#cbd5e1;line-height:1.6;margin:12px 0 16px;background:#110935;padding:12px;border-radius:10px;border:1px solid #1d1052}
+        @keyframes pulseGlow{0%{box-shadow:0 0 0 0 rgba(124,58,237,.6)}100%{box-shadow:0 0 0 12px rgba(124,58,237,0)}}
+        .btn-main-download{display:block;width:100%;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;text-align:center;padding:14px;border-radius:10px;font-weight:bold;font-size:16px;text-decoration:none;margin-bottom:12px;transition:transform .2s,box-shadow .2s;animation:pulseGlow 2s infinite}
+        .btn-main-download:active{transform:scale(.97)}
+        .btn-main-download small{font-size:11px;font-weight:normal;opacity:.8;display:block;margin-top:2px}
+        .trust-badge{text-align:center;font-size:11px;color:#94a3b8;margin-bottom:12px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+        .trust-badge span{background:#160f38;padding:3px 10px;border-radius:12px;border:1px solid #2e2067}
+        .share-section{display:flex;gap:10px;justify-content:center;margin-bottom:16px}
+        .share-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;transition:transform .2s}
+        .share-btn:active{transform:scale(.95)}
+        .share-btn-wa{background:#25D366;color:#fff}
+        .share-btn-tg{background:#0088cc;color:#fff}
+        .fav-detail-btn{background:transparent;border:none;font-size:24px;cursor:pointer;transition:.3s;color:#4b5563;display:inline-flex;align-items:center;gap:6px}
+        .fav-detail-btn.liked{color:#ef4444}
+        .fav-detail-btn:active{transform:scale(.8)}
+        .version-list-title{font-size:14px;font-weight:600;color:#a78bfa;margin:16px 0 10px;border-bottom:1px solid #25165c;padding-bottom:6px}
+        .version-item{display:flex;justify-content:space-between;align-items:center;background:#110935;border:1px solid #1d1052;border-radius:8px;padding:10px 12px;margin-bottom:8px;transition:.3s;flex-wrap:wrap;gap:8px;cursor:pointer}
+        .version-item.recommended{border-color:#7c3aed;background:#1a1045}
+        .version-item.active-version{border-color:#a78bfa;background:#2a1a5a;box-shadow:0 0 16px rgba(167,139,250,.2)}
+        .version-item .v-left{display:flex;flex-direction:column;gap:2px;flex:1}
+        .version-item .v-left .v-head{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+        .version-item .v-left .v-head strong{color:#a78bfa;font-size:13px}
+        .version-item .v-left .v-head .rec-badge{background:#7c3aed;color:#fff;font-size:8px;padding:1px 8px;border-radius:8px;font-weight:bold}
+        .version-item .v-left .v-head .size{color:#94a3b8;font-size:11px}
+        .version-item .v-left .v-detail{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .version-item .v-left .v-detail .rating{color:#f59e0b;font-size:11px}
+        .status-bar-wrap{display:inline-flex;align-items:center;gap:6px}
+        .status-bar{width:50px;height:4px;background:#2e2067;border-radius:4px;overflow:hidden;display:inline-block}
+        .status-fill{display:block;height:100%;background:linear-gradient(90deg,#10b981,#8b5cf6);border-radius:4px;width:0%}
+        .status-text{font-size:10px;color:#10b981;font-weight:600}
+        .version-item .v-left .v-detail .badge{background:#1c1245;color:#a78bfa;font-size:9px;padding:1px 8px;border-radius:3px}
+        .version-item .v-right a{background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;padding:4px 12px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:11px;display:inline-block;transition:transform .2s}
+        .version-item .v-right a:active{transform:scale(.95)}
+        .rating-section{display:flex;flex-direction:column;gap:8px;margin:16px 0 20px;background:#110935;padding:12px;border-radius:10px;border:1px solid #1d1052;max-width:100%}
+        .rating-section .stars-input{display:flex;gap:6px;justify-content:center;font-size:22px;cursor:pointer;flex-wrap:wrap;max-width:100%}
+        .rating-section .stars-input span{transition:color .2s;color:#4b5563;flex-shrink:0}
+        .rating-section .stars-input span.active{color:#f59e0b}
+        .rating-section .stars-input span:hover{color:#f59e0b}
+        .rating-section textarea{width:100%;padding:8px;border-radius:8px;background:#160f38;border:1px solid #2e2067;color:#fff;font-size:12px;resize:vertical;min-height:60px}
+        .rating-section .btn-submit{background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;border:none;padding:6px 16px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:12px;align-self:flex-end}
+        .rating-section .reviews-list{max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-top:8px}
+        .rating-section .review-item{background:#160f38;padding:6px 10px;border-radius:6px;font-size:11px;color:#cbd5e1;border-left:3px solid #7c3aed}
+        .rating-section .review-item .r-stars{color:#f59e0b}
+        .rating-section .review-item .r-text{display:block;margin-top:2px}
+        .rating-section .review-item .r-date{font-size:9px;color:#4b5563;display:block;margin-top:2px}
+        .chat-page{max-width:900px;margin:20px auto;padding:0 16px}
+        .chat-page h2{font-size:22px;color:#8b5cf6;text-align:center;margin-bottom:6px}
+        .chat-page .subtitle{text-align:center;color:#94a3b8;font-size:13px;margin-bottom:16px}
+        .chat-container{background:#110935;border-radius:16px;border:1px solid #1d1052;padding:16px;overflow:hidden;min-height:400px}
+        .chat-container iframe{width:100%;height:500px;border:none;border-radius:8px}
+        .categories-page{max-width:1200px;margin:16px auto;padding:0 16px}
+        .categories-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #25165c;padding-bottom:6px;margin-bottom:16px}
+        .categories-header h3{font-size:16px;color:#8b5cf6;margin:0}
+        .categories-header .back-link{color:#a78bfa;font-size:13px;text-decoration:none;font-weight:500;transition:.3s}
+        .categories-header .back-link:hover{color:#fff}
+        .categories-page .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+        .category-item{background:#160f38;border:1px solid #2e2067;border-radius:8px;padding:8px 12px;color:#cbd5e1;font-size:12px;cursor:pointer;transition:.3s;text-align:center}
+        .category-item:hover{background:#7c3aed;color:#fff;border-color:#7c3aed;transform:scale(1.04)}
+        .request-page{max-width:600px;margin:30px auto;padding:0 16px}
+        .request-page h2{font-size:24px;color:#8b5cf6;text-align:center;margin-bottom:8px}
+        .request-page p{text-align:center;color:#94a3b8;font-size:13px;margin-bottom:20px}
+        .request-form{background:#110935;padding:20px;border-radius:16px;border:1px solid #1d1052}
+        .request-form label{display:block;font-size:12px;color:#a78bfa;margin-bottom:4px;font-weight:500}
+        .request-form input,.request-form textarea{width:100%;padding:10px;border-radius:8px;background:#160f38;border:1px solid #2e2067;color:#fff;font-size:13px;margin-bottom:12px}
+        .request-form input:focus,.request-form textarea:focus{border-color:#7c3aed;outline:none}
+        .request-form textarea{min-height:80px;resize:vertical}
+        .request-form .btn-submit{width:100%;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;border:none;padding:12px;border-radius:10px;font-weight:bold;font-size:14px;cursor:pointer;transition:.3s}
+        .request-form .btn-submit:active{transform:scale(.97)}
+        .request-form .status-msg{margin-top:10px;text-align:center;font-size:13px;padding:8px;border-radius:8px;display:none}
+        .request-form .status-msg.success{display:block;background:#10b98120;color:#10b981;border:1px solid #10b981}
+        .request-form .status-msg.error{display:block;background:#ef444420;color:#ef4444;border:1px solid #ef4444}
+        .about-page{max-width:800px;margin:24px auto;padding:0 16px;text-align:center}
+        .about-page h2{font-size:24px;color:#8b5cf6;margin-bottom:12px}
+        .about-page p{font-size:14px;color:#cbd5e1;line-height:1.7;margin-bottom:10px}
+        .about-page .social-links{display:flex;justify-content:center;gap:16px;margin-top:16px}
+        .about-page .social-links a{color:#a78bfa;text-decoration:none;font-size:14px;font-weight:500;transition:.3s}
+        .about-page .social-links a:hover{color:#fff}
+        .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,3,15,.88);backdrop-filter:blur(5px);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+        .modal-overlay.active{opacity:1;pointer-events:auto}
+        .modal-content{background:#130c3a;border:2px solid #7c3aed;border-radius:16px;width:100%;max-width:300px;padding:20px;text-align:center;position:relative;transform:scale(.8);transition:transform .3s}
+        .modal-overlay.active .modal-content{transform:scale(1)}
+        .modal-close{position:absolute;top:8px;right:10px;font-size:16px;color:#a78bfa;cursor:pointer;font-weight:bold}
+        .modal-icon{font-size:32px;margin-bottom:6px}
+        .modal-content h3{font-size:16px;margin-bottom:3px}
+        .modal-content p{font-size:10px;color:#ffb703;font-weight:bold;margin-bottom:14px;text-transform:uppercase}
+        .modal-btn{display:block;width:100%;padding:8px;margin-bottom:6px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:12px;border:none;text-align:center;cursor:pointer}
+        .btn-wa{background:#22c55e;color:#fff}
+        .btn-telegram{background:#0088cc;color:#fff}
+        .fab-container{position:fixed;bottom:20px;right:16px;z-index:99;display:flex;flex-direction:column;align-items:center;gap:8px;justify-content:center}
+        .fab-main{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#7c3aed);display:flex;align-items:center;justify-content:center;border:none;color:#fff;font-size:20px;cursor:pointer;transition:all .5s cubic-bezier(.34,1.56,.64,1);position:relative;order:2}
+        .fab-main.hide{transform:scale(0) rotate(180deg);opacity:0;pointer-events:none;width:0;height:0;margin:0;padding:0;border:none}
+        .fab-child{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#fff;font-size:14px;opacity:0;transform:scale(0);transition:all .5s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+        .fab-child.show{opacity:1;transform:scale(1);pointer-events:auto}
+        .fab-child-wa{background:linear-gradient(135deg,#25D366,#128C7E);order:1}
+        .fab-child-tg{background:linear-gradient(135deg,#0088cc,#005f8a);order:3}
+        .fab-child img{width:22px;height:22px;object-fit:contain;display:block}
+        .fab-child-wa.show{transition-delay:.15s}
+        .fab-child-tg.show{transition-delay:.3s}
+        .back-top-btn{position:fixed;bottom:20px;left:16px;z-index:99;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 16px rgba(124,58,237,.4);display:flex;align-items:center;justify-content:center;transition:opacity .3s,transform .3s;opacity:0;pointer-events:none}
+        .back-top-btn.show{opacity:1;pointer-events:auto}
+        .back-top-btn:active{transform:scale(.9)}
+        .footer{background:#0b071e;border-top:1px solid #1c1245;padding:20px 16px 12px;margin-top:16px}
+        .footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px}
+        .footer-col h5{font-size:12px;color:#a78bfa;margin-bottom:6px}
+        .footer-col p,.footer-col a{font-size:10px;color:#94a3b8;text-decoration:none;display:block;margin-bottom:2px;transition:.3s}
+        .footer-col a:hover{color:#a78bfa}
+        .footer-bottom{text-align:center;font-size:8px;color:#4b5563;padding-top:12px;border-top:1px solid #1c1245;margin-top:12px;letter-spacing:1px}
+        @media(max-width:480px){.logo{font-size:18px}.logo small{font-size:7px}.nav-menu a,.btn-login-nav{font-size:11px;padding:3px 8px}.slide-content h2{font-size:17px}.slide-content p{font-size:11px;max-width:100%}.slide-img{width:60px;height:60px}.games-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}.filter-wrapper{flex-direction:column;align-items:flex-start;gap:6px}.cat-tab{font-size:10px;padding:3px 10px}.version-item{flex-direction:column;align-items:stretch;text-align:center}.version-item .v-right a{display:block;text-align:center}.share-section{flex-wrap:wrap}}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo" onclick="showPage('home')">BAGASXIT<small>MODS & APK</small></div>
+            <nav class="nav-menu">
+                <a href="#" onclick="showPage('home')" id="navHome">🏠 Home</a>
+                <a href="#" onclick="showPage('chat')" id="navChat">💬 Chat</a>
+                <a href="#" onclick="showPage('request')" id="navRequest">📨 Request</a>
+                <a href="#" onclick="showPage('about')" id="navAbout">ℹ️ About</a>
+                <button class="btn-login-nav" onclick="alert('🔐 Fitur login member segera hadir!')">🔑 Masuk</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HOME -->
+    <div class="page active" id="homePage">
+        <div class="carousel-container" id="carouselContainer">
+            <!-- Carousel akan di-generate oleh JavaScript dari config.json -->
+        </div>
+
+        <div class="search-section">
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" class="search-bar" placeholder="🔍 Cari mod game kesukaanmu di sini..." autocomplete="off">
+                <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+            </div>
+            <div class="search-suggestions" id="searchSuggestions"></div>
+            <div class="hot-search" id="hotSearchContainer">
+                <!-- Hot keywords akan di-generate oleh JavaScript dari config.json -->
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="trending-section" id="trendingSection">
+                <h2>🔥 <span>Trending</span> 🔥</h2>
+                <div class="trending-grid" id="trendingGrid"></div>
+            </div>
+            <div class="filter-wrapper">
+                <span class="filter-label">📂 Filter:</span>
+                <div class="categories-tabs">
+                    <div class="cat-tab active" data-category="all">🔥 All Mods</div>
+                    <div class="cat-tab" data-category="game">🎮 Game</div>
+                    <div class="cat-tab" data-category="app">📱 Aplikasi</div>
+                    <div class="cat-tab categories-tab" onclick="showPage('categories')">📁 Categories</div>
+                </div>
+            </div>
+            <div class="section-header"><h2 id="allGamesTitle">🎮 <span>Semua Game</span></h2><a href="#">Lagi →</a></div>
+            <div class="games-grid" id="modsGrid"></div>
+            <div class="install-box" id="installBox">
+                <!-- Install steps akan di-generate oleh JavaScript dari config.json -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== LIVE CHAT PAGE ===== -->
+    <div class="page" id="chatPage">
+        <div class="chat-page">
+            <h2 id="chatTitle">💬 Live Chat Global</h2>
+            <p class="subtitle" id="chatSubtitle">Ngobrol bareng sesama pengunjung BAGASXIT! Bebas, anonim, dan real-time.</p>
+            <div class="chat-container">
+                <script>
+                    window['CboxReady'] = function (Cbox) {
+                        Cbox('button', '5-964773-5jbTa9');
+                    }
+                </script>
+                <script src="https://static.cbox.ws/embed/2.js" async></script>
+            </div>
+        </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="page" id="categoriesPage">
+        <div class="categories-page">
+            <div class="categories-header">
+                <h3>🎮 PERMAINAN</h3>
+                <a href="#" onclick="showPage('home')" class="back-link">← Kembali</a>
+            </div>
+            <div class="cat-group">
+                <div class="cat-grid" id="categoriesGameGrid">
+                    <!-- Akan di-generate oleh JavaScript dari config.json -->
+                </div>
+            </div>
+            <div class="cat-group">
+                <h3 style="font-size:16px;color:#8b5cf6;margin-bottom:10px;">📱 APLIKASI</h3>
+                <div class="cat-grid" id="categoriesAppGrid">
+                    <!-- Akan di-generate oleh JavaScript dari config.json -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REQUEST MOD -->
+    <div class="page" id="requestPage">
+        <div class="request-page">
+            <h2 id="requestTitle">📨 Request Mod</h2>
+            <p id="requestDesc">Isi form di bawah untuk meminta game/mod yang belum tersedia. Permintaan akan otomatis terkirim ke WhatsApp/Telegram admin.</p>
+            <div class="request-form">
+                <label for="reqName">Nama Game / Mod</label>
+                <input type="text" id="reqName" placeholder="Contoh: GTA 6 Mod">
+                <label for="reqLink">Link Download (opsional)</label>
+                <input type="text" id="reqLink" placeholder="https://...">
+                <label for="reqDesc">Deskripsi / Fitur yang diinginkan</label>
+                <textarea id="reqDesc" placeholder="Saya mau mod dengan unlimited money dan god mode..."></textarea>
+                <button class="btn-submit" onclick="submitRequest()">📤 Kirim Permintaan</button>
+                <div class="status-msg" id="reqStatus"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="page" id="aboutPage">
+        <div class="about-page">
+            <h2 id="aboutTitle">ℹ️ Tentang BAGASXIT</h2>
+            <p id="aboutText1"><strong>BAGASXIT</strong> adalah platform penyedia mod game dan aplikasi Android terpercaya. Kami menyediakan berbagai mod terbaru dengan fitur premium yang telah diuji keamanannya.</p>
+            <p id="aboutText2">Semua mod yang kami bagikan diambil dari sumber terpercaya dan telah melalui proses pengecekan agar aman untuk digunakan. Kami selalu mengupdate koleksi mod kami secara berkala.</p>
+            <p id="disclaimerText"><strong>Disclaimer:</strong> Semua konten di situs ini disediakan untuk tujuan edukasi dan hiburan. Kami tidak bertanggung jawab atas penyalahgunaan mod. Download dan gunakan dengan bijak.</p>
+            <div class="social-links">
+                <a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P" target="_blank">💬 WhatsApp</a>
+                <a href="https://t.me/BagasXIT" target="_blank">✈️ Telegram</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAIL PAGE -->
+    <div id="detailPage">
+        <div class="back-nav" onclick="closeGameDetail()">← Kembali ke Beranda</div>
+        <div class="app-header-detail">
+            <img id="detailIcon" src="" class="app-icon-detail">
+            <div class="app-title-info">
+                <h2 id="detailTitle">Nama Game</h2>
+                <div class="app-dev" id="detailDev">BagasXIT Dev</div>
+                <div class="app-meta" id="detailMeta">⭐ 5.0 | 0 Views | ✅ Working</div>
+            </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap;">
+            <button class="fav-detail-btn" id="favDetailBtn" onclick="toggleFavorite()">♡</button>
+            <span style="font-size:12px;color:#94a3b8;" id="favCount">0</span>
+        </div>
+        <div class="app-desc-detail" id="detailDesc">Memuat data...</div>
+        <div class="share-section">
+            <a href="#" id="shareWa" class="share-btn share-btn-wa" target="_blank">💬 WhatsApp</a>
+            <a href="#" id="shareTg" class="share-btn share-btn-tg" target="_blank">✈️ Telegram</a>
+        </div>
+        <a id="mainDownloadBtn" href="#" target="_blank" class="btn-main-download" onclick="trackDownload()">
+            ⬇ Download versi terbaru
+            <small id="mainDownloadVersion">v1.0.0</small>
+        </a>
+        <div class="trust-badge" id="trustBadgeContainer">
+            <!-- Trust badges akan di-generate oleh JavaScript dari config.json -->
+        </div>
+
+        <!-- VERSI LAINNYA -->
+        <div class="version-list-title" id="versionListTitle">📌 Versi Lainnya</div>
+        <div id="versionList"></div>
+
+        <!-- RATING & ULASAN -->
+        <div class="rating-section" id="ratingSection">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-weight:600;font-size:14px;">⭐ Rating & Ulasan</span>
+                <span style="font-size:13px;color:#94a3b8;" id="ratingAvg">0.0 (0)</span>
+            </div>
+            <div class="stars-input" id="starsInput">
+                <span data-value="1">☆</span>
+                <span data-value="2">☆</span>
+                <span data-value="3">☆</span>
+                <span data-value="4">☆</span>
+                <span data-value="5">☆</span>
+            </div>
+            <textarea id="reviewText" placeholder="Tulis ulasanmu di sini..."></textarea>
+            <button class="btn-submit" onclick="submitReview()">Kirim Ulasan</button>
+            <div class="reviews-list" id="reviewsList"></div>
+        </div>
+    </div>
+
+    <!-- POPUP -->
+    <div class="modal-overlay" id="welcomeModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">×</span>
+            <div class="modal-icon">🎮</div>
+            <h3 id="welcomeTitle">WELCOME TO BAGASXIT!</h3>
+            <p id="welcomeSubtitle">FREE TRIAL ACTIVE: ALL MODS INCLUDED</p>
+            <a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P" class="modal-btn btn-wa" target="_blank">💬 WhatsApp Community</a>
+            <a href="https://t.me/BagasXIT" class="modal-btn btn-telegram" target="_blank">💬 Telegram Community</a>
+        </div>
+    </div>
+
+    <!-- FAB & BACK TOP -->
+    <div class="fab-container" id="fabContainer">
+        <a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P" class="fab-child fab-child-wa" id="fabWa" target="_blank"><img src="https://i.postimg.cc/YCvyn14Z/whatsapp.png" alt="WA"></a>
+        <button class="fab-main" id="fabMain">💬</button>
+        <a href="https://t.me/BagasXIT" class="fab-child fab-child-tg" id="fabTg" target="_blank"><img src="https://i.postimg.cc/yxnr5jy3/telegram.png" alt="TG"></a>
+    </div>
+    <button class="back-top-btn" id="backTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-col"><h5>🏠 BAGASXIT</h5><p id="footerAboutText">Platform mod game terpercaya dengan koleksi APK mod terbaru dan terlengkap.</p></div>
+            <div class="footer-col"><h5>📌 Links</h5><a href="#" onclick="showPage('home')">Home</a><a href="#" onclick="showPage('categories')">Categories</a><a href="#" onclick="showPage('chat')">Chat</a><a href="#" onclick="showPage('request')">Request</a><a href="#" onclick="showPage('about')">About</a></div>
+            <div class="footer-col"><h5>📱 Social</h5><a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P" target="_blank">💬 WhatsApp</a><a href="https://t.me/BagasXIT" target="_blank">✈️ Telegram</a></div>
+            <div class="footer-col"><h5>⚠️ Disclaimer</h5><p>All mods are for educational purposes only. Download at your own risk.</p></div>
+        </div>
+        <div class="footer-bottom" id="footerBottomText">© 2026 BAGASXIT TRADING & MODS CO.</div>
+    </footer>
+
+    <script>
+        // ============================================================
+        // URL JSON DARI GITHUB
+        // ============================================================
+        const CONFIG_URL = 'https://raw.githubusercontent.com/BagasXIT/websitegamesbagasxit/refs/heads/main/config.json';
+        const GAMES_URL = 'https://raw.githubusercontent.com/BagasXIT/websitegamesbagasxit/refs/heads/main/games.json';
+        const MESSAGES_URL = 'https://raw.githubusercontent.com/BagasXIT/websitegamesbagasxit/refs/heads/main/messages.json';
+
+        let gameDatabase = {};
+        let configData = {};
+        let messagesData = {};
+
+        // ============================================================
+        // LOAD SEMUA DATA DARI GITHUB (DIPERBAIKI - TUNGGU SEMUA SIAP)
+        // ============================================================
+        let configLoaded = false;
+        let gamesLoaded = false;
+        let messagesLoaded = false;
+
+        function loadAllData() {
+            // Load Config
+            fetch(CONFIG_URL)
+                .then(res => {
+                    if (!res.ok) throw new Error('Gagal load config');
+                    return res.json();
+                })
+                .then(data => {
+                    configData = data;
+                    configLoaded = true;
+                    checkAllLoaded();
+                })
+                .catch(err => console.error('❌ Gagal load config:', err));
+
+            // Load Games
+            fetch(GAMES_URL)
+                .then(res => {
+                    if (!res.ok) throw new Error('Gagal load games');
+                    return res.json();
+                })
+                .then(data => {
+                    gameDatabase = data;
+                    gamesLoaded = true;
+                    checkAllLoaded();
+                })
+                .catch(err => {
+                    console.error('❌ Error load games:', err);
+                    document.getElementById('modsGrid').innerHTML = 
+                        '<div style="text-align:center;padding:40px;color:#ef4444;">❌ Gagal memuat data. Coba refresh halaman.</div>';
+                });
+
+            // Load Messages
+            fetch(MESSAGES_URL)
+                .then(res => {
+                    if (!res.ok) throw new Error('Gagal load messages');
+                    return res.json();
+                })
+                .then(data => {
+                    messagesData = data;
+                    messagesLoaded = true;
+                    checkAllLoaded();
+                })
+                .catch(err => console.error('❌ Gagal load messages:', err));
+        }
+
+        // Fungsi ini akan dipanggil setiap kali satu data selesai di-load
+        function checkAllLoaded() {
+            if (configLoaded && gamesLoaded && messagesLoaded) {
+                // Semua data sudah siap, baru jalankan fungsi-fungsi berikut
+                applyConfig();
+                applyMessages();
+                renderGrid();
+                renderTrending();
+                initCarousel();
+                console.log('✅ Semua data berhasil dimuat!');
+            }
+        }
+
+        // ============================================================
+        // APLIKASI KONFIGURASI
+        // ============================================================
+        function applyConfig() {
+            if (!configData) return;
+
+            // Hot Keywords
+            const hotContainer = document.getElementById('hotSearchContainer');
+            if (configData.hotKeywords) {
+                let html = '<span class="label">🔥 Pencarian panas:</span>';
+                configData.hotKeywords.forEach(keyword => {
+                    html += `<span class="keyword" onclick="searchKeyword('${keyword}')">${keyword}</span>`;
+                });
+                hotContainer.innerHTML = html;
+            }
+
+            // Carousel
+            const carouselContainer = document.getElementById('carouselContainer');
+            if (configData.carousel && configData.carousel.length > 0) {
+                let html = '';
+                configData.carousel.forEach((slide, index) => {
+                    const game = gameDatabase[slide.gameKey];
+                    if (!game) {
+                        console.warn(`⚠️ Game key "${slide.gameKey}" tidak ditemukan di games.json`);
+                        return;
+                    }
+                    const active = index === 0 ? 'active' : '';
+                    html += `
+                        <div class="carousel-slide ${active}" onclick="showGameDetail('${slide.gameKey}')">
+                            <div class="slide-content">
+                                <span class="slide-badge">${slide.badge}</span>
+                                <h2>${slide.title}</h2>
+                                <p>${slide.desc}</p>
+                            </div>
+                            <img src="${game.img}" class="slide-img">
+                        </div>
+                    `;
+                });
+                // Tambahkan dots
+                if (configData.carousel.length > 0) {
+                    html += `
+                        <div class="carousel-dots">
+                            ${configData.carousel.map((_, i) => `<button class="dot ${i === 0 ? 'active' : ''}" data-slide="${i}"></button>`).join('')}
+                        </div>
+                    `;
+                }
+                carouselContainer.innerHTML = html;
+            } else {
+                console.warn('⚠️ Tidak ada data carousel di config.json');
+            }
+
+            // Categories
+            if (configData.categoriesGame) {
+                const grid = document.getElementById('categoriesGameGrid');
+                let html = '';
+                configData.categoriesGame.forEach(cat => {
+                    html += `<span class="category-item" onclick="filterByCategory('${cat}')">${cat}</span>`;
+                });
+                grid.innerHTML = html;
+            }
+
+            if (configData.categoriesApp) {
+                const grid = document.getElementById('categoriesAppGrid');
+                let html = '';
+                configData.categoriesApp.forEach(cat => {
+                    html += `<span class="category-item" onclick="filterByCategory('${cat}')">${cat}</span>`;
+                });
+                grid.innerHTML = html;
+            }
+
+            // Trust Badges
+            if (configData.trustBadges) {
+                const container = document.getElementById('trustBadgeContainer');
+                let html = '';
+                configData.trustBadges.forEach(badge => {
+                    html += `<span>${badge}</span>`;
+                });
+                container.innerHTML = html;
+            }
+
+            // Install Steps
+            if (configData.installSteps) {
+                const box = document.getElementById('installBox');
+                let html = '<h3>💡 <span style="color:#a78bfa;">How to Install?</span></h3>';
+                configData.installSteps.forEach((step, index) => {
+                    html += `
+                        <div class="install-step">
+                            <div class="step-num">${index + 1}</div>
+                            <div>${step}</div>
+                        </div>
+                    `;
+                });
+                box.innerHTML = html;
+            }
+
+            // All Games Title
+            if (configData.allGamesTitle) {
+                document.getElementById('allGamesTitle').innerHTML = configData.allGamesTitle;
+            }
+        }
+
+        // ============================================================
+        // APLIKASI MESSAGES
+        // ============================================================
+        function applyMessages() {
+            if (!messagesData) return;
+
+            document.getElementById('welcomeTitle').textContent = messagesData.welcomeTitle || 'WELCOME TO BAGASXIT!';
+            document.getElementById('welcomeSubtitle').textContent = messagesData.welcomeSubtitle || 'FREE TRIAL ACTIVE: ALL MODS INCLUDED';
+            document.getElementById('aboutTitle').textContent = messagesData.aboutTitle || 'ℹ️ Tentang BAGASXIT';
+            document.getElementById('aboutText1').innerHTML = messagesData.aboutText1 || '<strong>BAGASXIT</strong> adalah platform penyedia mod game dan aplikasi Android terpercaya.';
+            document.getElementById('aboutText2').textContent = messagesData.aboutText2 || '';
+            document.getElementById('disclaimerText').innerHTML = messagesData.disclaimer || '';
+            document.getElementById('requestTitle').textContent = messagesData.requestTitle || '📨 Request Mod';
+            document.getElementById('requestDesc').textContent = messagesData.requestDesc || '';
+            document.getElementById('chatTitle').textContent = messagesData.chatTitle || '💬 Live Chat Global';
+            document.getElementById('chatSubtitle').textContent = messagesData.chatSubtitle || '';
+            document.getElementById('footerAboutText').textContent = messagesData.footerAbout || 'Platform mod game terpercaya dengan koleksi APK mod terbaru dan terlengkap.';
+            document.getElementById('footerBottomText').textContent = messagesData.footerText || '© 2026 BAGASXIT TRADING & MODS CO.';
+        }
+
+        // ============================================================
+        // FUNGSI NAVIGASI
+        // ============================================================
+        function showPage(p){
+            document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+            document.querySelectorAll('.nav-menu a').forEach(el=>el.classList.remove('active-nav'));
+            if(p==='home'){document.getElementById('homePage').classList.add('active');document.getElementById('navHome').classList.add('active-nav');closeGameDetail();}
+            else if(p==='chat'){document.getElementById('chatPage').classList.add('active');document.getElementById('navChat').classList.add('active-nav');closeGameDetail();}
+            else if(p==='categories'){document.getElementById('categoriesPage').classList.add('active');closeGameDetail();}
+            else if(p==='request'){document.getElementById('requestPage').classList.add('active');document.getElementById('navRequest').classList.add('active-nav');closeGameDetail();}
+            else if(p==='about'){document.getElementById('aboutPage').classList.add('active');document.getElementById('navAbout').classList.add('active-nav');closeGameDetail();}
+            window.scrollTo(0,0);
+        }
+        document.addEventListener('DOMContentLoaded',()=>{document.getElementById('navHome').classList.add('active-nav');});
+
+        function searchKeyword(k){document.getElementById('searchInput').value=k;filterGames();}
+
+        // ============================================================
+        // SEARCH CLEAR
+        // ============================================================
+        function clearSearch(){
+            document.getElementById('searchInput').value='';
+            document.getElementById('searchClear').classList.remove('show');
+            filterGames();
+            document.getElementById('searchInput').focus();
+        }
+
+        // ============================================================
+        // FILTER BY CATEGORY
+        // ============================================================
+        function filterByCategory(category){showPage('home');document.getElementById('searchInput').value=category.trim();filterGames();}
+
+        // ============================================================
+        // DOWNLOAD COUNTER
+        // ============================================================
+        function getDownloadCount(key){return parseInt(localStorage.getItem('dl_'+key))||0;}
+        function incrementDownload(key){const cur=getDownloadCount(key);localStorage.setItem('dl_'+key, cur+1);return cur+1;}
+        let curKey=null;
+        function trackDownload(){if(curKey){incrementDownload(curKey);}}
+
+        // ============================================================
+        // VIEW COUNTER
+        // ============================================================
+        function getViewCount(key){return parseInt(localStorage.getItem('views_'+key))||0;}
+        function incrementView(key){const cur=getViewCount(key);localStorage.setItem('views_'+key, cur+1);return cur+1;}
+
+        // ============================================================
+        // FAVORITE
+        // ============================================================
+        function getFavorites(){try{return JSON.parse(localStorage.getItem('favorites'))||[];}catch(e){return [];}}
+        function saveFavorites(list){localStorage.setItem('favorites',JSON.stringify(list));}
+        function isFavorite(key){return getFavorites().includes(key);}
+        function toggleFavorite(){
+            if(!curKey)return;
+            const favs=getFavorites();
+            const idx=favs.indexOf(curKey);
+            if(idx>-1){favs.splice(idx,1);}else{favs.push(curKey);}
+            saveFavorites(favs);
+            updateFavoriteUI();
+            renderGrid();
+        }
+        function updateFavoriteUI(){
+            const btn=document.getElementById('favDetailBtn');
+            const count=document.getElementById('favCount');
+            const favs=getFavorites();
+            count.textContent=favs.length;
+            if(isFavorite(curKey)){btn.textContent='❤️';btn.classList.add('liked');}else{btn.textContent='♡';btn.classList.remove('liked');}
+        }
+
+        // ============================================================
+        // AUTO-LIKE
+        // ============================================================
+        let autoLikeInterval = null;
+        let autoLikeRunning = false;
+
+        function startAutoLike() {
+            if (autoLikeRunning || !curKey) return;
+            autoLikeRunning = true;
+            const lastAutoLike = localStorage.getItem('auto_like_last_time') || '0';
+            const now = Date.now();
+            const diff = (now - parseInt(lastAutoLike)) / 1000;
+            if (diff >= 60) {
+                addAutoLike();
+                localStorage.setItem('auto_like_last_time', String(now));
+            }
+            if (autoLikeInterval) clearInterval(autoLikeInterval);
+            autoLikeInterval = setInterval(() => {
+                addAutoLike();
+                localStorage.setItem('auto_like_last_time', String(Date.now()));
+            }, 60000);
+        }
+
+        function addAutoLike() {
+            if (!curKey) return;
+            const favs = getFavorites();
+            if (!favs.includes(curKey)) {
+                favs.push(curKey);
+                saveFavorites(favs);
+                updateFavoriteUI();
+                renderGrid();
+            }
+        }
+
+        function stopAutoLike() {
+            if (autoLikeInterval) {
+                clearInterval(autoLikeInterval);
+                autoLikeInterval = null;
+            }
+            autoLikeRunning = false;
+        }
+
+        // ============================================================
+        // TRENDING & GRID
+        // ============================================================
+        function parseDownloads(meta){const m=meta.match(/([\d.]+)\s*M\s*Downloads/);return m?parseFloat(m[1]):0;}
+        function renderTrending(){
+            const grid=document.getElementById('trendingGrid');
+            const keys=Object.keys(gameDatabase);
+            if(keys.length===0){grid.innerHTML='<div style="text-align:center;padding:20px;color:#94a3b8;">Memuat data...</div>';return;}
+            const sorted=keys.map(k=>{
+                const g=gameDatabase[k];
+                return {key:k, title:g.title, img:g.img, downloads:parseDownloads(g.meta), meta:g.meta};
+            }).sort((a,b)=>b.downloads-a.downloads).slice(0,3);
+            if(sorted.length===0){grid.innerHTML='';return;}
+            let html='';
+            sorted.forEach((item,idx)=>{
+                html+=`<div class="trending-card" onclick="showGameDetail('${item.key}')">
+                    <span class="rank">#${idx+1}</span>
+                    <img src="${item.img}" class="thumb">
+                    <div class="info"><h4>${item.title}</h4><div class="meta">${item.meta}</div></div>
+                </div>`;
+            });
+            grid.innerHTML=html;
+        }
+
+        const grid=document.getElementById('modsGrid'), sInput=document.getElementById('searchInput'), tabs=document.querySelectorAll('.cat-tab:not(.categories-tab)');
+        function getBadge(k){
+            const g=gameDatabase[k];
+            if(!g) return {class:'badge-money',text:'MOD'};
+            if(k==='ff_vip')return {class:'badge-ff',text:'MENU MOD'};
+            if(k==='epic_c2')return {class:'badge-gold',text:'GOLD/RUBY'};
+            if(k==='stumble')return {class:'badge-skins',text:'SKINS HACK'};
+            if(k==='last_day_earth')return {class:'badge-menu',text:'MENU MOD'};
+            if(k==='minecraft')return {class:'badge-menu',text:'OFFICIAL'};
+            if(k==='monopoly'||k==='monoposto')return {class:'badge-money',text:'UNLOCKED'};
+            if(k==='epic_plane'||k==='frost_world'||k==='homescapes'||k==='hunter_assassin')return {class:'badge-money',text:'UNLIMITED'};
+            return {class:'badge-money',text:'MONEY MOD'};
+        }
+        function renderGrid(){
+            const keys=Object.keys(gameDatabase);
+            if(keys.length===0){
+                grid.innerHTML='<div style="text-align:center;padding:40px;color:#94a3b8;">🔄 Memuat data game...</div>';
+                return;
+            }
+            let html='';
+            const favs=getFavorites();
+            keys.forEach(k=>{
+                const g=gameDatabase[k];
+                if(!g) return;
+                const b=getBadge(k);
+                const v=g.versions&&g.versions.length?g.versions[0].version:'v1.0';
+                const dl=g.meta.split('|')[1]?.trim().split(' ')[0]||'1.0M';
+                const count=getDownloadCount(k);
+                const isFav=favs.includes(k)?'show':'';
+                html+=`<div class="game-card" data-key="${k}" onclick="showGameDetail('${k}')">
+                    <img src="${g.img}" class="thumb">
+                    <span class="fav-badge ${isFav}">❤️</span>
+                    <div class="info"><h4>${g.title}</h4><div class="version">${v}</div>
+                    <div class="rating-row"><span class="stars">⭐⭐⭐⭐⭐</span><span class="downloads">${dl}</span></div>
+                    <span class="badge-type ${b.class}">${b.text}</span>
+                    <div><span class="badge-working">100% bekerja</span> <span style="font-size:8px;color:#94a3b8;margin-left:4px;">⬇ ${count}</span></div>
+                    </div></div>`;
+            });
+            grid.innerHTML=html;
+            renderTrending();
+        }
+
+        function filterGames(){
+            const val=sInput.value.toLowerCase(), cat=document.querySelector('.cat-tab.active')?.getAttribute('data-category')||'all';
+            grid.querySelectorAll('.game-card').forEach(c=>{
+                const n=c.querySelector('h4').textContent.toLowerCase(), gc=c.getAttribute('data-cat')||'game';
+                c.style.display=(n.includes(val)&&(cat==='all'||gc===cat))?'block':'none';
+            });
+            document.getElementById('searchClear').classList.toggle('show', val.length>0);
+        }
+        sInput.addEventListener('input',filterGames);
+        tabs.forEach(t=>{t.addEventListener('click',function(){document.querySelector('.cat-tab.active')?.classList.remove('active');this.classList.add('active');filterGames();});});
+
+        // ============================================================
+        // SEARCH AUTO-COMPLETE
+        // ============================================================
+        const suggestionsBox=document.getElementById('searchSuggestions');
+        sInput.addEventListener('input',function(){
+            const val=this.value.toLowerCase().trim();
+            if(!val){suggestionsBox.classList.remove('active');return;}
+            const keys=Object.keys(gameDatabase);
+            const matches=keys.filter(k=>gameDatabase[k].title.toLowerCase().includes(val));
+            if(matches.length===0){suggestionsBox.classList.remove('active');return;}
+            let html='';
+            matches.forEach(k=>{
+                const g=gameDatabase[k];
+                html+=`<div class="s-item" onclick="searchKeyword('${g.title}')"><span>${g.title}</span><span class="count">${g.meta.split('|')[1]?.trim()||''}</span></div>`;
+            });
+            suggestionsBox.innerHTML=html;
+            suggestionsBox.classList.add('active');
+        });
+        sInput.addEventListener('blur',function(){setTimeout(()=>suggestionsBox.classList.remove('active'),200);});
+
+        // ============================================================
+        // CAROUSEL
+        // ============================================================
+        let cSlide=0, slides, dots;
+
+        function initCarousel(){
+            slides = document.querySelectorAll('.carousel-slide');
+            dots = document.querySelectorAll('.carousel-dots .dot');
+            if(slides.length === 0) {
+                console.warn('⚠️ Tidak ada slide carousel yang ditemukan');
+                return;
+            }
+            
+            function showSlide(i){
+                slides.forEach(s=>s.classList.remove('active'));
+                dots.forEach(d=>d.classList.remove('active'));
+                slides[i].classList.add('active');
+                dots[i].classList.add('active');
+                cSlide=i;
+            }
+            function nextSlide(){showSlide((cSlide+1)%slides.length);}
+            
+            if(window.carouselInterval) clearInterval(window.carouselInterval);
+            window.carouselInterval = setInterval(nextSlide, 4000);
+            
+            dots.forEach((d,i)=>{
+                d.addEventListener('click',function(){
+                    clearInterval(window.carouselInterval);
+                    showSlide(i);
+                    window.carouselInterval = setInterval(nextSlide, 4000);
+                });
+            });
+            
+            window.showSlide = showSlide;
+            console.log('✅ Carousel berhasil diinisialisasi dengan', slides.length, 'slide');
+        }
+
+        // ============================================================
+        // RATING & REVIEWS
+        // ============================================================
+        let selectedRating=0;
+        const stars = document.querySelectorAll('#starsInput span');
+        stars.forEach(s=>{
+            s.addEventListener('click',function(){
+                selectedRating=parseInt(this.dataset.value);
+                stars.forEach(st=>{
+                    st.classList.toggle('active',parseInt(st.dataset.value)<=selectedRating);
+                    st.textContent=parseInt(st.dataset.value)<=selectedRating?'★':'☆';
+                });
+            });
+            s.addEventListener('mouseenter',function(){
+                const val=parseInt(this.dataset.value);
+                stars.forEach(st=>{
+                    st.textContent=parseInt(st.dataset.value)<=val?'★':'☆';
+                });
+            });
+            s.addEventListener('mouseleave',function(){
+                stars.forEach(st=>{
+                    st.textContent=parseInt(st.dataset.value)<=selectedRating?'★':'☆';
+                });
+            });
+        });
+
+        function getReviews(gameKey){
+            try{return JSON.parse(localStorage.getItem('reviews_'+gameKey))||[];}catch(e){return [];}
+        }
+        function saveReviews(gameKey,reviews){localStorage.setItem('reviews_'+gameKey,JSON.stringify(reviews));}
+        function renderReviews(gameKey){
+            const reviews=getReviews(gameKey);
+            const list=document.getElementById('reviewsList');
+            const avgEl=document.getElementById('ratingAvg');
+            if(reviews.length===0){list.innerHTML='<div style="color:#4b5563;font-size:12px;text-align:center;">Belum ada ulasan. Jadilah yang pertama!</div>';avgEl.textContent='0.0 (0)';return;}
+            const total=reviews.reduce((s,r)=>s+r.rating,0);
+            const avg=(total/reviews.length).toFixed(1);
+            avgEl.textContent=avg+' ('+reviews.length+')';
+            let html='';
+            reviews.slice().reverse().forEach(r=>{
+                const starStr='★'.repeat(r.rating)+'☆'.repeat(5-r.rating);
+                html+=`<div class="review-item"><span class="r-stars">${starStr}</span><span class="r-text">${r.text||'Tidak ada komentar'}</span><span class="r-date">${r.date||''}</span></div>`;
+            });
+            list.innerHTML=html;
+        }
+        function submitReview(){
+            if(!curKey){alert('Pilih game dulu!');return;}
+            if(selectedRating===0){alert('Pilih rating bintang!');return;}
+            const text=document.getElementById('reviewText').value.trim()||'Tidak ada komentar';
+            const reviews=getReviews(curKey);
+            reviews.push({rating:selectedRating,text:text,date:new Date().toLocaleDateString('id-ID')});
+            saveReviews(curKey,reviews);
+            renderReviews(curKey);
+            document.getElementById('reviewText').value='';
+            selectedRating=0;
+            stars.forEach(s=>{s.classList.remove('active');s.textContent='☆';});
+            alert('Terima kasih atas ulasannya! ✅');
+        }
+
+        // ============================================================
+        // DETAIL
+        // ============================================================
+        function showGameDetail(k){
+            const d=gameDatabase[k];if(!d)return;
+            curKey=k;
+            const views = incrementView(k);
+            document.getElementById('detailMeta').textContent = `⭐ 5.0 | ${views} Views | ✅ Working`;
+            document.getElementById('detailTitle').textContent=d.title;
+            document.getElementById('detailIcon').src=d.img;
+            document.getElementById('detailDev').textContent=d.dev||'BagasXIT Dev';
+            const url=encodeURIComponent(window.location.href);
+            const text=encodeURIComponent(`Download ${d.title} di BAGASXIT!`);
+            document.getElementById('shareWa').href=`https://api.whatsapp.com/send?text=${text}%20${url}`;
+            document.getElementById('shareTg').href=`https://t.me/share/url?url=${url}&text=${text}`;
+            renderDetail(d,0);
+            renderReviews(k);
+            updateFavoriteUI();
+            startAutoLike();
+            const pg=document.getElementById('detailPage');
+            pg.style.display='block';setTimeout(()=>pg.classList.add('active'),10);window.scrollTo(0,0);
+        }
+
+        function renderDetail(d,idx){
+            const vers=d.versions||[];if(!vers.length)return;
+            const v=vers[idx]||vers[0];
+            document.getElementById('detailDesc').innerHTML=v.desc||d.desc||'';
+            const btn=document.getElementById('mainDownloadBtn');
+            btn.href=v.link||'#';
+            document.getElementById('mainDownloadVersion').textContent=v.version+' · '+(v.size||'');
+            const list=document.getElementById('versionList'), title=document.getElementById('versionListTitle');
+            if(vers.length<=1){title.style.display='none';list.innerHTML='';return;}
+            title.style.display='block';let html='';
+            vers.forEach((vi,i)=>{
+                const isActive=i===idx, rec=vi.recommended?' recommended':'', act=isActive?' active-version':'';
+                const recBadge=vi.recommended?'<span class="rec-badge">⭐ DIREKOMENDASIKAN</span>':'';
+                const st=parseInt(vi.status)||0;
+                html+=`<div class="version-item${rec}${act}" onclick="renderDetail(d,${i})">
+                    <div class="v-left"><div class="v-head"><strong>${vi.version}</strong>${recBadge}<span class="size">${vi.size}</span></div>
+                    <div class="v-detail"><span class="rating">${vi.rating}</span>
+                    <span class="status-bar-wrap"><span class="status-bar"><span class="status-fill" style="width:${st}%;"></span></span><span class="status-text">${vi.status}</span></span>
+                    <span class="badge">${vi.badge}</span></div></div>
+                    <div class="v-right"><a href="${vi.link||'#'}" target="_blank" onclick="event.stopPropagation();trackDownload();">⬇ Unduh</a></div></div>`;
+            });
+            list.innerHTML=html;
+        }
+
+        function closeGameDetail(){
+            stopAutoLike();
+            const pg=document.getElementById('detailPage');
+            pg.classList.remove('active');
+            setTimeout(()=>pg.style.display='none',250);
+        }
+
+        // ============================================================
+        // REQUEST MOD
+        // ============================================================
+        function submitRequest(){
+            const name=document.getElementById('reqName').value.trim();
+            const link=document.getElementById('reqLink').value.trim();
+            const desc=document.getElementById('reqDesc').value.trim();
+            if(!name){alert('Nama game/mod wajib diisi!');return;}
+            const waLink='https://api.whatsapp.com/send?text=📨 *REQUEST MOD BARU*%0A%0A🎮 *Nama:* '+encodeURIComponent(name)+'%0A🔗 *Link:* '+encodeURIComponent(link||'Tidak ada')+'%0A📝 *Deskripsi:* '+encodeURIComponent(desc||'Tidak ada');
+            const tgLink='https://t.me/share/url?url=&text=📨 REQUEST MOD BARU%0A%0A🎮 Nama: '+encodeURIComponent(name)+'%0A🔗 Link: '+encodeURIComponent(link||'Tidak ada')+'%0A📝 Deskripsi: '+encodeURIComponent(desc||'Tidak ada');
+            const msg=document.getElementById('reqStatus');
+            if(confirm('Kirim permintaan ke WhatsApp?')){window.open(waLink,'_blank');}
+            else if(confirm('Kirim permintaan ke Telegram?')){window.open(tgLink,'_blank');}
+            else{return;}
+            msg.className='status-msg success';
+            msg.textContent='✅ Permintaan terkirim! Terima kasih.';
+            setTimeout(()=>{msg.className='status-msg';msg.textContent='';},5000);
+            document.getElementById('reqName').value='';
+            document.getElementById('reqLink').value='';
+            document.getElementById('reqDesc').value='';
+        }
+
+        // ============================================================
+        // BACK TO TOP
+        // ============================================================
+        window.addEventListener('scroll',function(){
+            const btn=document.getElementById('backTopBtn');
+            if(window.scrollY>300) btn.classList.add('show'); else btn.classList.remove('show');
+        });
+
+        // ============================================================
+        // POPUP & FAB
+        // ============================================================
+        let fInterval, fAnim=false;
+        function startFab(){
+            const m=document.getElementById('fabMain'), wa=document.getElementById('fabWa'), tg=document.getElementById('fabTg');
+            m.classList.remove('hide');wa.classList.remove('show');tg.classList.remove('show');fAnim=false;
+            if(fInterval)clearInterval(fInterval);
+            fInterval=setInterval(()=>{if(fAnim)return;fAnim=true;m.classList.add('hide');wa.classList.add('show');tg.classList.add('show');setTimeout(()=>{wa.classList.remove('show');tg.classList.remove('show');m.classList.remove('hide');setTimeout(()=>fAnim=false,500);},5000);},7000);
+        }
+
+        function closeModal(){document.getElementById('welcomeModal').classList.remove('active');}
+
+        // ============================================================
+        // SERVICE WORKER
+        // ============================================================
+        if('serviceWorker' in navigator){
+            navigator.serviceWorker.register('sw.js')
+            .then(()=>console.log('SW registered'))
+            .catch(()=>console.log('SW registration failed'));
+        }
+
+        // ============================================================
+        // LOAD DATA SAAT HALAMAN DIMUAT
+        // ============================================================
+        window.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('modsGrid').innerHTML = 
+                '<div style="text-align:center;padding:40px;color:#94a3b8;">🔄 Memuat data game...</div>';
+            
+            loadAllData();
+            
+            setTimeout(() => {
+                document.getElementById('welcomeModal').classList.add('active');
+            }, 400);
+            
+            setTimeout(startFab, 1000);
+        });
+    </script>
+</body>
+</html>
