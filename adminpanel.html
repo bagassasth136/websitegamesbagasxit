@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>BAGASXIT · ADMIN PANEL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+  :root {
+    --bg: #0A0A0F;
+    --card: #14141C;
+    --card-hi: #1A1A24;
+    --border: #262630;
+    --txt: #F8FAFC;
+    --txt-dim: #94A3B8;
+    --txt-mute: #64748B;
+    --accent: #A78BFA;
+    --accent-dim: #7C3AED;
+    --green: #22C55E;
+    --red: #EF4444;
+    --yellow: #F59E0B;
+    --cyan: #22D3EE;
+  }
+  body {
+    background: var(--bg); color: var(--txt);
+    min-height: 100vh; padding: 20px 14px 100px;
+    font-size: 14px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  /* Header */
+  .brand { text-align: center; margin-bottom: 20px; }
+  .brand h1 {
+    font-size: 28px; font-weight: 900; letter-spacing: 1px;
+    background: linear-gradient(135deg, #A78BFA, #22D3EE);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .brand .sub { color: var(--txt-mute); font-size: 10px; letter-spacing: 4px; margin-top: 4px; font-weight: 700; }
+
+  /* Stat bar */
+  .stats-bar {
+    display: flex; gap: 12px; margin-bottom: 18px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px 18px;
+  }
+  .stats-bar > div { flex: 1; text-align: center; font-weight: 700; font-size: 13px; }
+  .stats-bar .val { color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+
+  /* Tabs */
+  .tabs {
+    display: flex; gap: 6px; overflow-x: auto; margin-bottom: 20px;
+    padding-bottom: 4px; scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex: 0 0 auto; padding: 10px 16px; border-radius: 10px;
+    background: var(--card); color: var(--txt-dim);
+    font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    cursor: pointer; border: 1px solid var(--border);
+    transition: all 0.2s; user-select: none;
+  }
+  .tab.active {
+    background: var(--accent); color: #0A0A0F;
+    border-color: var(--accent);
+    box-shadow: 0 6px 20px rgba(167, 139, 250, 0.35);
+  }
+
+  /* Panels */
+  .panel { display: none; animation: fadeIn 0.3s; }
+  .panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* Section title */
+  .sec-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    color: var(--txt-dim); margin: 20px 4px 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* Card */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 18px; margin-bottom: 14px;
+  }
+
+  /* Inputs */
+  input, textarea {
+    width: 100%; padding: 14px 16px; border-radius: 10px;
+    background: #0F0B21; border: 1px solid var(--border);
+    color: var(--txt); font-size: 13px; font-family: 'Inter', sans-serif;
+    outline: none; transition: border 0.2s; margin-bottom: 10px;
+  }
+  input:focus, textarea:focus { border-color: var(--accent); }
+  textarea { min-height: 80px; resize: vertical; }
+  input::placeholder, textarea::placeholder { color: var(--txt-mute); }
+
+  /* Buttons */
+  .btn {
+    width: 100%; padding: 14px; border-radius: 10px; border: none;
+    font-size: 12px; font-weight: 800; letter-spacing: 1px;
+    cursor: pointer; transition: transform 0.15s;
+    font-family: 'Inter', sans-serif; color: #0A0A0F;
+    margin-bottom: 8px;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-primary { background: var(--accent); box-shadow: 0 6px 20px rgba(167,139,250,0.3); }
+  .btn-green { background: var(--green); color: #fff; box-shadow: 0 6px 20px rgba(34,197,94,0.3); }
+  .btn-red { background: var(--red); color: #fff; box-shadow: 0 6px 20px rgba(239,68,68,0.3); }
+  .btn-yellow { background: var(--yellow); color: #fff; box-shadow: 0 6px 20px rgba(245,158,11,0.3); }
+  .btn-ghost { background: transparent; color: var(--txt); border: 1px solid var(--border); }
+
+  /* Chip row */
+  .chips { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .chip {
+    flex: 1; min-width: 60px; padding: 10px; border-radius: 8px;
+    background: #1A1A24; color: var(--txt);
+    font-size: 11px; font-weight: 700; text-align: center;
+    cursor: pointer; border: 1px solid var(--border);
+    transition: all 0.2s; user-select: none;
+  }
+  .chip:active { background: var(--accent); color: #0A0A0F; }
+
+  /* Info grid (dashboard) */
+  .grid-info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .info-item {
+    background: #0F0B21; border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px;
+    font-size: 12px; font-weight: 600;
+  }
+  .info-item .v { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 800; display: block; margin-top: 4px; }
+
+  /* Chart */
+  .chart {
+    display: flex; align-items: flex-end;
+    height: 140px; gap: 8px; padding: 12px 0 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+  .chart-val { font-size: 10px; color: var(--accent); font-weight: 700; margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; }
+  .chart-bar {
+    width: 100%; background: linear-gradient(180deg, var(--accent), var(--accent-dim));
+    border-radius: 4px; min-height: 4px;
+    transition: height 0.4s ease-out;
+  }
+  .chart-label { font-size: 10px; color: var(--txt-mute); margin-top: 6px; font-weight: 600; }
+
+  /* Key card */
+  .key-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px; margin-bottom: 10px;
+    transition: border 0.2s;
+  }
+  .key-card.multi { border-color: var(--accent); }
+  .key-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .key-name { font-weight: 800; font-size: 13px; font-family: 'JetBrains Mono', monospace; }
+  .key-badge {
+    font-size: 9px; padding: 3px 8px; border-radius: 6px;
+    font-weight: 700; letter-spacing: 0.5px;
+  }
+  .b-green { background: rgba(34,197,94,0.15); color: var(--green); }
+  .b-yellow { background: rgba(245,158,11,0.15); color: var(--yellow); }
+  .b-red { background: rgba(239,68,68,0.15); color: var(--red); }
+  .b-accent { background: rgba(167,139,250,0.15); color: var(--accent); }
+  .key-meta { font-size: 11px; color: var(--txt-dim); margin-bottom: 10px; }
+  .key-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .mini-btn {
+    padding: 9px; border-radius: 8px; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.5px; text-align: center; cursor: pointer;
+    border: 1px solid; transition: all 0.15s; user-select: none;
+    font-family: 'Inter', sans-serif;
+  }
+  .mini-btn:active { transform: scale(0.97); }
+  .mb-purple { color: var(--accent); border-color: var(--accent); background: rgba(167,139,250,0.08); }
+  .mb-green { color: var(--green); border-color: var(--green); background: rgba(34,197,94,0.08); }
+  .mb-yellow { color: var(--yellow); border-color: var(--yellow); background: rgba(245,158,11,0.08); }
+  .mb-red { color: var(--red); border-color: var(--red); background: rgba(239,68,68,0.08); }
+
+  /* Filter chips */
+  .filters { display: flex; gap: 6px; margin-bottom: 10px; }
+  .filters .chip { padding: 10px; font-size: 10px; }
+  .filters .chip.active { background: var(--accent); color: #0A0A0F; border-color: var(--accent); }
+
+  /* Log row */
+  .log-row {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 14px; margin-bottom: 6px;
+    font-size: 11px; color: #C4C0E2;
+  }
+  .log-row .t { color: var(--txt-mute); font-family: 'JetBrains Mono', monospace; margin-right: 6px; }
+
+  /* Broadcast card */
+  .bcast-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px; margin-bottom: 10px;
+  }
+  .bcast-title { color: var(--accent); font-weight: 800; font-size: 12px; margin-bottom: 6px; }
+  .bcast-msg { font-size: 12px; color: var(--txt); margin-bottom: 8px; line-height: 1.5; }
+  .bcast-time { font-size: 10px; color: var(--txt-mute); margin-bottom: 10px; }
+
+  /* Maint status */
+  .maint-status {
+    text-align: center; padding: 12px; border-radius: 10px;
+    font-weight: 700; font-size: 12px; margin-bottom: 12px;
+    border: 1px solid;
+  }
+  .maint-on { background: rgba(239,68,68,0.1); color: var(--red); border-color: var(--red); }
+  .maint-off { background: rgba(34,197,94,0.1); color: var(--green); border-color: var(--green); }
+
+  /* Empty */
+  .empty { text-align: center; color: var(--txt-mute); padding: 40px 0; font-size: 12px; }
+
+  /* Toast */
+  #toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(200%);
+    background: var(--card-hi); color: var(--txt);
+    padding: 14px 22px; border-radius: 12px;
+    font-size: 12px; font-weight: 700;
+    border: 1px solid var(--accent);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    transition: transform 0.3s; z-index: 9999;
+    max-width: 90%; text-align: center;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+  #toast.err { border-color: var(--red); color: var(--red); }
+
+  /* Modal */
+  .modal-bg {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    display: none; align-items: center; justify-content: center;
+    padding: 20px; z-index: 9998; backdrop-filter: blur(6px);
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: var(--card); border: 1px solid var(--accent);
+    border-radius: 16px; padding: 22px; max-width: 420px; width: 100%;
+    max-height: 80vh; overflow-y: auto;
+  }
+  .modal h3 { color: var(--accent); font-size: 14px; margin-bottom: 14px; }
+  .device-row {
+    display: flex; align-items: center; gap: 8px;
+    background: #0F0B21; border-radius: 8px;
+    padding: 10px 12px; margin-bottom: 6px; font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .device-row span { flex: 1; word-break: break-all; }
+  .device-row .rm {
+    color: var(--red); font-family: 'Inter', sans-serif;
+    font-weight: 700; font-size: 10px; cursor: pointer;
+    padding: 4px 8px; border: 1px solid var(--red); border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<div class="wrap">
+  <div class="brand">
+    <h1>BAGASXIT</h1>
+    <div class="sub">ADMIN PANEL</div>
+  </div>
+
+  <div class="stats-bar">
+    <div>🔑 Keys: <span class="val" id="statKeys">—</span></div>
+    <div>🟢 Online: <span class="val" id="statOnline">—</span></div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="dash">DASH</div>
+    <div class="tab" data-tab="gen">GEN</div>
+    <div class="tab" data-tab="multi">MULTI</div>
+    <div class="tab" data-tab="keys">KEYS</div>
+    <div class="tab" data-tab="admin">ADMIN</div>
+    <div class="tab" data-tab="logs">LOGS</div>
+    <div class="tab" data-tab="bcast">BCAST</div>
+  </div>
+
+  <!-- DASH -->
+  <div class="panel active" id="panel-dash">
+    <div class="sec-title">📊 OVERVIEW</div>
+    <div class="card">
+      <div class="grid-info">
+        <div class="info-item">📅 Today<span class="v" id="dToday">—</span></div>
+        <div class="info-item">📈 7 Days<span class="v" id="dWeek">—</span></div>
+        <div class="info-item">✅ Active<span class="v" id="dActive">—</span></div>
+        <div class="info-item">❌ Expired<span class="v" id="dExpired">—</span></div>
+        <div class="info-item">🟡 Bound<span class="v" id="dBound">—</span></div>
+        <div class="info-item">⏳ Exp 24h<span class="v" id="dSoon">—</span></div>
+      </div>
+    </div>
+    <div class="sec-title">📈 KEYS CREATED (7 DAYS)</div>
+    <div class="card">
+      <div class="chart" id="chart"></div>
+    </div>
+  </div>
+
+  <!-- GEN -->
+  <div class="panel" id="panel-gen">
+    <div class="sec-title">🔑 CREATE SINGLE-DEVICE KEY</div>
+    <div class="card">
+      <input type="text" id="genKey" placeholder="Key Code (e.g. BX-ABC123)">
+      <button class="btn btn-primary" id="genAuto">⚡ AUTO GENERATE</button>
+      <input type="number" id="genDur" placeholder="Duration (hours)" style="margin-top:10px;">
+      <div class="chips">
+        <div class="chip" data-dur="24">1D</div>
+        <div class="chip" data-dur="72">3D</div>
+        <div class="chip" data-dur="168">7D</div>
+        <div class="chip" data-dur="720">30D</div>
+      </div>
+      <button class="btn btn-green" id="genCreate">+ CREATE & SAVE KEY</button>
+    </div>
+  </div>
+
+  <!-- MULTI -->
+  <div class="panel" id="panel-multi">
+    <div class="sec-title">👥 CREATE MULTI-DEVICE KEY</div>
+    <div class="card">
+      <input type="text" id="mKey" placeholder="Multi Key Code (e.g. BX-MULTI01)">
+      <button class="btn btn-primary" id="mAuto">⚡ AUTO GENERATE</button>
+      <input type="number" id="mDur" placeholder="Duration (hours)" style="margin-top:10px;">
+      <div class="chips">
+        <div class="chip" data-mdur="24">1D</div>
+        <div class="chip" data-mdur="72">3D</div>
+        <div class="chip" data-mdur="168">7D</div>
+        <div class="chip" data-mdur="720">30D</div>
+      </div>
+      <div class="sec-title" style="margin-top:6px;">MAX DEVICES</div>
+      <div class="chips">
+        <div class="chip mdev" data-dev="5">5</div>
+        <div class="chip mdev" data-dev="50">50</div>
+        <div class="chip mdev" data-dev="100">100</div>
+        <div class="chip mdev" data-dev="1000">1000</div>
+        <div class="chip mdev" data-dev="0">∞</div>
+      </div>
+      <input type="number" id="mCustom" placeholder="Custom (ketik angka)">
+      <div style="text-align:center; font-size:12px; color:var(--accent); font-weight:700; margin:10px 0;" id="mDisplay">Selected: 5 devices</div>
+      <button class="btn btn-green" id="mCreate">+ CREATE MULTI KEY</button>
+    </div>
+  </div>
+
+  <!-- KEYS -->
+  <div class="panel" id="panel-keys">
+    <div class="sec-title">📋 KEYS LIST</div>
+    <input type="text" id="keySearch" placeholder="🔍 Search key...">
+    <div class="filters">
+      <div class="chip active" data-filter="all">ALL</div>
+      <div class="chip" data-filter="active">ACTIVE</div>
+      <div class="chip" data-filter="expired">EXPIRED</div>
+      <div class="chip" data-filter="bound">BOUND</div>
+    </div>
+    <button class="btn btn-red" id="delFiltered">⚠ DELETE ALL (filter)</button>
+    <div id="keysList" style="margin-top:14px;"></div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="panel" id="panel-admin">
+    <div class="sec-title">👤 ADD ADMIN</div>
+    <div class="card">
+      <input type="text" id="aUser" placeholder="Username">
+      <input type="password" id="aPass" placeholder="Password">
+      <button class="btn btn-primary" id="aAdd">+ ADD ADMIN</button>
+    </div>
+    <div class="sec-title">📋 ADMINS LIST</div>
+    <div id="adminsList"></div>
+  </div>
+
+  <!-- LOGS -->
+  <div class="panel" id="panel-logs">
+    <div class="sec-title">📜 ACTIVITY LOG</div>
+    <div id="logsList"></div>
+  </div>
+
+  <!-- BCAST -->
+  <div class="panel" id="panel-bcast">
+    <div class="sec-title">📢 SEND BROADCAST</div>
+    <div class="card">
+      <input type="text" id="bTitle" placeholder="Title (e.g. UPDATE)">
+      <textarea id="bMsg" placeholder="Message..."></textarea>
+      <button class="btn btn-primary" id="bSend">📢 SEND BROADCAST</button>
+    </div>
+    <div class="sec-title">📋 RECENT BROADCASTS</div>
+    <div id="bcastList"></div>
+
+    <div class="sec-title">🛠️ MAINTENANCE MODE</div>
+    <div class="card">
+      <div class="maint-status maint-off" id="maintStatus">✅ Status: OFF</div>
+      <textarea id="mMsg" placeholder="Custom message (optional)"></textarea>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <button class="btn btn-red" id="mOn">🛠️ MAINTENANCE ON</button>
+        <button class="btn btn-primary" id="mOff">✅ MAINTENANCE OFF</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script>
+  var _fb = {
+    a: 'QUl6YVN5Q24zdkZKcHkzN3RKZnl1X1AxeFlaNWpDVWNHVkN0VDNV',
+    b: 'YmFnYXN4aXQtb2ZmaWNpYWwuZmlyZWJhc2VhcHAuY29t',
+    c: 'aHR0cHM6Ly9iYWdhc3hpdC1vZmZpY2lhbC1kZWZhdWx0LXJ0ZGIuZmlyZWJhc2Vpby5jb20=',
+    d: 'YmFnYXN4aXQtb2ZmaWNpYWw=',
+    e: 'YmFnYXN4aXQtb2ZmaWNpYWwuZmlyZWJhc2VzdG9yYWdlLmFwcA==',
+    f: 'NjEzNDYyNDg1MTkx',
+    g: 'MTo2MTM0NjI0ODUxOTE6d2ViOmY1NmFiNDBhNTNjMzQ0MTYwNGY2ZTI='
+  };
+  firebase.initializeApp({
+    apiKey: atob(_fb.a), authDomain: atob(_fb.b), databaseURL: atob(_fb.c),
+    projectId: atob(_fb.d), storageBucket: atob(_fb.e),
+    messagingSenderId: atob(_fb.f), appId: atob(_fb.g)
+  });
+  var db = firebase.database();
+  var auth = firebase.auth();
+
+  var keysRef = db.ref('keys');
+  var onlineRef = db.ref('online_users');
+  var adminsRef = db.ref('admins');
+  var logsRef = db.ref('activity_logs');
+  var bcastRef = db.ref('broadcasts');
+  var configRef = db.ref('config');
+
+  var currentFilter = 'all';
+  var currentSearch = '';
+  var selectedDev = 5;
+  var toastT;
+
+  function toast(msg, isErr) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = isErr ? 'err show' : 'show';
+    clearTimeout(toastT);
+    toastT = setTimeout(function(){ t.className = isErr ? 'err' : ''; }, 2400);
+  }
+
+  function pad(n) { return n < 10 ? '0'+n : n; }
+  function fmtTime(ts) {
+    var d = new Date(ts);
+    return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+  }
+  function fmtTimeShort(ts) {
+    var d = new Date(ts);
+    return pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+  }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  function logAction(action) {
+    logsRef.push({ action: action, timestamp: Date.now() }).catch(function(){});
+  }
+
+  // ===== TABS =====
+  document.querySelectorAll('.tab').forEach(function(tab) {
+    tab.onclick = function() {
+      document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+      document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    };
+  });
+
+  // ===== STATS =====
+  keysRef.on('value', function(snap) {
+    document.getElementById('statKeys').textContent = snap.numChildren();
+  });
+  onlineRef.on('value', function(snap) {
+    var now = Date.now(), active = 0;
+    snap.forEach(function(child) {
+      var ts = child.child('last_seen').val();
+      if (ts && (now - ts) <= 60000) active++;
+    });
+    document.getElementById('statOnline').textContent = active;
+  });
+
+  // ===== DASHBOARD =====
+  keysRef.on('value', function(snap) {
+    var now = Date.now();
+    var oneDayAgo = now - 86400000;
+    var sevenDaysAgo = now - 7*86400000;
+    var oneDayAhead = now + 86400000;
+    var today=0, week=0, active=0, expired=0, bound=0, soon=0;
+    var dayCounts = [0,0,0,0,0,0,0];
+
+    snap.forEach(function(c) {
+      var createdAt = c.child('created_at').val();
+      var expiresAt = c.child('expires_at').val();
+      var hwid = c.child('hwid').val();
+      var isActive = c.child('is_active').val();
+      var isBound = hwid && hwid.length > 0;
+      var isExp = expiresAt && now > expiresAt;
+      var isAct = isActive === true && !isExp;
+
+      if (createdAt) {
+        if (createdAt >= oneDayAgo) today++;
+        if (createdAt >= sevenDaysAgo) week++;
+        var daysAgo = Math.floor((now - createdAt) / 86400000);
+        if (daysAgo >= 0 && daysAgo < 7) dayCounts[6 - daysAgo]++;
+      }
+      if (isAct) active++;
+      if (isExp) expired++;
+      if (isBound) bound++;
+      if (expiresAt && expiresAt > now && expiresAt <= oneDayAhead) soon++;
+    });
+
+    document.getElementById('dToday').textContent = today;
+    document.getElementById('dWeek').textContent = week;
+    document.getElementById('dActive').textContent = active;
+    document.getElementById('dExpired').textContent = expired;
+    document.getElementById('dBound').textContent = bound;
+    document.getElementById('dSoon').textContent = soon;
+
+    var max = Math.max.apply(null, dayCounts.concat([1]));
+    var labels = [];
+    var days = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+    for (var i = 6; i >= 0; i--) {
+      var d = new Date(now - i*86400000);
+      labels.push(days[d.getDay()]);
+    }
+    var chart = document.getElementById('chart');
+    chart.innerHTML = '';
+    for (var i = 0; i < 7; i++) {
+      var h = Math.max(4, (dayCounts[i] / max) * 110);
+      chart.innerHTML += '<div class="chart-col"><div class="chart-val">' + dayCounts[i] + '</div><div class="chart-bar" style="height:' + h + 'px"></div><div class="chart-label">' + labels[i] + '</div></div>';
+    }
+  });
+
+  // ===== GEN =====
+  document.getElementById('genAuto').onclick = function() {
+    var code = Math.random().toString(36).substring(2,8).toUpperCase();
+    document.getElementById('genKey').value = 'BX-' + code;
+  };
+  document.querySelectorAll('#panel-gen .chip').forEach(function(c) {
+    c.onclick = function() { document.getElementById('genDur').value = c.dataset.dur; };
+  });
+  document.getElementById('genCreate').onclick = function() {
+    var key = document.getElementById('genKey').value.trim();
+    var durH = parseFloat(document.getElementById('genDur').value);
+    if (!key || !durH) return toast('Isi key & durasi', true);
+    var now = Date.now();
+    var durMs = durH * 3600000;
+    keysRef.child(key).set({
+      key: key, created_at: now, expires_at: now + durMs, duration_ms: durMs,
+      is_active: true, hwid: '', assigned_to: 'Admin-Panel', source: 'admin',
+      reset_count: 0, last_reset: 0
+    }).then(function() {
+      toast('✅ Key dibuat: ' + key);
+      logAction('Created key: ' + key);
+      document.getElementById('genKey').value = '';
+      document.getElementById('genDur').value = '';
+    }).catch(function(e) { toast('❌ ' + e.message, true); });
+  };
+
+  // ===== MULTI =====
+  document.getElementById('mAuto').onclick = function() {
+    var code = Math.random().toString(36).substring(2,8).toUpperCase();
+    document.getElementById('mKey').value = 'BX-MULTI-' + code;
+  };
+  document.querySelectorAll('#panel-multi .chip[data-mdur]').forEach(function(c) {
+    c.onclick = function() { document.getElementById('mDur').value = c.dataset.mdur; };
+  });
+  document.querySelectorAll('.mdev').forEach(function(c) {
+    c.onclick = function() {
+      selectedDev = parseInt(c.dataset.dev);
+      document.getElementById('mCustom').value = '';
+      document.getElementById('mDisplay').textContent = 'Selected: ' + (selectedDev === 0 ? 'UNLIMITED' : selectedDev + ' devices');
+    };
+  });
+  document.getElementById('mCustom').oninput = function(e) {
+    var v = parseInt(e.target.value);
+    if (!isNaN(v) && v >= 0) {
+      selectedDev = v;
+      document.getElementById('mDisplay').textContent = 'Selected: ' + (v === 0 ? 'UNLIMITED' : v + ' devices');
+    }
+  };
+  document.getElementById('mCreate').onclick = function() {
+    var key = document.getElementById('mKey').value.trim();
+    var durH = parseFloat(document.getElementById('mDur').value);
+    if (!key || !durH) return toast('Isi key & durasi', true);
+    var now = Date.now();
+    var durMs = durH * 3600000;
+    keysRef.child(key).set({
+      key: key, created_at: now, expires_at: now + durMs, duration_ms: durMs,
+      is_active: true, hwid: '', hwid_list: [], max_devices: selectedDev,
+      assigned_to: 'Admin-Multi', source: 'admin_multi',
+      reset_count: 0, last_reset: 0
+    }).then(function() {
+      toast('✅ Multi-key dibuat: ' + key);
+      logAction('Created multi key: ' + key + ' (' + (selectedDev === 0 ? 'unlimited' : selectedDev) + ')');
+      document.getElementById('mKey').value = '';
+      document.getElementById('mDur').value = '';
+    }).catch(function(e) { toast('❌ ' + e.message, true); });
+  };
+
+  // ===== KEYS LIST =====
+  document.querySelectorAll('.filters .chip').forEach(function(c) {
+    c.onclick = function() {
+      document.querySelectorAll('.filters .chip').forEach(function(x){ x.classList.remove('active'); });
+      c.classList.add('active');
+      currentFilter = c.dataset.filter;
+      updateDelBtn();
+    };
+  });
+  function updateDelBtn() {
+    var el = document.getElementById('delFiltered');
+    var label = currentFilter.toUpperCase();
+    el.textContent = '⚠ DELETE ALL ' + label;
+  }
+  updateDelBtn();
+  document.getElementById('keySearch').oninput = function(e) {
+    currentSearch = e.target.value.toLowerCase().trim();
+  };
+
+  var allKeys = {};
+  keysRef.on('value', function(snap) {
+    allKeys = {};
+    snap.forEach(function(c) { allKeys[c.key] = c.val(); });
+    renderKeys();
+  });
+
+  function renderKeys() {
+    var now = Date.now();
+    var list = document.getElementById('keysList');
+    var html = '';
+    var count = 0;
+
+    for (var k in allKeys) {
+      var v = allKeys[k] || {};
+      var expiresAt = v.expires_at;
+      var hwid = v.hwid || '';
+      var isActive = v.is_active === true;
+      var maxDev = v.max_devices;
+      var bound = hwid.length > 0;
+      var expired = expiresAt && now > expiresAt;
+      var isMulti = maxDev !== undefined && (maxDev > 1 || maxDev === 0);
+
+      if (currentFilter === 'active' && (expired || !isActive)) continue;
+      if (currentFilter === 'expired' && !expired) continue;
+      if (currentFilter === 'bound' && !bound && !isMulti) continue;
+      if (currentSearch && k.toLowerCase().indexOf(currentSearch) === -1) continue;
+
+      count++;
+      var badge, badgeCls;
+      if (isMulti) { badge = 'MULTI ' + (v.hwid_list ? v.hwid_list.length : 0) + '/' + (maxDev === 0 ? '∞' : maxDev); badgeCls = 'b-accent'; }
+      else if (expired) { badge = 'EXPIRED'; badgeCls = 'b-red'; }
+      else if (bound) { badge = 'BOUND'; badgeCls = 'b-yellow'; }
+      else if (isActive) { badge = 'FREE'; badgeCls = 'b-green'; }
+      else { badge = 'INACTIVE'; badgeCls = 'b-red'; }
+
+      var expStr = expiresAt ? fmtTime(expiresAt) : '—';
+      var remainStr = '';
+      if (expiresAt) {
+        var r = expiresAt - now;
+        remainStr = r > 0 ? ' · ' + Math.floor(r/3600000) + 'h ' + Math.floor((r%3600000)/60000) + 'm left' : ' · expired';
+      }
+
+      html += '<div class="key-card' + (isMulti ? ' multi' : '') + '">';
+      html += '<div class="key-head"><span class="key-name">' + esc(k) + '</span><span class="key-badge ' + badgeCls + '">' + badge + '</span></div>';
+      html += '<div class="key-meta">⏰ ' + expStr + remainStr + '</div>';
+      html += '<div class="key-actions">';
+      html += '<div class="mini-btn mb-purple" onclick="copyKey(\'' + esc(k) + '\')">COPY KEY</div>';
+      if (isMulti) {
+        html += '<div class="mini-btn mb-green" onclick="viewDevices(\'' + esc(k) + '\')">VIEW DEVICES</div>';
+      } else {
+        html += '<div class="mini-btn mb-green" onclick="copyHwid(\'' + esc(k) + '\')">COPY HWID</div>';
+      }
+      html += '<div class="mini-btn mb-yellow" onclick="resetKey(\'' + esc(k) + '\',' + (isMulti ? 'true' : 'false') + ')">' + (isMulti ? 'RESET ALL' : 'RESET HWID') + '</div>';
+      html += '<div class="mini-btn mb-red" onclick="deleteKey(\'' + esc(k) + '\')">DELETE</div>';
+      html += '</div></div>';
+    }
+
+    if (count === 0) html = '<div class="empty">🔍 Tidak ada key yang cocok</div>';
+    list.innerHTML = html;
+  }
+
+  window.copyKey = function(k) {
+    navigator.clipboard.writeText(k).then(function(){ toast('✅ Key copied'); });
+  };
+  window.copyHwid = function(k) {
+    var v = allKeys[k];
+    if (!v || !v.hwid) return toast('HWID kosong', true);
+    navigator.clipboard.writeText(v.hwid).then(function(){ toast('✅ HWID copied'); });
+  };
+  window.resetKey = function(k, isMulti) {
+    if (!confirm('Reset ' + (isMulti ? 'semua device' : 'HWID') + ' untuk ' + k + '?')) return;
+    if (isMulti) {
+      keysRef.child(k).child('hwid_list').set([]).then(function() {
+        toast('✅ Semua device di-reset');
+        logAction('Reset all devices: ' + k);
+      });
+    } else {
+      keysRef.child(k).child('hwid').set('').then(function() {
+        toast('✅ HWID reset');
+        logAction('Reset HWID: ' + k);
+      });
+    }
+  };
+  window.deleteKey = function(k) {
+    if (!confirm('Hapus key ' + k + '?')) return;
+    keysRef.child(k).remove().then(function() {
+      toast('✅ Key dihapus');
+      logAction('Deleted key: ' + k);
+    });
+  };
+
+  window.viewDevices = function(k) {
+    var v = allKeys[k];
+    if (!v) return;
+    var list = v.hwid_list || [];
+    var maxDev = v.max_devices || 0;
+    var modal = document.getElementById('modalContent');
+    var html = '<h3>👥 ' + list.length + '/' + (maxDev === 0 ? '∞' : maxDev) + ' DEVICES</h3>';
+    if (list.length === 0) {
+      html += '<div style="text-align:center; color:var(--txt-mute); padding:20px; font-size:12px;">Belum ada device</div>';
+    } else {
+      for (var i = 0; i < list.length; i++) {
+        var hw = list[i];
+        var short = hw.length > 20 ? hw.substring(0,10) + '...' + hw.substring(hw.length-6) : hw;
+        html += '<div class="device-row"><span>' + esc(short) + '</span><span class="rm" onclick="removeDevice(\'' + esc(k) + '\',\'' + esc(hw) + '\')">REMOVE</span></div>';
+      }
+    }
+    html += '<button class="btn btn-ghost" style="margin-top:14px;" onclick="closeModal()">CLOSE</button>';
+    modal.innerHTML = html;
+    document.getElementById('modalBg').classList.add('show');
+  };
+  window.removeDevice = function(k, hw) {
+    if (!confirm('Remove device ini?')) return;
+    keysRef.child(k).child('hwid_list').once('value').then(function(snap) {
+      var arr = [];
+      snap.forEach(function(c) { if (c.val() !== hw) arr.push(c.val()); });
+      return keysRef.child(k).child('hwid_list').set(arr);
+    }).then(function() {
+      toast('✅ Device dihapus');
+      closeModal();
+    });
+  };
+  window.closeModal = function() {
+    document.getElementById('modalBg').classList.remove('show');
+  };
+
+  // DELETE FILTERED
+  document.getElementById('delFiltered').onclick = function() {
+    if (!confirm('Hapus semua key dengan filter: ' + currentFilter.toUpperCase() + '?\n\nTidak bisa dibatalkan.')) return;
+    var now = Date.now();
+    var updates = {};
+    for (var k in allKeys) {
+      var v = allKeys[k] || {};
+      var expiresAt = v.expires_at;
+      var hwid = v.hwid || '';
+      var isActive = v.is_active === true;
+      var maxDev = v.max_devices;
+      var bound = hwid.length > 0;
+      var expired = expiresAt && now > expiresAt;
+      var isMulti = maxDev !== undefined && (maxDev > 1 || maxDev === 0);
+      var del = false;
+      if (currentFilter === 'all') del = true;
+      else if (currentFilter === 'active') del = isActive && !expired;
+      else if (currentFilter === 'expired') del = expired;
+      else if (currentFilter === 'bound') del = bound || isMulti;
+      if (del) updates[k] = null;
+    }
+    var n = Object.keys(updates).length;
+    if (n === 0) return toast('Tidak ada key untuk dihapus', true);
+    keysRef.update(updates).then(function() {
+      toast('✅ ' + n + ' key dihapus');
+      logAction('Deleted ' + n + ' ' + currentFilter.toUpperCase() + ' keys');
+    });
+  };
+
+  // ===== ADMIN =====
+  adminsRef.on('value', function(snap) {
+    var list = document.getElementById('adminsList');
+    var html = '';
+    if (snap.numChildren() === 0) html = '<div class="empty">📂 Belum ada admin</div>';
+    snap.forEach(function(c) {
+      var user = c.child('username').val() || 'unknown';
+      var master = c.child('isMaster').val() === true;
+      html += '<div class="key-card"><div class="key-head"><span class="key-name">' + esc(user) + (master ? ' 👑' : '') + '</span>';
+      if (!master) html += '<span class="mini-btn mb-red" style="padding:6px 12px; margin-left:auto;" onclick="delAdmin(\'' + c.key + '\',\'' + esc(user) + '\')">DELETE</span>';
+      html += '</div></div>';
+    });
+    list.innerHTML = html;
+  });
+  window.delAdmin = function(nodeKey, name) {
+    if (!confirm('Hapus admin ' + name + '?')) return;
+    adminsRef.child(nodeKey).remove().then(function() {
+      toast('✅ Admin dihapus');
+      logAction('Deleted admin: ' + name);
+    });
+  };
+  document.getElementById('aAdd').onclick = function() {
+    var u = document.getElementById('aUser').value.trim();
+    var p = document.getElementById('aPass').value.trim();
+    if (!u || !p) return toast('Isi username & password', true);
+    adminsRef.push({ username: u, password: p, isMaster: false, created_at: Date.now() }).then(function() {
+      toast('✅ Admin ditambahkan');
+      logAction('Added admin: ' + u);
+      document.getElementById('aUser').value = '';
+      document.getElementById('aPass').value = '';
+    });
+  };
+
+  // ===== LOGS =====
+  logsRef.limitToLast(50).on('value', function(snap) {
+    var list = document.getElementById('logsList');
+    var arr = [];
+    snap.forEach(function(c) { arr.push(c.val()); });
+    arr.reverse();
+    var html = '';
+    for (var i = 0; i < arr.length; i++) {
+      var l = arr[i] || {};
+      var t = l.timestamp ? fmtTimeShort(l.timestamp) : '';
+      html += '<div class="log-row"><span class="t">[' + t + ']</span>' + esc(l.action || '') + '</div>';
+    }
+    if (!html) html = '<div class="empty">📂 Belum ada aktivitas</div>';
+    list.innerHTML = html;
+  });
+
+  // ===== BCAST =====
+  bcastRef.limitToLast(10).on('value', function(snap) {
+    var list = document.getElementById('bcastList');
+    var arr = [];
+    snap.forEach(function(c) { arr.push({ k: c.key, v: c.val() }); });
+    arr.reverse();
+    var html = '';
+    for (var i = 0; i < arr.length; i++) {
+      var b = arr[i];
+      var title = b.v.title || '';
+      var msg = b.v.message || '';
+      var ts = b.v.timestamp || 0;
+      html += '<div class="bcast-card">';
+      html += '<div class="bcast-title">📢 ' + esc(title) + '</div>';
+      html += '<div class="bcast-msg">' + esc(msg) + '</div>';
+      html += '<div class="bcast-time">🕒 ' + (ts ? fmtTime(ts) : '') + '</div>';
+      html += '<div class="mini-btn mb-red" onclick="delBcast(\'' + b.k + '\',\'' + esc(title) + '\')">DELETE BROADCAST</div>';
+      html += '</div>';
+    }
+    if (!html) html = '<div class="empty">📂 Belum ada broadcast</div>';
+    list.innerHTML = html;
+  });
+  window.delBcast = function(k, title) {
+    if (!confirm('Hapus broadcast ini?')) return;
+    bcastRef.child(k).remove().then(function() {
+      toast('✅ Broadcast dihapus');
+      logAction('Deleted broadcast: ' + title);
+    });
+  };
+  document.getElementById('bSend').onclick = function() {
+    var t = document.getElementById('bTitle').value.trim();
+    var m = document.getElementById('bMsg').value.trim();
+    if (!t || !m) return toast('Isi title & message', true);
+    bcastRef.push({ title: t, message: m, timestamp: Date.now() }).then(function() {
+      toast('✅ Broadcast terkirim');
+      logAction('Broadcast: ' + t);
+      document.getElementById('bTitle').value = '';
+      document.getElementById('bMsg').value = '';
+    });
+  };
+
+  // ===== MAINTENANCE =====
+  configRef.on('value', function(snap) {
+    var v = snap.val() || {};
+    var el = document.getElementById('maintStatus');
+    if (v.maintenance === true) {
+      el.className = 'maint-status maint-on';
+      el.textContent = '⚠️ Status: ON' + (v.message ? ' · ' + v.message : '');
+    } else {
+      el.className = 'maint-status maint-off';
+      el.textContent = '✅ Status: OFF';
+    }
+  });
+  document.getElementById('mOn').onclick = function() {
+    var msg = document.getElementById('mMsg').value.trim() || 'Server maintenance, coba lagi nanti.';
+    configRef.set({ maintenance: true, message: msg, updated_at: Date.now() }).then(function() {
+      toast('🛠️ Maintenance ON');
+      logAction('Maintenance ON');
+    });
+  };
+  document.getElementById('mOff').onclick = function() {
+    configRef.set({ maintenance: false, message: '', updated_at: Date.now() }).then(function() {
+      toast('✅ Maintenance OFF');
+      logAction('Maintenance OFF');
+    });
+  };
+
+  // ===== AUTH =====
+  auth.signInAnonymously().then(function() {
+    toast('✅ Admin panel siap');
+  }).catch(function(e) {
+    toast('❌ Auth error: ' + e.message, true);
+  });
+</script>
+</body>
+</html>
