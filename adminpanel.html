@@ -20,6 +20,8 @@
   .brand { text-align: center; margin-bottom: 20px; }
   .brand h1 { font-size: 28px; font-weight: 900; letter-spacing: 1px; background: linear-gradient(135deg, #A78BFA, #22D3EE); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .brand .sub { color: var(--txt-mute); font-size: 10px; letter-spacing: 4px; margin-top: 4px; font-weight: 700; }
+  .brand .refresh-btn { margin-top: 10px; padding: 6px 14px; border-radius: 8px; background: var(--accent); color: #0A0A0F; border: none; font-weight: 800; font-size: 11px; cursor: pointer; }
+  .brand .refresh-btn:active { transform: scale(0.95); }
   .stats-bar { display: flex; gap: 12px; margin-bottom: 18px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; }
   .stats-bar > div { flex: 1; text-align: center; font-weight: 700; font-size: 13px; }
   .stats-bar .val { color: var(--accent); font-family: 'JetBrains Mono', monospace; }
@@ -95,39 +97,15 @@
   .device-row { display: flex; align-items: center; gap: 8px; background: #0F0B21; border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; font-size: 11px; font-family: 'JetBrains Mono', monospace; }
   .device-row span { flex: 1; word-break: break-all; }
   .device-row .rm { color: var(--red); font-family: 'Inter', sans-serif; font-weight: 700; font-size: 10px; cursor: pointer; padding: 4px 8px; border: 1px solid var(--red); border-radius: 6px; }
-
-  /* LOGIN GATE */
-  #loginGate {
-    position: fixed; inset: 0; background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px; z-index: 10000;
-  }
-  #loginGate .login-box {
-    max-width: 380px; width: 100%; background: var(--card);
-    border: 1px solid var(--border); border-radius: 18px;
-    padding: 32px 24px; text-align: center;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-    animation: fadeIn 0.4s;
-  }
-  #loginGate h2 {
-    font-size: 22px; font-weight: 900; letter-spacing: 1px;
-    background: linear-gradient(135deg, #A78BFA, #22D3EE);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    margin-bottom: 6px;
-  }
-  #loginGate .lock-sub {
-    color: var(--txt-mute); font-size: 10px; letter-spacing: 3px;
-    font-weight: 700; margin-bottom: 24px;
-  }
-  #loginGate input {
-    text-align: center; letter-spacing: 4px; font-family: 'JetBrains Mono', monospace;
-    font-size: 16px; margin-bottom: 14px;
-  }
+  #loginGate { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 10000; }
+  #loginGate .login-box { max-width: 380px; width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 32px 24px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.6); animation: fadeIn 0.4s; }
+  #loginGate h2 { font-size: 22px; font-weight: 900; letter-spacing: 1px; background: linear-gradient(135deg, #A78BFA, #22D3EE); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
+  #loginGate .lock-sub { color: var(--txt-mute); font-size: 10px; letter-spacing: 3px; font-weight: 700; margin-bottom: 24px; }
+  #loginGate input { text-align: center; letter-spacing: 4px; font-family: 'JetBrains Mono', monospace; font-size: 16px; margin-bottom: 14px; }
 </style>
 </head>
 <body>
 
-<!-- LOGIN GATE -->
 <div id="loginGate">
   <div class="login-box">
     <h2>BAGASXIT</h2>
@@ -147,6 +125,7 @@
   <div class="brand">
     <h1>BAGASXIT</h1>
     <div class="sub">ADMIN PANEL</div>
+    <button class="refresh-btn" onclick="if(window.__refreshAll)window.__refreshAll()">🔄 REFRESH</button>
   </div>
 
   <div class="stats-bar">
@@ -276,12 +255,10 @@
 </div>
 
 <script>
-/* ================== CONFIG ================== */
 var SB_URL = 'https://qlzwqbbvjscfjaicbhks.supabase.co';
 var SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsendxYmJ2anNjZmphaWNiaGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0ODU3MTQsImV4cCI6MjEwNjA2MTcxNH0.UF71O0P7Fza20cUEVmAYlzmksmTKrrp0WUeZjZyATew';
 var ADMIN_PASS = '010306';
 
-/* ================== LOGIN GATE ================== */
 (function(){
   var gate = document.getElementById('loginGate');
   var app = document.getElementById('mainApp');
@@ -311,11 +288,8 @@ var ADMIN_PASS = '010306';
   inp.addEventListener('keydown', function(e){ if (e.key === 'Enter') btn.click(); });
 })();
 
-/* ================== SUPABASE HELPERS ================== */
 async function sbGet(path){
-  var r = await fetch(SB_URL + '/rest/v1/' + path, {
-    headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON }
-  });
+  var r = await fetch(SB_URL + '/rest/v1/' + path, { headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON } });
   if (!r.ok) throw new Error('GET ' + r.status);
   return r.json();
 }
@@ -355,13 +329,13 @@ async function sbDelete(table, filter){
   return true;
 }
 
-/* ================== ADMIN APP ================== */
 window.startAdmin = function(){
   var allKeys = {};
   var currentFilter = 'all';
   var currentSearch = '';
   var selectedDev = 5;
   var toastT;
+  var keysLoaded = false;
 
   function toast(msg, isErr){
     var t = document.getElementById('toast');
@@ -383,11 +357,8 @@ window.startAdmin = function(){
   }
   function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 
-  function logAction(action){
-    sbInsert('activity_logs', { action: action }).catch(function(){});
-  }
+  function logAction(action){ sbInsert('activity_logs', { action: action }).catch(function(){}); }
 
-  /* TABS */
   document.querySelectorAll('.tab').forEach(function(tab){
     tab.onclick = function(){
       document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
@@ -397,10 +368,9 @@ window.startAdmin = function(){
     };
   });
 
-  /* LOAD DATA */
   async function loadAll(){
     try {
-      var keys = await sbGet('keys?select=*');
+      var keys = await sbGet('keys?select=*&order=created_at.desc&limit=500');
       allKeys = {};
       keys.forEach(function(k){ allKeys[k.key] = k; });
       document.getElementById('statKeys').textContent = keys.length;
@@ -461,7 +431,6 @@ window.startAdmin = function(){
     }
   }
 
-  /* GEN */
   document.getElementById('genAuto').onclick = function(){
     var code = Math.random().toString(36).substring(2,8).toUpperCase();
     document.getElementById('genKey').value = 'BX-' + code;
@@ -487,7 +456,8 @@ window.startAdmin = function(){
         source: 'admin',
         duration_ms: durMs,
         reset_count: 0,
-        last_reset: 0      });
+        last_reset: 0
+      });
       toast('✅ Key dibuat: ' + key);
       logAction('Created key: ' + key);
       document.getElementById('genKey').value = '';
@@ -496,7 +466,6 @@ window.startAdmin = function(){
     } catch(e){ toast('❌ ' + e.message, true); }
   };
 
-  /* MULTI */
   document.getElementById('mAuto').onclick = function(){
     var code = Math.random().toString(36).substring(2,8).toUpperCase();
     document.getElementById('mKey').value = 'BX-MULTI-' + code;
@@ -546,7 +515,6 @@ window.startAdmin = function(){
     } catch(e){ toast('❌ ' + e.message, true); }
   };
 
-  /* KEYS LIST */
   document.querySelectorAll('.filters .chip').forEach(function(c){
     c.onclick = function(){
       document.querySelectorAll('.filters .chip').forEach(function(x){ x.classList.remove('active'); });
@@ -718,7 +686,6 @@ window.startAdmin = function(){
     } catch(e){ toast('❌ ' + e.message, true); }
   };
 
-  /* ADMINS */
   async function loadAdmins(){
     try {
       var admins = await sbGet('admins?select=*&order=id.asc');
@@ -731,7 +698,7 @@ window.startAdmin = function(){
         html += '</div></div>';
       });
       list.innerHTML = html;
-    } catch(e){ toast('❌ Load admins: ' + e.message, true); }
+    } catch(e){}
   }
   window.delAdmin = async function(id, name){
     if (!confirm('Hapus admin ' + name + '?')) return;
@@ -756,7 +723,6 @@ window.startAdmin = function(){
     } catch(e){ toast('❌ ' + e.message, true); }
   };
 
-  /* LOGS */
   async function loadLogs(){
     try {
       var logs = await sbGet('activity_logs?select=*&order=timestamp.desc&limit=50');
@@ -768,10 +734,9 @@ window.startAdmin = function(){
       });
       if (!html) html = '<div class="empty">📂 Belum ada aktivitas</div>';
       list.innerHTML = html;
-    } catch(e){ toast('❌ Load logs: ' + e.message, true); }
+    } catch(e){}
   }
 
-  /* BCAST */
   async function loadBcast(){
     try {
       var arr = await sbGet('broadcasts?select=*&order=timestamp.desc&limit=10');
@@ -788,7 +753,7 @@ window.startAdmin = function(){
       });
       if (!html) html = '<div class="empty">📂 Belum ada broadcast</div>';
       list.innerHTML = html;
-    } catch(e){ toast('❌ Load bcast: ' + e.message, true); }
+    } catch(e){}
   }
   window.delBcast = async function(id, title){
     if (!confirm('Hapus broadcast ini?')) return;
@@ -813,7 +778,6 @@ window.startAdmin = function(){
     } catch(e){ toast('❌ ' + e.message, true); }
   };
 
-  /* MAINTENANCE */
   async function loadMaint(){
     try {
       var rows = await sbGet('config?id=eq.maintenance&select=*');
@@ -845,15 +809,26 @@ window.startAdmin = function(){
     } catch(e){ toast('❌ ' + e.message, true); }
   };
 
-  /* INIT */
+  window.__refreshAll = function(){
+    toast('🔄 Refreshing...');
+    loadAll();
+    loadAdmins();
+    loadLogs();
+    loadBcast();
+    loadMaint();
+  };
+
   loadAll();
   loadAdmins();
   loadLogs();
   loadBcast();
   loadMaint();
+
   setInterval(function(){
-    loadAll(); loadLogs(); loadBcast(); loadMaint();
-  }, 15000);
+    loadLogs();
+    loadBcast();
+    loadMaint();
+  }, 30000);
 };
 </script>
 </body>
