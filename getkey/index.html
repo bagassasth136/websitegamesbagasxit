@@ -283,12 +283,10 @@ body{
   <div class="cp">© 2026 BAGASXIT · ALL RIGHTS RESERVED</div>
 </footer>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstile" async defer></script>
 
 <script>
+/* background canvas */
 (function(){
   var c = document.getElementById('bgCanvas');
   var ctx = c.getContext('2d');
@@ -327,25 +325,31 @@ body{
   draw();
 })();
 
-var _fb = {
-  a:'QUl6YVN5Q24zdkZKcHkzN3RKZnl1X1AxeFlaNWpDVWNHVkN0VDNV',
-  b:'YmFnYXN4aXQtb2ZmaWNpYWwuZmlyZWJhc2VhcHAuY29t',
-  c:'aHR0cHM6Ly9iYWdhc3hpdC1vZmZpY2lhbC1kZWZhdWx0LXJ0ZGIuZmlyZWJhc2Vpby5jb20=',
-  d:'YmFnYXN4aXQtb2ZmaWNpYWw=',
-  e:'YmFnYXN4aXQtb2ZmaWNpYWwuZmlyZWJhc2VzdG9yYWdlLmFwcA==',
-  f:'NjEzNDYyNDg1MTkx',
-  g:'MTo2MTM0NjI0ODUxOTE6d2ViOmY1NmFiNDBhNTNjMzQ0MTYwNGY2ZTI='
-};
-var _sk = 'MHg0QUFBQUFBRkFzWVoxZ1BncUdXaDRx';
+var SB_URL = 'https://qlzwqbbvjscfjaicbhks.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsendxYmJ2anNjZmphaWNiaGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNDg1NzE0LCJleHAiOjIxMDYwNjE3MTR9.UF71O0P7Fza20cUEVmAYlzmksmTKrrp0WUeZjZyATew';
 
-firebase.initializeApp({
-  apiKey: atob(_fb.a), authDomain: atob(_fb.b), databaseURL: atob(_fb.c),
-  projectId: atob(_fb.d), storageBucket: atob(_fb.e),
-  messagingSenderId: atob(_fb.f), appId: atob(_fb.g)
-});
-var db = firebase.database();
-var auth = firebase.auth();
-auth.signInAnonymously().catch(function(e){ console.error(e); });
+async function sbGet(path) {
+  var r = await fetch(SB_URL + '/rest/v1/' + path, {
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+  });
+  return r.json();
+}
+
+async function sbInsert(table, data) {
+  var r = await fetch(SB_URL + '/rest/v1/' + table, {
+    method: 'POST',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+    body: JSON.stringify(data)
+  });
+  return r.json();
+}
+
+var _sk = 'MHg0QUFBQUFBRkFzWVoxZ1BncUdXaDRx';
 
 var LINKS = [
   atob('aHR0cHM6Ly9tb3ZlMmxpbmsuY28vNDAyYjlmZWE='),
@@ -359,7 +363,7 @@ var LINKS = [
   atob('aHR0cHM6Ly9tb3ZlMmxpbmsuY28vZTQ2MTlmZWE='),
   atob('aHR0cHM6Ly9tb3ZlMmxpbmsuY28vMDg4YTI2Y2Y=')
 ];
-  
+
 var WAIT_K='bagasxit_waiting', USER_K='bagasxit_user_key', LAST_K='bagasxit_last_gen';
 var SHOW_COOLDOWN = false;
 
@@ -442,14 +446,20 @@ function init(){
 function checkOld(){
   var k = localStorage.getItem(USER_K);
   if (!k) return;
-  db.ref('keys/'+k).once('value').then(function(s){
-    var d = s.val();
-    if (d && d.expires_at > Date.now() && d.is_active){
-      curKey = k; showKey(k, d.expires_at);
+  sbGet('keys?key=eq.' + encodeURIComponent(k) + '&select=*').then(function(rows){
+    if (rows && rows.length > 0){
+      var d = rows[0];
+      var expMs = new Date(d.expires_at).getTime();
+      if (expMs > Date.now() && d.is_active){
+        curKey = k;
+        showKey(k, expMs);
+      } else {
+        localStorage.removeItem(USER_K);
+      }
     } else {
       localStorage.removeItem(USER_K);
     }
-  });
+  }).catch(function(){ localStorage.removeItem(USER_K); });
 }
 
 $btnGet.onclick = function(){
@@ -504,20 +514,21 @@ function makeKey(){
   var now = Date.now();
   var durMs = 5*3600*1000;
   var payload = {
-    key:newKey, created_at: firebase.database.ServerValue.TIMESTAMP,
-    expires_at: now+durMs, duration_ms: durMs, is_active: true,
-    hwid:'', assigned_to:'Auto-Gen', source:'web', reset_count:0, last_reset:0
+    key: newKey,
+    expires_at: new Date(now + durMs).toISOString(),
+    is_active: true,
+    hwid: null
   };
-  function w(){
-    db.ref('keys/'+newKey).set(payload).then(function(){
-      localStorage.setItem(USER_K, newKey);
-      localStorage.setItem(LAST_K, now.toString());
-      curKey = newKey;
-      showKey(newKey, now+durMs);
-    }).catch(function(e){ toast('❌ '+e.message, true); });
-  }
-  if (auth.currentUser) w();
-  else auth.signInAnonymously().then(w).catch(function(e){ toast('❌ '+e.message, true); });
+  sbInsert('keys', payload).then(function(res){
+    if (!res || res.error || (Array.isArray(res) && res.length === 0)){
+      toast('❌ Key generation failed', true);
+      return;
+    }
+    localStorage.setItem(USER_K, newKey);
+    localStorage.setItem(LAST_K, now.toString());
+    curKey = newKey;
+    showKey(newKey, now+durMs);
+  }).catch(function(e){ toast('❌ '+e.message, true); });
 }
 
 function typeKey(full, cb){
@@ -591,16 +602,18 @@ $btnCopy.onclick = function(){
   });
 };
 
-db.ref('config/maintenance').on('value', function(s){
-  var on = s.val() === true;
-  if (on){
-    $status.className = 'status off';
-    $statusTxt.textContent = 'MAINTENANCE';
-  } else {
-    $status.className = 'status';
-    $statusTxt.textContent = 'SYSTEM ONLINE';
-  }
-});
+setInterval(function(){
+  sbGet('config?id=eq.maintenance&select=value').then(function(rows){
+    var on = rows && rows.length > 0 && rows[0].value === true;
+    if (on){
+      $status.className = 'status off';
+      $statusTxt.textContent = 'MAINTENANCE';
+    } else {
+      $status.className = 'status';
+      $statusTxt.textContent = 'SYSTEM ONLINE';
+    }
+  }).catch(function(){});
+}, 30000);
 
 init();
 </script>
