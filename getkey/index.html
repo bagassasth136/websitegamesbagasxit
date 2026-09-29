@@ -244,10 +244,10 @@ body{
   draw();
 })();
 
-/* ============ PROTECTED CONFIG (base64) ============ */
+/* ============ PROTECTED CONFIG ============ */
 var _p1 = atob('aHR0cHM6Ly9xbHp3cWJidmpzY2ZqYWljYmhrcy5zdXBhYmFzZS5jbw==');
 var _p2 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsendxYmJ2anNjZmphaWNiaGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0ODU3MTQsImV4cCI6MjEwNjA2MTcxNH0.UF71O0P7Fza20cUEVmAYlzmksmTKrrp0WUeZjZyATew';
-var _cfg = JSON.parse(atob('eyJ0IjoiX3RfdjMiLCJ3IjoiX3dfdjMiLCJ1IjoiX3VfdjMiLCJsIjoiX2xfdjMiLCJkIjoxMjAwMDAsInAiOiJieF90X3YzIn0='));
+var _cfg = JSON.parse(atob('eyJ0IjoiX3RfdjMiLCJ3IjoiX3dfdjMiLCJ1IjoiX3VfdjMiLCJsIjoiX2xfdjMiLCJkIjo5MDAwMCwicCI6ImJ4X3RfdjMifQ=='));
 
 var SB_URL = _p1;
 var SB_KEY = _p2;
@@ -314,6 +314,16 @@ function tsOK(){
     $btnGet.style.display = 'block';
     $infoTxt.textContent = '✅ Verification complete. Click CONTINUE.';
   } else if (curStep === 2){
+    // === FIX: Cek timer dulu sebelum generate key ===
+    if (!isTimeUp()) {
+      // Timer belum habis (bypass terdeteksi) → reset ke awal
+      $turnstileBox.style.display = 'none';
+      resetToStart();
+      localStorage.removeItem(_cfg.t);
+      localStorage.removeItem(WAIT_K);
+      return;
+    }
+    // Timer habis → lanjut generate key
     $turnstileBox.style.display = 'none';
     $infoTxt.textContent = '✅ Final verification complete!';
     doGen();
@@ -337,9 +347,7 @@ function resetToStart(){
   if (window.turnstile && tsWidget !== null) turnstile.reset(tsWidget);
 }
 
-/* ============ INIT ============ */
 function init(){
-  // Cek key lama dulu — kalo masih aktif, tampilin
   var existingKey = localStorage.getItem(USER_K);
   if (existingKey){
     sbGet('keys?key=eq.' + encodeURIComponent(existingKey) + '&select=*').then(function(rows){
@@ -347,7 +355,6 @@ function init(){
         var d = rows[0];
         var expMs = new Date(d.expires_at).getTime();
         if (expMs > Date.now() && d.is_active){
-          // Key masih aktif → tampilin + tombol GETKEY tetep ada
           curKey = existingKey;
           showKey(existingKey, expMs);
           $btnGet.style.display = 'block';
@@ -356,12 +363,9 @@ function init(){
           return;
         }
       }
-      // Key expired / ga ada → hapus, lanjut flow normal
       localStorage.removeItem(USER_K);
       initNormal();
-    }).catch(function(){
-      initNormal();
-    });
+    }).catch(function(){ initNormal(); });
   } else {
     initNormal();
   }
