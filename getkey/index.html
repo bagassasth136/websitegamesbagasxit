@@ -325,29 +325,14 @@ body{
   draw();
 })();
 
-var SB_URL = 'https://qlzwqbbvjscfjaicbhks.supabase.co';
-var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsendxYmJ2anNjZmphaWNiaGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0ODU3MTQsImV4cCI6MjEwNjA2MTcxNH0.UF71O0P7Fza20cUEVmAYlzmksmTKrrp0WUeZjZyATew';
+/* ============ PROTECTED CONFIG (base64) ============ */
+var _p1 = atob('aHR0cHM6Ly9xbHp3cWJidmpzY2ZqYWljYmhrcy5zdXBhYmFzZS5jbw==');
+var _p2 = atob('ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnBjM01pT2lKemRYQmhZbUZ6WlNJc0luSmxaaUk2SW5Gc2VuZHhZbUoyYW5OalptcGhhV05pYUd0eklpd2ljbTlzWlNJNkltRnViMjRpTENKcFlYUWlPakUzT1RBME9EVTNNVFFzSW1WNGNDSTZ NakRBNE5qRTNNVFFzSW5SeVlXNXpZV04wYVc5dUlqcDlMblZHTnpFd1VHOVFOM3BoTWpCalZVUldUVUZaYkhwdGEzTk5WRkp5Y0RCWFZXVmFNbGxCVkdWM1FBenM=');
+var _cfg = JSON.parse(atob('eyJ0IjoiX3RfdjMiLCJ3IjoiX3dfdjMiLCJ1IjoiX3VfdjMiLCJsIjoiX2xfdjMiLCJkIjoyMDAwMCwicCI6ImJ4X3RfdjMifQ=='));
 
-async function sbGet(path) {
-  var r = await fetch(SB_URL + '/rest/v1/' + path, {
-    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
-  });
-  return r.json();
-}
-
-async function sbInsert(table, data) {
-  var r = await fetch(SB_URL + '/rest/v1/' + table, {
-    method: 'POST',
-    headers: {
-      'apikey': SB_KEY,
-      'Authorization': 'Bearer ' + SB_KEY,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-    body: JSON.stringify(data)
-  });
-  return r.json();
-}
+var SB_URL = _p1;
+var SB_KEY = _p2;
+var USER_K = _cfg.u, LAST_K = _cfg.l, WAIT_K = _cfg.w;
 
 var _sk = 'MHg0QUFBQUFBRkFzWVoxZ1BncUdXaDRx';
 
@@ -364,7 +349,6 @@ var LINKS = [
   atob('aHR0cHM6Ly9tb3ZlMmxpbmsuY28vMDg4YTI2Y2Y=')
 ];
 
-var WAIT_K='bagasxit_waiting', USER_K='bagasxit_user_key', LAST_K='bagasxit_last_gen';
 var SHOW_COOLDOWN = false;
 
 var $keyBox = document.getElementById('keyBox');
@@ -417,6 +401,23 @@ function tsOK(){
   }
 }
 
+function resetToStart(){
+  curStep = 1;
+  $step1.className = 'step-dot on';
+  $step2.className = 'step-dot';
+  $turnstileBox.style.display = 'flex';
+  $btnGet.style.display = 'none';
+  $btnGet.textContent = 'CONTINUE →';
+  $btnCopy.style.display = 'none';
+  $keyBox.classList.remove('active');
+  $keyVal.className = 'key-value locked';
+  $keyVal.textContent = 'LOCKED';
+  $timer.classList.remove('show');
+  $keyTimer.textContent = 'Complete steps to get your key';
+  $infoTxt.textContent = 'Complete the verification above to continue.';
+  if (window.turnstile && tsWidget !== null) turnstile.reset(tsWidget);
+}
+
 function init(){
   var p = new URLSearchParams(location.search);
   var v = p.get('v');
@@ -462,7 +463,27 @@ function checkOld(){
   }).catch(function(){ localStorage.removeItem(USER_K); });
 }
 
+function isTimeUp(){
+  var start = localStorage.getItem(_cfg.t);
+  if (!start) return false;
+  return (Date.now() - parseInt(start)) >= _cfg.d;
+}
+
 $btnGet.onclick = function(){
+  if (curStep === 1) {
+    localStorage.setItem(_cfg.t, Date.now().toString());
+    localStorage.setItem(WAIT_K, Date.now().toString());
+    doRedirect();
+    return;
+  }
+
+  if (!isTimeUp()) {
+    resetToStart();
+    localStorage.removeItem(_cfg.t);
+    localStorage.removeItem(WAIT_K);
+    return;
+  }
+
   var lg = localStorage.getItem(LAST_K);
   if (SHOW_COOLDOWN && lg && (Date.now()-parseInt(lg)) < 5*3600*1000){
     var rem = Math.ceil((5*3600*1000-(Date.now()-parseInt(lg)))/3600000);
@@ -470,6 +491,10 @@ $btnGet.onclick = function(){
     return;
   }
   localStorage.setItem(WAIT_K, Date.now().toString());
+  doRedirect();
+};
+
+function doRedirect(){
   var today = new Date().toISOString().slice(0,10);
   var used = JSON.parse(localStorage.getItem('used_links')||'{}');
   if (used.date !== today) used = { date:today, links:[] };
@@ -481,7 +506,28 @@ $btnGet.onclick = function(){
   localStorage.setItem('used_links', JSON.stringify(used));
   $infoTxt.textContent = '🔗 Redirecting...';
   setTimeout(function(){ location.href = target; }, 500);
-};
+}
+
+async function sbGet(path) {
+  var r = await fetch(SB_URL + '/rest/v1/' + path, {
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+  });
+  return r.json();
+}
+
+async function sbInsert(table, data) {
+  var r = await fetch(SB_URL + '/rest/v1/' + table, {
+    method: 'POST',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+    body: JSON.stringify(data)
+  });
+  return r.json();
+}
 
 function doGen(){
   $infoTxt.textContent = '⚙️ Generating your key...';
@@ -524,6 +570,7 @@ function makeKey(){
       toast('❌ Key generation failed', true);
       return;
     }
+    localStorage.removeItem(_cfg.t);
     localStorage.setItem(USER_K, newKey);
     localStorage.setItem(LAST_K, now.toString());
     curKey = newKey;
