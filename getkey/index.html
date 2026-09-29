@@ -244,7 +244,6 @@ body{
   draw();
 })();
 
-/* ============ PROTECTED CONFIG ============ */
 var _p1 = atob('aHR0cHM6Ly9xbHp3cWJidmpzY2ZqYWljYmhrcy5zdXBhYmFzZS5jbw==');
 var _p2 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsendxYmJ2anNjZmphaWNiaGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0ODU3MTQsImV4cCI6MjEwNjA2MTcxNH0.UF71O0P7Fza20cUEVmAYlzmksmTKrrp0WUeZjZyATew';
 var _cfg = JSON.parse(atob('eyJ0IjoiX3RfdjMiLCJ3IjoiX3dfdjMiLCJ1IjoiX3VfdjMiLCJsIjoiX2xfdjMiLCJkIjo5MDAwMCwicCI6ImJ4X3RfdjMifQ=='));
@@ -314,16 +313,16 @@ function tsOK(){
     $btnGet.style.display = 'block';
     $infoTxt.textContent = '✅ Verification complete. Click CONTINUE.';
   } else if (curStep === 2){
-    // === FIX: Cek timer dulu sebelum generate key ===
+    
     if (!isTimeUp()) {
-      // Timer belum habis (bypass terdeteksi) → reset ke awal
+      
       $turnstileBox.style.display = 'none';
       resetToStart();
       localStorage.removeItem(_cfg.t);
       localStorage.removeItem(WAIT_K);
       return;
     }
-    // Timer habis → lanjut generate key
+    
     $turnstileBox.style.display = 'none';
     $infoTxt.textContent = '✅ Final verification complete!';
     doGen();
