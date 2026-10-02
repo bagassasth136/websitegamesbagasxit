@@ -205,6 +205,16 @@ body{
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstile" async defer></script>
 
 <script>
+/* ============ LAYER 2: DOMAIN GUARD ============ */
+(function(){
+  var allowed = ['bxit.my.id', 'www.bxit.my.id'];
+  var host = location.hostname;
+  if (allowed.indexOf(host) === -1 && host !== '' && host !== 'localhost' && host !== '127.0.0.1') {
+    document.body.innerHTML = '<div style="color:#F5F5F7;text-align:center;padding:60px 20px;font-family:sans-serif;background:#050506;height:100vh;"><h1 style="color:#EF4444;">⚠️ UNAUTHORIZED</h1><p>This site is not affiliated with BAGASXIT.</p><p style="color:#8E8E96;font-size:12px;">Visit official: bxit.my.id</p></div>';
+    throw new Error('Domain blocked');
+  }
+})();
+
 /* background canvas */
 (function(){
   var c = document.getElementById('bgCanvas');
@@ -313,16 +323,13 @@ function tsOK(){
     $btnGet.style.display = 'block';
     $infoTxt.textContent = '✅ Verification complete. Click CONTINUE.';
   } else if (curStep === 2){
-    
     if (!isTimeUp()) {
-      
       $turnstileBox.style.display = 'none';
       resetToStart();
       localStorage.removeItem(_cfg.t);
       localStorage.removeItem(WAIT_K);
       return;
     }
-    
     $turnstileBox.style.display = 'none';
     $infoTxt.textContent = '✅ Final verification complete!';
     doGen();
@@ -491,12 +498,12 @@ function makeKey(){
   var now = Date.now();
   var durMs = 5*3600*1000;
   var payload = {
-  key: newKey,
-  expires_at: new Date(now + durMs).toISOString(),
-  is_active: true,
-  hwid: null,
-  source: "web"
-};
+    key: newKey,
+    expires_at: new Date(now + durMs).toISOString(),
+    is_active: true,
+    hwid: null,
+    source: "web"
+  };
   sbInsert('keys', payload).then(function(res){
     if (!res || res.error || (Array.isArray(res) && res.length === 0)){
       toast('❌ Key generation failed', true);
