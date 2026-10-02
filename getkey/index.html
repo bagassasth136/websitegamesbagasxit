@@ -210,7 +210,7 @@ body{
   var allowed = ['bxit.my.id', 'www.bxit.my.id'];
   var host = location.hostname;
   if (allowed.indexOf(host) === -1 && host !== '' && host !== 'localhost' && host !== '127.0.0.1') {
-    document.body.innerHTML = '<div style="color:#F5F5F7;text-align:center;padding:60px 20px;font-family:sans-serif;background:#050506;height:100vh;"><h1 style="color:#EF4444;">⚠️ UNAUTHORIZED</h1><p>This site is not affiliated with BAGASXIT.</p><p style="color:#8E8E96;font-size:12px;">Visit official: bxit.my.id</p></div>';
+    document.body.innerHTML = atob('PGRpdiBzdHlsZT0iY29sb3I6I0Y1RjVGNzt0ZXh0LWFsaWduOmNlbnRlcjtwYWRkaW5nOjYwcHggMjBweDtmb250LWZhbWlseTpzYW5zLXNlcmlmO2JhY2tncm91bmQ6IzA1MDUwNjtoZWlnaHQ6MTAwdmg7Ij48aDEgc3R5bGU9ImNvbG9yOiNFRjQ0NDQ7Zm9udC1zaXplOjMycHg7Ij7imqDvuIhDTE9ORSBZQSBLT05UT0wgRlVDS/CflpXwn5G5PC9oMT48L2Rpdj4=');
     throw new Error('Domain blocked');
   }
 })();
