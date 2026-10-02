@@ -491,11 +491,12 @@ function makeKey(){
   var now = Date.now();
   var durMs = 5*3600*1000;
   var payload = {
-    key: newKey,
-    expires_at: new Date(now + durMs).toISOString(),
-    is_active: true,
-    hwid: null
-  };
+  key: newKey,
+  expires_at: new Date(now + durMs).toISOString(),
+  is_active: true,
+  hwid: null,
+  source: "web"
+};
   sbInsert('keys', payload).then(function(res){
     if (!res || res.error || (Array.isArray(res) && res.length === 0)){
       toast('❌ Key generation failed', true);
