@@ -210,10 +210,52 @@ body{
   var allowed = ['bxit.my.id', 'www.bxit.my.id'];
   var host = location.hostname;
   if (allowed.indexOf(host) === -1 && host !== '' && host !== 'localhost' && host !== '127.0.0.1') {
-    document.body.innerHTML = atob('PGRpdiBzdHlsZT0iY29sb3I6I0Y1RjVGNzt0ZXh0LWFsaWduOmNlbnRlcjtwYWRkaW5nOjYwcHggMjBweDtmb250LWZhbWlseTpzYW5zLXNlcmlmO2JhY2tncm91bmQ6IzA1MDUwNjtoZWlnaHQ6MTAwdmg7Ij48aDEgc3R5bGU9ImNvbG9yOiNFRjQ0NDQ7Zm9udC1zaXplOjMycHg7Ij7imqDvuIhDTE9ORSBZQSBLT05UT0wgRlVDS/CflpXwn5G5PC9oMT48L2Rpdj4=');
+    document.body.innerHTML = atob('PGRpdiBzdHlsZT0iY29sb3I6I0Y1RjVGNzt0ZXh0LWFsaWduOmNlbnRlcjtwYWRkaW5nOjYwcHggMjBweDtmb250LWZhbWlseTpzYW5zLXNlcmlmO2JhY2tncm91bmQ6IzA1MDUwNjtoZWlnaHQ6MTAwdmg7Ij48aDEgc3R5bGU9ImNvbG9yOiNFRjQ0NDQ7Zm9udC1zaXplOjMycHg7Ij7imqDvuIhDTE9ORSBZQSBLT05UT0wgRlVDS/CflpU8L2gxPjwvZGl2Pg==');
     throw new Error('Domain blocked');
   }
 })();
+
+/* ============ FINGERPRINT (manual) ============ */
+function getDeviceId(){
+  try {
+    var parts = [
+      navigator.userAgent || '',
+      navigator.language || '',
+      navigator.platform || '',
+      screen.width + 'x' + screen.height,
+      screen.colorDepth || '',
+      new Date().getTimezoneOffset(),
+      (Intl.DateTimeFormat().resolvedOptions().timeZone) || '',
+      navigator.hardwareConcurrency || '',
+      navigator.deviceMemory || ''
+    ];
+    // Canvas fingerprint
+    try {
+      var cv = document.createElement('canvas');
+      cv.width = 200; cv.height = 50;
+      var cx = cv.getContext('2d');
+      cx.textBaseline = 'top';
+      cx.font = '14px Arial';
+      cx.fillStyle = '#f60';
+      cx.fillRect(125, 1, 62, 20);
+      cx.fillStyle = '#069';
+      cx.fillText('BAGASXIT', 2, 15);
+      cx.fillStyle = 'rgba(102,204,0,0.7)';
+      cx.fillText('BAGASXIT', 4, 17);
+      parts.push(cv.toDataURL());
+    } catch(e){}
+    var raw = parts.join('|');
+    // Hash sederhana (djb2)
+    var hash = 5381;
+    for (var i = 0; i < raw.length; i++){
+      hash = ((hash << 5) + hash) + raw.charCodeAt(i);
+      hash = hash & hash;
+    }
+    return 'D' + Math.abs(hash).toString(36) + '_' + raw.length.toString(36);
+  } catch(e){
+    return 'D_fallback';
+  }
+}
 
 /* background canvas */
 (function(){
@@ -278,6 +320,7 @@ var LINKS = [
 ];
 
 var SHOW_COOLDOWN = false;
+var RATE_LIMIT_MS = 5 * 3600 * 1000; // 5 jam
 
 var $keyBox = document.getElementById('keyBox');
 var $keyVal = document.getElementById('keyValue');
@@ -299,11 +342,12 @@ var $statusTxt = document.getElementById('statusText');
 
 var curKey='', tsWidget=null, curStep=1, cdInt=null;
 var RING=251.2;
+var DEVICE_ID = getDeviceId();
 
 function toast(msg, isErr){
   $toast.textContent = msg;
   $toast.className = isErr ? 'err show' : 'show';
-  setTimeout(function(){ $toast.className = isErr ? 'err' : ''; }, 2400);
+  setTimeout(function(){ $toast.className = isErr ? 'err' : ''; }, 3000);
 }
 
 window.onloadTurnstile = function(){ renderTS(); };
@@ -407,6 +451,43 @@ function isTimeUp(){
   return (Date.now() - parseInt(start)) >= _cfg.d;
 }
 
+function fmtWait(ms){
+  var h = Math.floor(ms / 3600000);
+  var m = Math.floor((ms % 3600000) / 60000);
+  if (h > 0) return h + ' jam ' + (m < 10 ? '0' + m : m) + ' menit';
+  return m + ' menit';
+}
+
+function checkRateLimit(){
+  return sbGet('rate_limit?device_id=eq.' + encodeURIComponent(DEVICE_ID) + '&select=*')
+    .then(function(rows){
+      if (rows && rows.length > 0){
+        var lastGen = rows[0].last_gen;
+        var diff = Date.now() - lastGen;
+        if (diff < RATE_LIMIT_MS){
+          var sisa = RATE_LIMIT_MS - diff;
+          return { ok: false, wait: sisa };
+        }
+      }
+      return { ok: true };
+    })
+    .catch(function(){ return { ok: true }; });
+}
+
+function saveRateLimit(){
+  var payload = { device_id: DEVICE_ID, last_gen: Date.now() };
+  fetch(SB_URL + '/rest/v1/rate_limit', {
+    method: 'POST',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'resolution=merge-duplicates,return=representation'
+    },
+    body: JSON.stringify(payload)
+  }).catch(function(){});
+}
+
 $btnGet.onclick = function(){
   if (curStep === 1) {
     localStorage.setItem(_cfg.t, Date.now().toString());
@@ -422,14 +503,19 @@ $btnGet.onclick = function(){
     return;
   }
 
-  var lg = localStorage.getItem(LAST_K);
-  if (SHOW_COOLDOWN && lg && (Date.now()-parseInt(lg)) < 5*3600*1000){
-    var rem = Math.ceil((5*3600*1000-(Date.now()-parseInt(lg)))/3600000);
-    $infoTxt.textContent = '⚠️ Please wait '+rem+' more hour(s) for a new key.';
-    return;
-  }
-  localStorage.setItem(WAIT_K, Date.now().toString());
-  doRedirect();
+  // Cek rate limit dulu
+  $infoTxt.textContent = '🔍 Checking...';
+  $btnGet.disabled = true;
+  checkRateLimit().then(function(r){
+    if (!r.ok){
+      $infoTxt.textContent = '⏳ Tunggu ' + fmtWait(r.wait) + ' lagi untuk key baru.';
+      $btnGet.disabled = false;
+      return;
+    }
+    $btnGet.disabled = false;
+    localStorage.setItem(WAIT_K, Date.now().toString());
+    doRedirect();
+  });
 };
 
 function doRedirect(){
@@ -509,6 +595,8 @@ function makeKey(){
       toast('❌ Key generation failed', true);
       return;
     }
+    // Simpen rate limit
+    saveRateLimit();
     localStorage.removeItem(_cfg.t);
     localStorage.setItem(USER_K, newKey);
     localStorage.setItem(LAST_K, now.toString());
