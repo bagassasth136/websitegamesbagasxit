@@ -99,6 +99,7 @@ body{
 .turnstile-box{background:rgba(10,10,13,.6);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;display:flex;justify-content:center;align-items:center;min-height:68px;}
 .btn{width:100%;padding:15px;border-radius:12px;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:800;letter-spacing:.8px;transition:.2s;position:relative;overflow:hidden;}
 .btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
 .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:none;box-shadow:0 8px 24px var(--accent-glow);}
 .btn-primary::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);transition:left .6s;}
 .btn-primary:hover::after{left:100%}
@@ -215,48 +216,6 @@ body{
   }
 })();
 
-/* ============ FINGERPRINT (manual) ============ */
-function getDeviceId(){
-  try {
-    var parts = [
-      navigator.userAgent || '',
-      navigator.language || '',
-      navigator.platform || '',
-      screen.width + 'x' + screen.height,
-      screen.colorDepth || '',
-      new Date().getTimezoneOffset(),
-      (Intl.DateTimeFormat().resolvedOptions().timeZone) || '',
-      navigator.hardwareConcurrency || '',
-      navigator.deviceMemory || ''
-    ];
-    // Canvas fingerprint
-    try {
-      var cv = document.createElement('canvas');
-      cv.width = 200; cv.height = 50;
-      var cx = cv.getContext('2d');
-      cx.textBaseline = 'top';
-      cx.font = '14px Arial';
-      cx.fillStyle = '#f60';
-      cx.fillRect(125, 1, 62, 20);
-      cx.fillStyle = '#069';
-      cx.fillText('BAGASXIT', 2, 15);
-      cx.fillStyle = 'rgba(102,204,0,0.7)';
-      cx.fillText('BAGASXIT', 4, 17);
-      parts.push(cv.toDataURL());
-    } catch(e){}
-    var raw = parts.join('|');
-    // Hash sederhana (djb2)
-    var hash = 5381;
-    for (var i = 0; i < raw.length; i++){
-      hash = ((hash << 5) + hash) + raw.charCodeAt(i);
-      hash = hash & hash;
-    }
-    return 'D' + Math.abs(hash).toString(36) + '_' + raw.length.toString(36);
-  } catch(e){
-    return 'D_fallback';
-  }
-}
-
 /* background canvas */
 (function(){
   var c = document.getElementById('bgCanvas');
@@ -303,6 +262,7 @@ var _cfg = JSON.parse(atob('eyJ0IjoiX3RfdjMiLCJ3IjoiX3dfdjMiLCJ1IjoiX3VfdjMiLCJs
 var SB_URL = _p1;
 var SB_KEY = _p2;
 var USER_K = _cfg.u, LAST_K = _cfg.l, WAIT_K = _cfg.w;
+var FUNCTION_URL = SB_URL + '/functions/v1/hyper-responder';
 
 var _sk = 'MHg0QUFBQUFBRkFzWVoxZ1BncUdXaDRx';
 
@@ -320,7 +280,6 @@ var LINKS = [
 ];
 
 var SHOW_COOLDOWN = false;
-var RATE_LIMIT_MS = 5 * 3600 * 1000; // 5 jam
 
 var $keyBox = document.getElementById('keyBox');
 var $keyVal = document.getElementById('keyValue');
@@ -340,9 +299,8 @@ var $term = document.getElementById('term');
 var $status = document.getElementById('statusBadge');
 var $statusTxt = document.getElementById('statusText');
 
-var curKey='', tsWidget=null, curStep=1, cdInt=null;
+var curKey='', tsWidget=null, curStep=1, cdInt=null, curToken='';
 var RING=251.2;
-var DEVICE_ID = getDeviceId();
 
 function toast(msg, isErr){
   $toast.textContent = msg;
@@ -361,7 +319,8 @@ function renderTS(){
   }
 }
 
-function tsOK(){
+function tsOK(token){
+  curToken = token || '';
   if (curStep === 1){
     $turnstileBox.style.display = 'none';
     $btnGet.style.display = 'block';
@@ -382,6 +341,7 @@ function tsOK(){
 
 function resetToStart(){
   curStep = 1;
+  curToken = '';
   $step1.className = 'step-dot on';
   $step2.className = 'step-dot';
   $turnstileBox.style.display = 'flex';
@@ -451,43 +411,6 @@ function isTimeUp(){
   return (Date.now() - parseInt(start)) >= _cfg.d;
 }
 
-function fmtWait(ms){
-  var h = Math.floor(ms / 3600000);
-  var m = Math.floor((ms % 3600000) / 60000);
-  if (h > 0) return h + ' jam ' + (m < 10 ? '0' + m : m) + ' menit';
-  return m + ' menit';
-}
-
-function checkRateLimit(){
-  return sbGet('rate_limit?device_id=eq.' + encodeURIComponent(DEVICE_ID) + '&select=*')
-    .then(function(rows){
-      if (rows && rows.length > 0){
-        var lastGen = rows[0].last_gen;
-        var diff = Date.now() - lastGen;
-        if (diff < RATE_LIMIT_MS){
-          var sisa = RATE_LIMIT_MS - diff;
-          return { ok: false, wait: sisa };
-        }
-      }
-      return { ok: true };
-    })
-    .catch(function(){ return { ok: true }; });
-}
-
-function saveRateLimit(){
-  var payload = { device_id: DEVICE_ID, last_gen: Date.now() };
-  fetch(SB_URL + '/rest/v1/rate_limit', {
-    method: 'POST',
-    headers: {
-      'apikey': SB_KEY,
-      'Authorization': 'Bearer ' + SB_KEY,
-      'Content-Type': 'application/json',
-      'Prefer': 'resolution=merge-duplicates,return=representation'
-    },
-    body: JSON.stringify(payload)
-  }).catch(function(){});
-}
-
 $btnGet.onclick = function(){
   if (curStep === 1) {
     localStorage.setItem(_cfg.t, Date.now().toString());
@@ -503,19 +426,8 @@ $btnGet.onclick = function(){
     return;
   }
 
-  // Cek rate limit dulu
-  $infoTxt.textContent = '🔍 Checking...';
-  $btnGet.disabled = true;
-  checkRateLimit().then(function(r){
-    if (!r.ok){
-      $infoTxt.textContent = '⏳ Tunggu ' + fmtWait(r.wait) + ' lagi untuk key baru.';
-      $btnGet.disabled = false;
-      return;
-    }
-    $btnGet.disabled = false;
-    localStorage.setItem(WAIT_K, Date.now().toString());
-    doRedirect();
-  });
+  localStorage.setItem(WAIT_K, Date.now().toString());
+  doRedirect();
 };
 
 function doRedirect(){
@@ -539,27 +451,14 @@ async function sbGet(path) {
   return r.json();
 }
 
-async function sbInsert(table, data) {
-  var r = await fetch(SB_URL + '/rest/v1/' + table, {
-    method: 'POST',
-    headers: {
-      'apikey': SB_KEY,
-      'Authorization': 'Bearer ' + SB_KEY,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-    body: JSON.stringify(data)
-  });
-  return r.json();
-}
-
 function doGen(){
   $infoTxt.textContent = '⚙️ Generating your key...';
   $term.classList.add('show');
   $term.innerHTML = '';
   var lines = [
     '> initializing system...',
-    '> verifying request...',
+    '> verifying turnstile...',
+    '> checking rate limit...',
     '> generating license...',
     '> encrypting AES-256...'
   ];
@@ -578,32 +477,43 @@ function doGen(){
   }, 220);
 }
 
-function makeKey(){
-  var code = Math.random().toString(36).substring(2,8).toUpperCase();
-  var newKey = 'BX-'+code;
-  var now = Date.now();
-  var durMs = 5*3600*1000;
-  var payload = {
-    key: newKey,
-    expires_at: new Date(now + durMs).toISOString(),
-    is_active: true,
-    hwid: null,
-    source: "web"
-  };
-  sbInsert('keys', payload).then(function(res){
-    if (!res || res.error || (Array.isArray(res) && res.length === 0)){
-      toast('❌ Key generation failed', true);
+async function makeKey(){
+  try {
+    var res = await fetch(FUNCTION_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + SB_KEY
+      },
+      body: JSON.stringify({ token: curToken })
+    });
+
+    var data = await res.json();
+
+    if (!res.ok){
+      if (res.status === 429 && data.message){
+        toast('⏳ ' + data.message, true);
+        $infoTxt.textContent = '⏳ ' + data.message;
+        return;
+      }
+      toast('❌ ' + (data.error || 'Failed'), true);
       return;
     }
-    // Simpen rate limit
-    saveRateLimit();
+
+    var newKey = data.key;
+    var expMs = new Date(data.expires_at).getTime();
+    var now = Date.now();
+
     localStorage.removeItem(_cfg.t);
     localStorage.setItem(USER_K, newKey);
     localStorage.setItem(LAST_K, now.toString());
     curKey = newKey;
-    showKey(newKey, now+durMs);
+    showKey(newKey, expMs);
     $btnGet.textContent = 'GET NEW KEY →';
-  }).catch(function(e){ toast('❌ '+e.message, true); });
+
+  } catch(e){
+    toast('❌ ' + e.message, true);
+  }
 }
 
 function typeKey(full, cb){
