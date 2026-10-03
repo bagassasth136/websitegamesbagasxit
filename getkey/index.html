@@ -216,6 +216,45 @@ body{
   }
 })();
 
+/* ============ FINGERPRINT ============ */
+function getFp(){
+  try {
+    var p = [
+      navigator.userAgent || '',
+      navigator.language || '',
+      navigator.platform || '',
+      screen.width + 'x' + screen.height,
+      screen.colorDepth || '',
+      new Date().getTimezoneOffset(),
+      (Intl.DateTimeFormat().resolvedOptions().timeZone) || '',
+      navigator.hardwareConcurrency || '',
+      navigator.deviceMemory || ''
+    ];
+    try {
+      var cv = document.createElement('canvas');
+      cv.width = 200; cv.height = 50;
+      var cx = cv.getContext('2d');
+      cx.textBaseline = 'top';
+      cx.font = '14px Arial';
+      cx.fillStyle = '#f60';
+      cx.fillRect(125, 1, 62, 20);
+      cx.fillStyle = '#069';
+      cx.fillText('BAGASXIT', 2, 15);
+      cx.fillStyle = 'rgba(102,204,0,0.7)';
+      cx.fillText('BAGASXIT', 4, 17);
+      p.push(cv.toDataURL());
+    } catch(e){}
+    var raw = p.join('|');
+    var h = 5381;
+    for (var i = 0; i < raw.length; i++){
+      h = ((h << 5) + h) + raw.charCodeAt(i);
+      h = h & h;
+    }
+    return 'F' + Math.abs(h).toString(36) + '_' + raw.length.toString(36);
+  } catch(e){ return 'F_fallback'; }
+}
+var FP_ID = getFp();
+
 /* background canvas */
 (function(){
   var c = document.getElementById('bgCanvas');
@@ -238,18 +277,6 @@ body{
       ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.28);
       ctx.fillStyle='rgba(168,85,247,.6)'; ctx.fill();
     }
-    for (var a=0;a<pts.length;a++)
-      for (var b=a+1;b<pts.length;b++){
-        var dx=pts[a].x-pts[b].x, dy=pts[a].y-pts[b].y;
-        var d=Math.sqrt(dx*dx+dy*dy);
-        if(d<120){
-          ctx.beginPath();
-          ctx.moveTo(pts[a].x,pts[a].y);
-          ctx.lineTo(pts[b].x,pts[b].y);
-          ctx.strokeStyle='rgba(168,85,247,'+(0.12*(1-d/120))+')';
-          ctx.lineWidth=.6; ctx.stroke();
-        }
-      }
     requestAnimationFrame(draw);
   }
   draw();
@@ -485,7 +512,7 @@ async function makeKey(){
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + SB_KEY
       },
-      body: JSON.stringify({ token: curToken })
+      body: JSON.stringify({ token: curToken, fp: FP_ID })
     });
 
     var data = await res.json();
