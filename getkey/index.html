@@ -31,72 +31,24 @@ body{
   content:'';position:absolute;width:70%;height:70%;border-radius:50%;
   filter:blur(120px);opacity:.28;
 }
-.aurora::before{
-  background:radial-gradient(circle,#7C3AED,transparent 70%);
-  top:-25%;left:-15%;animation:aur1 16s ease-in-out infinite alternate;
-}
-.aurora::after{
-  background:radial-gradient(circle,#06B6D4,transparent 70%);
-  bottom:-25%;right:-15%;animation:aur2 20s ease-in-out infinite alternate;
-}
+.aurora::before{background:radial-gradient(circle,#7C3AED,transparent 70%);top:-25%;left:-15%;animation:aur1 16s ease-in-out infinite alternate}
+.aurora::after{background:radial-gradient(circle,#06B6D4,transparent 70%);bottom:-25%;right:-15%;animation:aur2 20s ease-in-out infinite alternate}
 @keyframes aur1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(60px,50px) scale(1.12)}}
 @keyframes aur2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-60px,-50px) scale(1.12)}}
-.main{
-  flex:1;position:relative;z-index:2;
-  padding:16px 14px 24px;
-  padding-left:max(14px, env(safe-area-inset-left));
-  padding-right:max(14px, env(safe-area-inset-right));
-  padding-top:max(16px, env(safe-area-inset-top));
-  padding-bottom:max(24px, env(safe-area-inset-bottom));
-  display:flex;align-items:center;justify-content:center;
-}
-.container{
-  max-width:440px;width:100%;
-  background:rgba(14,14,18,.75);border-radius:20px;
-  padding:22px 18px 20px;border:1px solid var(--border2);
-  text-align:center;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  box-shadow:0 20px 50px rgba(0,0,0,.6);
-  animation:riseIn .6s cubic-bezier(.16,1,.3,1);
-}
+.main{flex:1;position:relative;z-index:2;padding:16px 14px 24px;padding-left:max(14px, env(safe-area-inset-left));padding-right:max(14px, env(safe-area-inset-right));padding-top:max(16px, env(safe-area-inset-top));padding-bottom:max(24px, env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center}
+.container{max-width:440px;width:100%;background:rgba(14,14,18,.75);border-radius:20px;padding:22px 18px 20px;border:1px solid var(--border2);text-align:center;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 20px 50px rgba(0,0,0,.6);animation:riseIn .6s cubic-bezier(.16,1,.3,1)}
 @keyframes riseIn{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
-.head-row{
-  display:flex;align-items:center;gap:10px;
-  margin-bottom:16px;text-align:left;
-  width:100%;flex-wrap:nowrap;justify-content:center;
-}
-.back-btn{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:7px 11px;border-radius:10px;
-  background:var(--card);border:1px solid var(--border);
-  color:var(--txt-dim);text-decoration:none;
-  font-size:11px;font-weight:700;letter-spacing:.3px;
-  transition:.2s;flex-shrink:0;
-}
+.head-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;text-align:left;width:100%;flex-wrap:nowrap;justify-content:center}
+.back-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 11px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--txt-dim);text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.3px;transition:.2s;flex-shrink:0}
 .back-btn:active{transform:scale(.95)}
 .back-btn:hover{color:var(--accent);border-color:var(--accent)}
 .back-btn svg{width:12px;height:12px}
 .brand-wrap{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .brand{display:flex;align-items:center;gap:8px;margin-bottom:2px;justify-content:center}
-.brand-mark{
-  width:32px;height:32px;border-radius:10px;
-  background:linear-gradient(135deg,var(--accent),var(--cyan));
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 6px 20px var(--accent-glow);
-  font-weight:900;color:#fff;font-size:16px;flex-shrink:0;
-}
-.brand-txt{
-  font-size:clamp(18px,5vw,20px);font-weight:900;letter-spacing:.5px;
-  background:linear-gradient(135deg,#fff 0%,#C4B5FD 60%,#67E8F9 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
+.brand-mark{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--cyan));display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px var(--accent-glow);font-weight:900;color:#fff;font-size:16px;flex-shrink:0}
+.brand-txt{font-size:clamp(18px,5vw,20px);font-weight:900;letter-spacing:.5px;background:linear-gradient(135deg,#fff 0%,#C4B5FD 60%,#67E8F9 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .subtitle{color:var(--txt-mute);font-size:9px;letter-spacing:3px;font-weight:700;text-align:center;width:100%}
-.status{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:5px 12px;border-radius:20px;
-  background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);
-  color:var(--green);font-size:10px;font-weight:800;
-  letter-spacing:.8px;margin-bottom:14px;transition:.3s;
-}
+.status{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--green);font-size:10px;font-weight:800;letter-spacing:.8px;margin-bottom:14px;transition:.3s}
 .status.off{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--red)}
 .status .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 1.6s infinite}
 .status.off .dot{background:var(--red);box-shadow:0 0 8px var(--red)}
@@ -105,15 +57,8 @@ body{
 .step-dot{width:26px;height:3px;border-radius:3px;background:var(--border2);transition:.4s}
 .step-dot.on{background:linear-gradient(90deg,var(--accent),var(--cyan));box-shadow:0 0 10px var(--accent-glow)}
 .step-dot.done{background:var(--green)}
-.key-box{
-  background:linear-gradient(180deg,rgba(10,10,13,.9),rgba(14,14,18,.9));
-  border-radius:16px;padding:22px 14px;border:1px solid var(--border2);
-  margin-bottom:14px;position:relative;overflow:hidden;transition:.5s;
-}
-.key-box::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.6;
-}
+.key-box{background:linear-gradient(180deg,rgba(10,10,13,.9),rgba(14,14,18,.9));border-radius:16px;padding:22px 14px;border:1px solid var(--border2);margin-bottom:14px;position:relative;overflow:hidden;transition:.5s}
+.key-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.6}
 .key-box.active{border-color:rgba(16,185,129,.5);box-shadow:0 0 30px rgba(16,185,129,.15),inset 0 0 0 1px rgba(16,185,129,.15)}
 .key-box.active::before{background:linear-gradient(90deg,transparent,var(--green),transparent)}
 @keyframes shineMove{0%{left:-100%}100%{left:100%}}
@@ -126,14 +71,7 @@ body{
 .term .line.ok{color:var(--green)}
 .term .line.dim{color:var(--txt-mute)}
 @keyframes termLine{to{opacity:1;transform:translateX(0)}}
-.key-value{
-  font-family:'JetBrains Mono',monospace;
-  font-size:clamp(20px,6vw,26px);font-weight:800;color:var(--green);
-  letter-spacing:2px;word-break:break-all;margin:10px 0;
-  text-shadow:0 0 20px rgba(16,185,129,.4);
-  min-height:42px;display:flex;align-items:center;justify-content:center;
-  padding:0 4px;
-}
+.key-value{font-family:'JetBrains Mono',monospace;font-size:clamp(20px,6vw,26px);font-weight:800;color:var(--green);letter-spacing:2px;word-break:break-all;margin:10px 0;text-shadow:0 0 20px rgba(16,185,129,.4);min-height:42px;display:flex;align-items:center;justify-content:center;padding:0 4px}
 .key-value.locked{color:var(--txt-mute);text-shadow:none;font-size:16px;letter-spacing:4px}
 .key-value .cursor{display:inline-block;width:2px;height:24px;background:var(--green);margin-left:3px;animation:curBlink .7s step-end infinite}
 @keyframes curBlink{50%{opacity:0}}
@@ -145,18 +83,9 @@ body{
 .timer .txt{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;color:var(--green);text-align:center;line-height:1.2}
 .timer .txt .lbl{display:block;font-family:'Inter',sans-serif;font-size:7px;color:var(--txt-mute);font-weight:700;letter-spacing:1px;margin-top:2px}
 .key-timer{color:var(--txt-mute);font-size:10px;margin-top:8px;font-weight:600;letter-spacing:.5px}
-.turnstile-box{
-  background:rgba(10,10,13,.6);border:1px solid var(--border);
-  border-radius:12px;padding:12px;margin-bottom:12px;
-  display:flex;justify-content:center;align-items:center;
-  min-height:68px;overflow:hidden;
-}
+.turnstile-box{background:rgba(10,10,13,.6);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:12px;display:flex;justify-content:center;align-items:center;min-height:68px;overflow:hidden}
 .turnstile-box > div{max-width:100%}
-.btn{
-  width:100%;padding:15px;border-radius:12px;border:none;cursor:pointer;
-  font-family:'Inter',sans-serif;font-size:13px;font-weight:800;
-  letter-spacing:.8px;transition:.2s;position:relative;overflow:hidden;
-}
+.btn{width:100%;padding:15px;border-radius:12px;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:800;letter-spacing:.8px;transition:.2s;position:relative;overflow:hidden}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:none;box-shadow:0 8px 24px var(--accent-glow)}
@@ -168,34 +97,14 @@ body{
 .guide h4{color:var(--accent);font-size:11px;font-weight:800;letter-spacing:1px;margin-bottom:10px;text-transform:uppercase}
 .guide .step{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
 .guide .step:last-child{margin-bottom:0}
-.guide .step .n{
-  width:20px;height:20px;border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#fff;font-size:10px;font-weight:900;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;margin-top:1px;
-}
+.guide .step .n{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
 .guide .step .t{font-size:11px;color:var(--txt-dim);line-height:1.5;font-weight:600}
-.bottom{
-  position:relative;z-index:2;padding:14px;
-  padding-bottom:max(14px, env(safe-area-inset-bottom));
-  text-align:center;border-top:1px solid var(--border);
-  background:rgba(5,5,6,.6);
-}
+.bottom{position:relative;z-index:2;padding:14px;padding-bottom:max(14px, env(safe-area-inset-bottom));text-align:center;border-top:1px solid var(--border);background:rgba(5,5,6,.6)}
 .bottom .links{display:flex;justify-content:center;gap:16px;margin-bottom:8px;flex-wrap:wrap}
 .bottom .links a{color:var(--txt-dim);text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.5px;transition:.2s}
 .bottom .links a:hover{color:var(--accent)}
 .bottom .cp{color:var(--txt-mute);font-size:9px;letter-spacing:.8px;font-weight:600}
-#toast{
-  position:fixed;top:20px;left:50%;
-  transform:translateX(-50%) translateY(-160%);
-  background:linear-gradient(135deg,var(--green),#059669);
-  color:#fff;padding:12px 22px;border-radius:12px;
-  font-size:12px;font-weight:800;letter-spacing:.3px;
-  box-shadow:0 12px 40px rgba(16,185,129,.45);
-  transition:transform .35s cubic-bezier(.16,1,.3,1);
-  z-index:9999;max-width:90%;text-align:center;
-}
+#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-160%);background:linear-gradient(135deg,var(--green),#059669);color:#fff;padding:12px 22px;border-radius:12px;font-size:12px;font-weight:800;letter-spacing:.3px;box-shadow:0 12px 40px rgba(16,185,129,.45);transition:transform .35s cubic-bezier(.16,1,.3,1);z-index:9999;max-width:90%;text-align:center}
 #toast.show{transform:translateX(-50%) translateY(0)}
 #toast.err{background:linear-gradient(135deg,var(--red),#B91C1C);box-shadow:0 12px 40px rgba(239,68,68,.45)}
 </style>
@@ -208,7 +117,6 @@ body{
 
 <main class="main">
   <div class="container">
-
     <div class="head-row">
       <a href="/" class="back-btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -269,7 +177,6 @@ body{
       <div class="step"><div class="n">3</div><div class="t">Paste into the license field</div></div>
       <div class="step"><div class="n">4</div><div class="t">Enjoy all the mods</div></div>
     </div>
-
   </div>
 </main>
 
@@ -369,6 +276,7 @@ var _cfg = JSON.parse(atob('eyJ0IjoiX3RfdjMiLCJ3IjoiX3dfdjMiLCJ1IjoiX3VfdjMiLCJs
 var SB_URL = _p1;
 var SB_KEY = _p2;
 var USER_K = _cfg.u, LAST_K = _cfg.l;
+var FLOW_TOKEN_KEY = '_ft_v3';
 var FUNCTION_URL = SB_URL + '/functions/v1/hyper-responder';
 var FLOW_URL = SB_URL + '/functions/v1/key-flow';
 var EXISTING_URL = SB_URL + '/functions/v1/verify-existing';
@@ -471,8 +379,9 @@ function resetToStart(){
 }
 
 async function init(){
+  // Bersihin ?v= dari URL
   try {
-    if (location.search && !location.search.includes('ref=')) {
+    if (location.search) {
       history.replaceState({}, document.title, location.pathname);
     }
   } catch(e){}
@@ -481,40 +390,49 @@ async function init(){
 }
 
 async function checkSession(){
-  // Cek cookie via server (verify) — kirim referrer sekalian
-  try {
-    var r = await fetch(FLOW_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({
-        action: 'verify',
-        fp: FP_ID,
-        referrer: document.referrer || ""
-      })
-    });
-    var d = await r.json();
+  // Cek flow token di localStorage (bukan cookie)
+  var flowToken = localStorage.getItem(FLOW_TOKEN_KEY);
+  if (flowToken){
+    try {
+      var r = await fetch(FLOW_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'verify',
+          fp: FP_ID,
+          token: flowToken,
+          referrer: document.referrer || ""
+        })
+      });
+      var d = await r.json();
 
-    if (d.ok) {
-      curStep = 2;
-      $step1.className = 'step-dot done';
-      $step2.className = 'step-dot on';
-      $turnstileBox.style.display = 'flex';
-      $btnGet.style.display = 'none';
-      $infoTxt.textContent = '🔒 Complete the final verification to get your key.';
-      if (window.turnstile && tsWidget !== null) turnstile.reset(tsWidget);
-      return;
-    }
-  } catch(e){}
+      if (d.ok) {
+        localStorage.removeItem(FLOW_TOKEN_KEY);
+        curStep = 2;
+        $step1.className = 'step-dot done';
+        $step2.className = 'step-dot on';
+        $turnstileBox.style.display = 'flex';
+        $btnGet.style.display = 'none';
+        $infoTxt.textContent = '🔒 Complete the final verification to get your key.';
+        if (window.turnstile && tsWidget !== null) turnstile.reset(tsWidget);
+        return;
+      } else {
+        // Token gagal (expired / used / fp mismatch / not from move2link)
+        if (d.error && d.error.indexOf("Too fast") === -1) {
+          // Kalau bukan "too fast", hapus token
+          localStorage.removeItem(FLOW_TOKEN_KEY);
+        }
+      }
+    } catch(e){}
+  }
 
-  // Cek existing key via Edge Function verify-existing
+  // Cek existing key via Edge Function
   var existingKey = localStorage.getItem(USER_K);
   if (existingKey){
     try {
       var r2 = await fetch(EXISTING_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ key: existingKey })
       });
       var d2 = await r2.json();
@@ -543,16 +461,17 @@ $btnGet.onclick = async function(){
       var r = await fetch(FLOW_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ action: 'start', fp: FP_ID })
       });
       var d = await r.json();
-      if (!d.ok) {
+      if (!d.ok || !d.token) {
         toast('❌ ' + (d.error||'Failed'), true);
         $btnGet.disabled = false;
         $btnGet.textContent = 'CONTINUE →';
         return;
       }
+      // Simpen token di localStorage
+      localStorage.setItem(FLOW_TOKEN_KEY, d.token);
     } catch(e) {
       toast('❌ ' + e.message, true);
       $btnGet.disabled = false;
@@ -614,7 +533,6 @@ async function makeKey(){
     var res = await fetch(FUNCTION_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
       body: JSON.stringify({ token: curToken, fp: FP_ID })
     });
 
