@@ -30,8 +30,6 @@ body{
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px}
-
-/* ===== HEADER ===== */
 .header{
   position:sticky;top:0;z-index:100;
   background:rgba(5,5,6,.88);
@@ -71,8 +69,6 @@ body{
   color:var(--txt-dim);
 }
 .header-search:active{transform:scale(.92)}
-
-/* ===== SIDEBAR ===== */
 .sidebar-bg{
   position:fixed;inset:0;background:rgba(0,0,0,.75);
   backdrop-filter:blur(4px);
@@ -135,8 +131,6 @@ body{
   display:block;font-weight:500;font-size:10px;
   opacity:.85;margin-top:2px;letter-spacing:.3px;
 }
-
-/* ===== BOTTOM NAV ===== */
 .bottom-nav{
   position:fixed;bottom:0;left:0;right:0;z-index:90;
   background:rgba(5,5,6,.94);
@@ -166,15 +160,10 @@ body{
   border:3px solid var(--bg);
 }
 .bnav-item.key-tab{font-size:9px}
-
-/* ===== PAGE ===== */
 .page{display:none;animation:fadeIn .35s ease}
 .page.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
 .wrap{max-width:1200px;margin:0 auto;padding:0 16px}
-
-/* ===== CAROUSEL ===== */
 .carousel{
   margin:16px 0 12px;position:relative;
   border-radius:18px;overflow:hidden;
@@ -218,8 +207,6 @@ body{
   border:none;cursor:pointer;transition:.3s;padding:0;
 }
 .dots .dot.active{background:var(--accent);width:22px;border-radius:3px}
-
-/* ===== SEARCH ===== */
 .search-sec{margin:16px 0 8px;position:relative}
 .search-wrap{
   display:flex;align-items:center;
@@ -258,7 +245,6 @@ body{
 .suggest-item:last-child{border-bottom:none}
 .suggest-item:hover{background:var(--card2);color:var(--txt)}
 .suggest-item .cnt{font-size:10px;color:var(--txt-mute)}
-
 .hot{
   display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center;
 }
@@ -269,8 +255,6 @@ body{
   color:var(--txt-dim);cursor:pointer;transition:.2s;font-weight:600;
 }
 .hot .kw:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
-
-/* ===== SECTION HEAD ===== */
 .sec-head{
   display:flex;justify-content:space-between;align-items:center;
   margin:22px 0 12px;gap:8px;
@@ -284,8 +268,6 @@ body{
   color:var(--accent);font-size:11px;text-decoration:none;
   font-weight:700;letter-spacing:.3px;
 }
-
-/* ===== TRENDING ===== */
 .trend-grid{
   display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
 }
@@ -314,8 +296,6 @@ body{
 .trend-card .info .meta{
   font-size:9px;color:var(--txt-mute);font-weight:600;
 }
-
-/* ===== FILTER ===== */
 .filters{
   display:flex;gap:6px;overflow-x:auto;
   padding-bottom:4px;scrollbar-width:none;margin-bottom:14px;
@@ -332,8 +312,6 @@ body{
   color:#fff;border-color:transparent;
   box-shadow:0 4px 14px var(--accent-glow);
 }
-
-/* ===== GAME GRID ===== */
 .grid{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
   gap:12px;margin-bottom:16px;
@@ -392,8 +370,6 @@ body{
   border:1px solid rgba(16,185,129,.3);
 }
 .cnt-dl{font-size:8px;color:var(--txt-mute);margin-left:auto;font-weight:700}
-
-/* ===== INSTALL BOX ===== */
 .install{
   background:var(--card);border:1px solid var(--border);
   border-radius:14px;padding:16px;margin:16px 0;
@@ -412,8 +388,6 @@ body{
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;margin-top:1px;
 }
-
-/* ===== PAGE TITLES ===== */
 .page-head{
   padding:22px 0 12px;text-align:center;
 }
@@ -424,8 +398,6 @@ body{
   background-clip:text;margin-bottom:6px;
 }
 .page-head p{font-size:12px;color:var(--txt-dim);line-height:1.5}
-
-/* ===== FORM ===== */
 .form-card{
   background:var(--card);border:1px solid var(--border);
   border-radius:14px;padding:20px;margin:16px 0;
@@ -460,8 +432,6 @@ body{
 .form-card .msg.show{display:block}
 .form-card .msg.ok{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.3)}
 .form-card .msg.err{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.3)}
-
-/* ===== ABOUT ===== */
 .about-card{
   background:var(--card);border:1px solid var(--border);
   border-radius:14px;padding:22px;margin:16px 0;
@@ -481,8 +451,6 @@ body{
   font-size:12px;font-weight:700;transition:.2s;
 }
 .socials a:hover{border-color:var(--accent);color:var(--accent)}
-
-/* ===== DETAIL PAGE ===== */
 #detail{
   display:none;position:fixed;inset:0;z-index:200;
   background:var(--bg);overflow-y:auto;padding:16px;
@@ -604,8 +572,6 @@ body{
   text-decoration:none;font-weight:800;font-size:11px;
   letter-spacing:.3px;white-space:nowrap;
 }
-
-/* ===== RATING ===== */
 .rate-card{
   background:var(--card);border:1px solid var(--border);
   border-radius:12px;padding:16px;margin:16px 0;
@@ -647,16 +613,12 @@ body{
 .rev .rt{display:block;color:var(--txt-dim);margin-top:3px;line-height:1.5}
 .rev .rd{display:block;font-size:9px;color:var(--txt-mute);margin-top:4px;font-weight:600}
 .no-rev{color:var(--txt-mute);font-size:12px;text-align:center;padding:16px 0}
-
-/* ===== CHAT ===== */
 .chat-box{
   background:var(--card);border:1px solid var(--border);
   border-radius:14px;padding:14px;margin:16px 0;
   overflow:hidden;min-height:400px;
 }
 .chat-box iframe{width:100%;height:500px;border:none;border-radius:8px}
-
-/* ===== CATEGORIES ===== */
 .cat-grid{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
   gap:8px;margin-bottom:20px;
@@ -670,8 +632,6 @@ body{
 .cat-item:hover,.cat-item:active{
   background:var(--accent);color:#fff;border-color:var(--accent);
 }
-
-/* ===== MODAL ===== */
 .modal-bg{
   position:fixed;inset:0;background:rgba(0,0,0,.85);
   backdrop-filter:blur(6px);z-index:999;
@@ -705,8 +665,6 @@ body{
 }
 .m-wa{background:#25D366}
 .m-tg{background:#0088CC}
-
-/* ===== FAB ===== */
 .fab{
   position:fixed;bottom:90px;right:16px;z-index:80;
   display:flex;flex-direction:column;align-items:center;gap:8px;
@@ -729,7 +687,6 @@ body{
 .fab-child img{width:22px;height:22px;object-fit:contain}
 .fab-wa{background:#25D366}
 .fab-tg{background:#0088CC}
-
 .to-top{
   position:fixed;bottom:90px;left:16px;z-index:80;
   width:42px;height:42px;border-radius:50%;
@@ -739,8 +696,6 @@ body{
   display:flex;align-items:center;justify-content:center;
 }
 .to-top.show{opacity:1;pointer-events:auto}
-
-/* ===== FOOTER ===== */
 .footer{
   background:var(--bg2);border-top:1px solid var(--border);
   padding:24px 16px 16px;margin-top:24px;
@@ -764,8 +719,6 @@ body{
   padding-top:16px;border-top:1px solid var(--border);
   margin-top:18px;letter-spacing:.5px;font-weight:600;
 }
-
-/* Loading */
 .loading{
   text-align:center;padding:40px 20px;color:var(--txt-mute);
   font-size:12px;font-weight:600;
@@ -1054,15 +1007,65 @@ body{
   </div>
   <div class="foot-btm" id="fBtm">© 2026 BAGASXIT TRADING & MODS CO.</div>
 </footer>
+
 <script>
+// ===== SUPABASE =====
+const SB_URL = 'https://qlzwqbbvjscfjaicbhks.supabase.co';
+const SB_KEY = 'sb_publishable_DRIOqI7O90TinECl4K6FJA_l0nIaPCY';
+const SB_HDR = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
+
+function sbGet(path) {
+  return fetch(SB_URL + '/rest/v1/' + path, { headers: SB_HDR }).then(r => r.ok ? r.json() : []);
+}
+function sbPost(path, body) {
+  return fetch(SB_URL + '/rest/v1/' + path, {
+    method: 'POST',
+    headers: Object.assign({}, SB_HDR, { 'Prefer': 'return=representation' }),
+    body: JSON.stringify(body)
+  }).then(r => r.ok ? r.json() : null);
+}
+function sbDel(path) {
+  return fetch(SB_URL + '/rest/v1/' + path, { method: 'DELETE', headers: SB_HDR }).then(r => r.ok);
+}
+function sbRpc(fn, args) {
+  return fetch(SB_URL + '/rest/v1/rpc/' + fn, {
+    method: 'POST', headers: SB_HDR, body: JSON.stringify(args || {})
+  }).then(r => r.ok ? r.json() : null);
+}
+
+// ===== FINGERPRINT =====
+function getFpHash() {
+  try {
+    let p = [
+      navigator.userAgent || '', navigator.language || '', navigator.platform || '',
+      screen.width + 'x' + screen.height, new Date().getTimezoneOffset(),
+      (Intl.DateTimeFormat().resolvedOptions().timeZone) || '',
+      navigator.hardwareConcurrency || ''
+    ];
+    try {
+      const cv = document.createElement('canvas'); cv.width = 200; cv.height = 50;
+      const cx = cv.getContext('2d'); cx.textBaseline = 'top'; cx.font = '14px Arial';
+      cx.fillStyle = '#f60'; cx.fillRect(125, 1, 62, 20);
+      cx.fillStyle = '#069'; cx.fillText('BXIT', 2, 15);
+      p.push(cv.toDataURL());
+    } catch(e){}
+    const raw = p.join('|');
+    let h = 5381;
+    for (let i = 0; i < raw.length; i++) { h = ((h << 5) + h) + raw.charCodeAt(i); h = h & h; }
+    return 'F' + Math.abs(h).toString(36);
+  } catch(e){ return 'F_fallback'; }
+}
+const FP_HASH = getFpHash();
+
 // ===== STATE =====
 let gameDB = {}, configData = {}, messagesData = {};
 let curKey = null, curFilter = 'all', curSearch = '';
 let selectedRating = 0;
 let carouselIdx = 0, carouselTimer = null;
 let autoLikeTimer = null, autoLikeRunning = false;
+let statsCache = {};
+let favsCache = [];
 
-// ===== LOAD DATA (LOKAL) =====
 const URL_CONFIG = 'config.json';
 const URL_GAMES = 'games.json';
 const URL_MSG = 'messages.json';
@@ -1079,6 +1082,8 @@ async function loadAll() {
     configData = cfg; gameDB = gms; messagesData = msg;
     applyConfig();
     applyMessages();
+    await loadStats();
+    await loadFavs();
     renderGrid();
     renderTrending();
     initCarousel();
@@ -1090,47 +1095,50 @@ async function loadAll() {
   }
 }
 
+async function loadStats() {
+  try {
+    const rows = await sbGet('stats?select=game_key,stat_type,count');
+    statsCache = {};
+    (rows || []).forEach(r => {
+      if (!statsCache[r.game_key]) statsCache[r.game_key] = { download: 0, view: 0 };
+      statsCache[r.game_key][r.stat_type] = r.count;
+    });
+  } catch(e){ console.warn('stats load fail', e); }
+}
+function getStat(k, type) { return (statsCache[k] && statsCache[k][type]) || 0; }
+
+async function loadFavs() {
+  try {
+    const rows = await sbGet('favorites?fp_hash=eq.' + encodeURIComponent(FP_HASH) + '&select=game_key');
+    favsCache = (rows || []).map(r => r.game_key);
+  } catch(e){ favsCache = []; }
+}
+function isFav(k) { return favsCache.indexOf(k) > -1; }
+
 // ===== APPLY CONFIG =====
 function applyConfig() {
   if (!configData) return;
-
-  // Hot keywords
   const hot = document.getElementById('hotKeywords');
   if (configData.hotKeywords && hot) {
     hot.innerHTML = '<span class="lbl">🔥 Panas:</span>' +
       configData.hotKeywords.map(k => `<span class="kw" onclick="searchKW('${k.replace(/'/g,"\\'")}')">${k}</span>`).join('');
   }
-
-  // Categories
   if (configData.categoriesGame) {
-    const g = document.getElementById('catGame');
-    g.innerHTML = configData.categoriesGame.map(c => `<div class="cat-item" onclick="filterCat('${c.replace(/'/g,"\\'")}')">${c}</div>`).join('');
+    document.getElementById('catGame').innerHTML = configData.categoriesGame.map(c => `<div class="cat-item" onclick="filterCat('${c.replace(/'/g,"\\'")}')">${c}</div>`).join('');
   }
   if (configData.categoriesApp) {
-    const a = document.getElementById('catApp');
-    a.innerHTML = configData.categoriesApp.map(c => `<div class="cat-item" onclick="filterCat('${c.replace(/'/g,"\\'")}')">${c}</div>`).join('');
+    document.getElementById('catApp').innerHTML = configData.categoriesApp.map(c => `<div class="cat-item" onclick="filterCat('${c.replace(/'/g,"\\'")}')">${c}</div>`).join('');
   }
-
-  // Trust badges (untuk detail)
   if (configData.trustBadges) {
-    const t = document.getElementById('dTrust');
-    t.innerHTML = configData.trustBadges.map(b => `<span>${b}</span>`).join('');
+    document.getElementById('dTrust').innerHTML = configData.trustBadges.map(b => `<span>${b}</span>`).join('');
   }
-
-  // Install steps
   if (configData.installSteps) {
     const box = document.getElementById('installBox');
     let html = '<h3>💡 <span class="hl">Cara Install</span></h3>';
-    configData.installSteps.forEach((s, i) => {
-      html += `<div class="step"><div class="n">${i+1}</div><div>${s}</div></div>`;
-    });
+    configData.installSteps.forEach((s, i) => { html += `<div class="step"><div class="n">${i+1}</div><div>${s}</div></div>`; });
     box.innerHTML = html;
   }
-
-  // All games title
-  if (configData.allGamesTitle) {
-    document.getElementById('allTitle').innerHTML = configData.allGamesTitle;
-  }
+  if (configData.allGamesTitle) document.getElementById('allTitle').innerHTML = configData.allGamesTitle;
 }
 
 // ===== APPLY MESSAGES =====
@@ -1162,7 +1170,6 @@ function showPage(p) {
   closeDetail();
   window.scrollTo(0, 0);
 }
-
 function openSidebar() {
   document.getElementById('sidebar').classList.add('show');
   document.getElementById('sidebarBg').classList.add('show');
@@ -1209,8 +1216,6 @@ function showSuggest(q) {
   }).join('');
   box.classList.add('show');
 }
-
-// Filter chips
 document.querySelectorAll('.chip[data-cat]').forEach(c => {
   c.addEventListener('click', function() {
     document.querySelectorAll('.chip[data-cat]').forEach(x => x.classList.remove('active'));
@@ -1219,24 +1224,16 @@ document.querySelectorAll('.chip[data-cat]').forEach(c => {
     renderGrid();
   });
 });
-function filterCat(c) {
-  showPage('home');
-  setTimeout(() => searchKW(c), 100);
-}
+function filterCat(c) { showPage('home'); setTimeout(() => searchKW(c), 100); }
 
 // ===== BADGE =====
 function getBadge(k) {
   const map = {
-    ff_vip: ['badge-ff', 'Menu Mod'],
-    epic_c2: ['badge-gold', 'Gold/Ruby'],
-    stumble: ['badge-skins', 'Skins Hack'],
-    last_day_earth: ['badge-menu', 'Menu Mod'],
-    minecraft: ['badge-menu', 'Official'],
-    monopoly: ['badge-money', 'Unlocked'],
-    monoposto: ['badge-money', 'Unlocked'],
-    epic_plane: ['badge-money', 'Unlimited'],
-    frost_world: ['badge-money', 'Unlimited'],
-    homescapes: ['badge-money', 'Unlimited'],
+    ff_vip: ['badge-ff', 'Menu Mod'], epic_c2: ['badge-gold', 'Gold/Ruby'],
+    stumble: ['badge-skins', 'Skins Hack'], last_day_earth: ['badge-menu', 'Menu Mod'],
+    minecraft: ['badge-menu', 'Official'], monopoly: ['badge-money', 'Unlocked'],
+    monoposto: ['badge-money', 'Unlocked'], epic_plane: ['badge-money', 'Unlimited'],
+    frost_world: ['badge-money', 'Unlimited'], homescapes: ['badge-money', 'Unlimited'],
     hunter_assassin: ['badge-money', 'Unlimited']
   };
   return map[k] || ['badge-money', 'Money Mod'];
@@ -1247,8 +1244,6 @@ function renderGrid() {
   const grid = document.getElementById('modsGrid');
   const keys = Object.keys(gameDB);
   if (!keys.length) { grid.innerHTML = '<div class="loading" style="grid-column:1/-1">Belum ada data</div>'; return; }
-
-  const favs = getFavs();
   let html = '';
   keys.forEach(k => {
     const g = gameDB[k]; if (!g) return;
@@ -1256,11 +1251,11 @@ function renderGrid() {
     const b = getBadge(k);
     const ver = g.versions && g.versions[0] ? g.versions[0].version : 'v1.0';
     const dl = (g.meta || '').split('|')[1]?.trim().split(' ')[0] || '1.0M';
-    const cnt = getDlCount(k);
-    const isFav = favs.includes(k);
+    const cnt = getStat(k, 'download');
+    const fav = isFav(k);
     html += `<div class="card" onclick="showDetail('${k}')">
       <img src="${g.img}" class="thumb" loading="lazy" alt="${g.title}">
-      ${isFav ? '<div class="fav show">❤️</div>' : ''}
+      ${fav ? '<div class="fav show">❤️</div>' : ''}
       <div class="info">
         <h4>${g.title}</h4>
         <div class="ver">${ver}</div>
@@ -1277,27 +1272,21 @@ function renderGrid() {
 }
 
 // ===== TRENDING =====
-function parseDL(meta) {
-  const m = (meta || '').match(/([\d.]+)\s*M/i); return m ? parseFloat(m[1]) : 0;
-}
+function parseDL(meta) { const m = (meta || '').match(/([\d.]+)\s*M/i); return m ? parseFloat(m[1]) : 0; }
 function renderTrending() {
   const grid = document.getElementById('trendGrid');
   const keys = Object.keys(gameDB);
   if (!keys.length) { grid.innerHTML = ''; return; }
   const top = keys.map(k => ({
     key: k, title: gameDB[k].title, img: gameDB[k].img,
-    dl: parseDL(gameDB[k].meta)
+    dl: getStat(k, 'download') || parseDL(gameDB[k].meta)
   })).sort((a, b) => b.dl - a.dl).slice(0, 3);
   grid.innerHTML = top.map((t, i) => `
     <div class="trend-card" onclick="showDetail('${t.key}')">
       <div class="rank">#${i+1}</div>
       <img src="${t.img}" class="thumb" loading="lazy" alt="">
-      <div class="info">
-        <h4>${t.title}</h4>
-        <div class="meta">⭐ 5.0 · ${t.dl}M</div>
-      </div>
-    </div>
-  `).join('');
+      <div class="info"><h4>${t.title}</h4><div class="meta">⭐ 5.0 · ${t.dl}M</div></div>
+    </div>`).join('');
 }
 
 // ===== CAROUSEL =====
@@ -1319,14 +1308,11 @@ function initCarousel() {
     dotsHtml += `<button class="dot ${i === 0 ? 'active' : ''}" data-i="${i}"></button>`;
   });
   box.innerHTML = html + `<div class="dots">${dotsHtml}</div>`;
-
-  const slides = box.querySelectorAll('.slide');
-  const dots = box.querySelectorAll('.dot');
+  const slides = box.querySelectorAll('.slide'), dots = box.querySelectorAll('.dot');
   function go(i) {
     slides.forEach(s => s.classList.remove('active'));
     dots.forEach(d => d.classList.remove('active'));
-    slides[i]?.classList.add('active');
-    dots[i]?.classList.add('active');
+    slides[i]?.classList.add('active'); dots[i]?.classList.add('active');
     carouselIdx = i;
   }
   function next() { go((carouselIdx + 1) % slides.length); }
@@ -1335,10 +1321,11 @@ function initCarousel() {
 }
 
 // ===== DETAIL =====
-function showDetail(k) {
+async function showDetail(k) {
   const g = gameDB[k]; if (!g) return;
   curKey = k;
-  const views = incView(k);
+  sbRpc('increment_stat', { p_game_key: k, p_type: 'view' });
+  const views = getStat(k, 'view') + 1;
   document.getElementById('dTitle').textContent = g.title;
   document.getElementById('dIcon').src = g.img;
   document.getElementById('dDev').textContent = g.dev || 'BagasXIT Dev';
@@ -1348,11 +1335,10 @@ function showDetail(k) {
   document.getElementById('dWa').href = `https://api.whatsapp.com/send?text=${txt}%20${url}`;
   document.getElementById('dTg').href = `https://t.me/share/url?url=${url}&text=${txt}`;
   renderVerDetail(g, 0);
-  renderReviews(k);
+  await renderReviews(k);
   updateFavUI();
   startAutoLike();
-  const pg = document.getElementById('detail');
-  pg.classList.add('show');
+  document.getElementById('detail').classList.add('show');
   window.scrollTo(0, 0);
 }
 function renderVerDetail(g, idx) {
@@ -1361,13 +1347,11 @@ function renderVerDetail(g, idx) {
   document.getElementById('dDesc').innerHTML = v.desc || g.desc || '';
   document.getElementById('dDownload').href = v.link || '#';
   document.getElementById('dVer').textContent = `${v.version} · ${v.size || ''}`;
-  const list = document.getElementById('verList');
-  const title = document.getElementById('verTitle');
+  const list = document.getElementById('verList'), title = document.getElementById('verTitle');
   if (vers.length <= 1) { title.style.display = 'none'; list.innerHTML = ''; return; }
   title.style.display = 'block';
   list.innerHTML = vers.map((vi, i) => {
-    const cur = i === idx ? ' cur' : '';
-    const rec = vi.recommended ? ' rec' : '';
+    const cur = i === idx ? ' cur' : '', rec = vi.recommended ? ' rec' : '';
     const recB = vi.recommended ? '<span class="rec-b">⭐ REKOMENDASI</span>' : '';
     const pc = parseInt(vi.status) || 0;
     return `<div class="ver-item${cur}${rec}" onclick="renderVerDetail(gameDB['${curKey}'], ${i})">
@@ -1383,29 +1367,26 @@ function renderVerDetail(g, idx) {
     </div>`;
   }).join('');
 }
-function closeDetail() {
-  stopAutoLike();
-  document.getElementById('detail').classList.remove('show');
-}
-function trackDL() { if (curKey) incDl(curKey); }
+function closeDetail() { stopAutoLike(); document.getElementById('detail').classList.remove('show'); }
+function trackDL() { if (curKey) sbRpc('increment_stat', { p_game_key: curKey, p_type: 'download' }); }
 
-// ===== FAVORITE =====
-function getFavs() { try { return JSON.parse(localStorage.getItem('bgs_favs') || '[]'); } catch { return []; } }
-function saveFavs(a) { localStorage.setItem('bgs_favs', JSON.stringify(a)); }
-function toggleFav() {
+// ===== FAVORITE (SUPABASE) =====
+async function toggleFav() {
   if (!curKey) return;
-  const f = getFavs(); const i = f.indexOf(curKey);
-  if (i > -1) f.splice(i, 1); else f.push(curKey);
-  saveFavs(f);
-  updateFavUI();
-  renderGrid();
+  if (isFav(curKey)) {
+    await sbDel('favorites?fp_hash=eq.' + encodeURIComponent(FP_HASH) + '&game_key=eq.' + encodeURIComponent(curKey));
+    favsCache = favsCache.filter(k => k !== curKey);
+  } else {
+    await sbPost('favorites', { game_key: curKey, fp_hash: FP_HASH });
+    favsCache.push(curKey);
+  }
+  updateFavUI(); renderGrid();
 }
-function updateFavUI() {
-  const btn = document.getElementById('dFav');
-  const cnt = document.getElementById('dFavCnt');
-  const f = getFavs();
-  cnt.textContent = f.length;
-  if (curKey && f.includes(curKey)) { btn.textContent = '❤️'; btn.classList.add('liked'); }
+async function updateFavUI() {
+  const btn = document.getElementById('dFav'), cnt = document.getElementById('dFavCnt');
+  const rows = await sbGet('favorites?select=id&fp_hash=eq.' + encodeURIComponent(FP_HASH));
+  cnt.textContent = (rows || []).length;
+  if (curKey && isFav(curKey)) { btn.textContent = '❤️'; btn.classList.add('liked'); }
   else { btn.textContent = '♡'; btn.classList.remove('liked'); }
 }
 
@@ -1414,21 +1395,16 @@ function startAutoLike() {
   if (autoLikeRunning) return;
   autoLikeRunning = true;
   const last = parseInt(localStorage.getItem('bgs_autolike') || '0');
-  if (Date.now() - last >= 60000) {
-    addAutoLike();
-    localStorage.setItem('bgs_autolike', Date.now().toString());
-  }
+  if (Date.now() - last >= 60000) { addAutoLike(); localStorage.setItem('bgs_autolike', Date.now().toString()); }
   autoLikeTimer = setInterval(() => {
-    addAutoLike();
-    localStorage.setItem('bgs_autolike', Date.now().toString());
+    addAutoLike(); localStorage.setItem('bgs_autolike', Date.now().toString());
   }, 60000);
 }
 function addAutoLike() {
   if (!curKey) return;
-  const f = getFavs();
-  if (!f.includes(curKey)) {
-    f.push(curKey); saveFavs(f);
-    updateFavUI(); renderGrid();
+  if (!isFav(curKey)) {
+    favsCache.push(curKey);
+    sbPost('favorites', { game_key: curKey, fp_hash: FP_HASH }).then(() => { updateFavUI(); renderGrid(); });
   }
 }
 function stopAutoLike() {
@@ -1436,13 +1412,7 @@ function stopAutoLike() {
   autoLikeRunning = false;
 }
 
-// ===== DOWNLOAD / VIEW COUNTER =====
-function getDlCount(k) { return parseInt(localStorage.getItem('bgs_dl_' + k) || '0'); }
-function incDl(k) { const c = getDlCount(k) + 1; localStorage.setItem('bgs_dl_' + k, c); return c; }
-function getView(k) { return parseInt(localStorage.getItem('bgs_vw_' + k) || '0'); }
-function incView(k) { const c = getView(k) + 1; localStorage.setItem('bgs_vw_' + k, c); return c; }
-
-// ===== RATING =====
+// ===== RATING & ULASAN (SUPABASE) =====
 document.querySelectorAll('#starsIn span').forEach(s => {
   s.addEventListener('click', function() {
     selectedRating = parseInt(this.dataset.v);
@@ -1454,38 +1424,35 @@ document.querySelectorAll('#starsIn span').forEach(s => {
   });
   s.addEventListener('mouseenter', function() {
     const hv = parseInt(this.dataset.v);
-    document.querySelectorAll('#starsIn span').forEach(st => {
-      st.textContent = parseInt(st.dataset.v) <= hv ? '★' : '☆';
-    });
+    document.querySelectorAll('#starsIn span').forEach(st => { st.textContent = parseInt(st.dataset.v) <= hv ? '★' : '☆'; });
   });
   s.addEventListener('mouseleave', function() {
-    document.querySelectorAll('#starsIn span').forEach(st => {
-      st.textContent = parseInt(st.dataset.v) <= selectedRating ? '★' : '☆';
-    });
+    document.querySelectorAll('#starsIn span').forEach(st => { st.textContent = parseInt(st.dataset.v) <= selectedRating ? '★' : '☆'; });
   });
 });
-function getRevs(k) { try { return JSON.parse(localStorage.getItem('bgs_rev_' + k) || '[]'); } catch { return []; } }
-function saveRevs(k, r) { localStorage.setItem('bgs_rev_' + k, JSON.stringify(r)); }
-function renderReviews(k) {
-  const list = document.getElementById('reviews');
-  const avgEl = document.getElementById('rateAvg');
-  const revs = getRevs(k);
-  if (!revs.length) { list.innerHTML = '<div class="no-rev">Belum ada ulasan. Jadilah yang pertama!</div>'; avgEl.textContent = '0.0 (0)'; return; }
-  const sum = revs.reduce((a, r) => a + r.rating, 0);
-  avgEl.textContent = (sum / revs.length).toFixed(1) + ' (' + revs.length + ')';
-  list.innerHTML = revs.slice().reverse().map(r => {
+
+async function renderReviews(k) {
+  const list = document.getElementById('reviews'), avgEl = document.getElementById('rateAvg');
+  const rows = await sbGet('reviews?game_key=eq.' + encodeURIComponent(k) + '&select=rating,review_text,created_at&order=created_at.desc&limit=50');
+  if (!rows || !rows.length) {
+    list.innerHTML = '<div class="no-rev">Belum ada ulasan. Jadilah yang pertama!</div>';
+    avgEl.textContent = '0.0 (0)'; return;
+  }
+  const sum = rows.reduce((a, r) => a + r.rating, 0);
+  avgEl.textContent = (sum / rows.length).toFixed(1) + ' (' + rows.length + ')';
+  list.innerHTML = rows.map(r => {
     const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
-    return `<div class="rev"><span class="rs">${stars}</span><span class="rt">${r.text || 'Tanpa komentar'}</span><span class="rd">${r.date || ''}</span></div>`;
+    const date = new Date(r.created_at).toLocaleDateString('id-ID');
+    return `<div class="rev"><span class="rs">${stars}</span><span class="rt">${r.review_text || 'Tanpa komentar'}</span><span class="rd">${date}</span></div>`;
   }).join('');
 }
-function submitReview() {
+async function submitReview() {
   if (!curKey) return;
   if (!selectedRating) { alert('Pilih rating bintang dulu!'); return; }
   const text = document.getElementById('revText').value.trim() || 'Tanpa komentar';
-  const revs = getRevs(curKey);
-  revs.push({ rating: selectedRating, text, date: new Date().toLocaleDateString('id-ID') });
-  saveRevs(curKey, revs);
-  renderReviews(curKey);
+  const ok = await sbPost('reviews', { game_key: curKey, rating: selectedRating, review_text: text, fp_hash: FP_HASH });
+  if (!ok) { alert('❌ Gagal kirim ulasan, coba lagi.'); return; }
+  await renderReviews(curKey);
   document.getElementById('revText').value = '';
   selectedRating = 0;
   document.querySelectorAll('#starsIn span').forEach(s => { s.textContent = '☆'; s.classList.remove('on'); });
@@ -1509,15 +1476,11 @@ function submitRequest() {
   document.getElementById('rDesc').value = '';
 }
 
-// ===== WELCOME MODAL =====
+// ===== WELCOME / FAB / SCROLL =====
 function closeWelcome() { document.getElementById('welcome').classList.remove('show'); }
-
-// ===== FAB =====
 let fabTimer = null, fabAnim = false;
 function startFab() {
-  const main = document.getElementById('fabMain');
-  const wa = document.getElementById('fabWa');
-  const tg = document.getElementById('fabTg');
+  const main = document.getElementById('fabMain'), wa = document.getElementById('fabWa'), tg = document.getElementById('fabTg');
   if (fabTimer) clearInterval(fabTimer);
   fabTimer = setInterval(() => {
     if (fabAnim) return; fabAnim = true;
@@ -1531,24 +1494,16 @@ function startFab() {
   }, 8000);
 }
 document.getElementById('fabMain')?.addEventListener('click', () => {
-  const wa = document.getElementById('fabWa');
-  const tg = document.getElementById('fabTg');
-  const main = document.getElementById('fabMain');
+  const wa = document.getElementById('fabWa'), tg = document.getElementById('fabTg'), main = document.getElementById('fabMain');
   const isOpen = wa.classList.contains('show');
   if (isOpen) { wa.classList.remove('show'); tg.classList.remove('show'); main.style.transform = ''; }
   else { wa.classList.add('show'); tg.classList.add('show'); main.style.transform = 'rotate(45deg)'; }
 });
-
-// ===== SCROLL =====
 window.addEventListener('scroll', () => {
   const btn = document.getElementById('toTop');
   if (window.scrollY > 300) btn.classList.add('show'); else btn.classList.remove('show');
 });
-
-// ===== SERVICE WORKER =====
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-}
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(() => {}); }
 
 // ===== INIT =====
 window.addEventListener('DOMContentLoaded', () => {
@@ -1558,4 +1513,4 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
-</html>    
+</html>
