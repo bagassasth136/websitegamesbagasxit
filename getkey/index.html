@@ -2,8 +2,6 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>eruda.init()</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#050506">
@@ -61,13 +59,10 @@ body{
   animation:riseIn .6s cubic-bezier(.16,1,.3,1);
 }
 @keyframes riseIn{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
-
-/* HEADER ROW — FIX BIAR BRAND TENGAH */
 .head-row{
   display:flex;align-items:center;gap:10px;
   margin-bottom:16px;text-align:left;
-  width:100%;flex-wrap:nowrap;
-  justify-content:center;
+  width:100%;flex-wrap:nowrap;justify-content:center;
 }
 .back-btn{
   display:inline-flex;align-items:center;gap:5px;
@@ -80,33 +75,21 @@ body{
 .back-btn:active{transform:scale(.95)}
 .back-btn:hover{color:var(--accent);border-color:var(--accent)}
 .back-btn svg{width:12px;height:12px}
-.brand-wrap{
-  flex:1;min-width:0;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-}
-.brand{
-  display:flex;align-items:center;gap:8px;
-  margin-bottom:2px;justify-content:center;
-}
+.brand-wrap{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.brand{display:flex;align-items:center;gap:8px;margin-bottom:2px;justify-content:center}
 .brand-mark{
   width:32px;height:32px;border-radius:10px;
   background:linear-gradient(135deg,var(--accent),var(--cyan));
   display:flex;align-items:center;justify-content:center;
   box-shadow:0 6px 20px var(--accent-glow);
-  font-weight:900;color:#fff;font-size:16px;
-  flex-shrink:0;
+  font-weight:900;color:#fff;font-size:16px;flex-shrink:0;
 }
 .brand-txt{
   font-size:clamp(18px,5vw,20px);font-weight:900;letter-spacing:.5px;
   background:linear-gradient(135deg,#fff 0%,#C4B5FD 60%,#67E8F9 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-.subtitle{
-  color:var(--txt-mute);font-size:9px;letter-spacing:3px;
-  font-weight:700;text-align:center;width:100%;
-}
-
+.subtitle{color:var(--txt-mute);font-size:9px;letter-spacing:3px;font-weight:700;text-align:center;width:100%}
 .status{
   display:inline-flex;align-items:center;gap:6px;
   padding:5px 12px;border-radius:20px;
@@ -351,7 +334,7 @@ function getFp(){
 }
 var FP_ID = getFp();
 
-/* ============ BACKGROUND CANVAS ============ */
+/* ============ BACKGROUND ============ */
 (function(){
   var c = document.getElementById('bgCanvas');
   var ctx = c.getContext('2d');
@@ -388,6 +371,7 @@ var SB_KEY = _p2;
 var USER_K = _cfg.u, LAST_K = _cfg.l;
 var FUNCTION_URL = SB_URL + '/functions/v1/hyper-responder';
 var FLOW_URL = SB_URL + '/functions/v1/key-flow';
+var EXISTING_URL = SB_URL + '/functions/v1/verify-existing';
 
 var _sk = 'MHg0QUFBQUFBRkFzWVoxZ1BncUdXaDRx';
 
@@ -487,22 +471,31 @@ function resetToStart(){
 }
 
 async function init(){
-  // Cek cookie via server (verify)
+  try {
+    if (location.search && !location.search.includes('ref=')) {
+      history.replaceState({}, document.title, location.pathname);
+    }
+  } catch(e){}
+
   await checkSession();
 }
 
 async function checkSession(){
+  // Cek cookie via server (verify) — kirim referrer sekalian
   try {
     var r = await fetch(FLOW_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ action: 'verify', fp: FP_ID })
+      body: JSON.stringify({
+        action: 'verify',
+        fp: FP_ID,
+        referrer: document.referrer || ""
+      })
     });
     var d = await r.json();
 
     if (d.ok) {
-      // Ada cookie valid → lanjut step 2
       curStep = 2;
       $step1.className = 'step-dot done';
       $step2.className = 'step-dot on';
@@ -514,22 +507,25 @@ async function checkSession(){
     }
   } catch(e){}
 
-  // Cek existing key di localStorage
+  // Cek existing key via Edge Function verify-existing
   var existingKey = localStorage.getItem(USER_K);
   if (existingKey){
     try {
-      var rows = await sbGet('_kv_x9f2?key=eq.' + encodeURIComponent(existingKey) + '&select=*');
-      if (rows && rows.length > 0){
-        var d = rows[0];
-        var expMs = new Date(d.expires_at).getTime();
-        if (expMs > Date.now() && d.is_active){
-          curKey = existingKey;
-          showKey(existingKey, expMs);
-          $btnGet.style.display = 'block';
-          $btnGet.textContent = 'GET NEW KEY →';
-          $btnCopy.style.display = 'block';
-          return;
-        }
+      var r2 = await fetch(EXISTING_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ key: existingKey })
+      });
+      var d2 = await r2.json();
+      if (d2.ok && d2.expires_at){
+        var expMs = new Date(d2.expires_at).getTime();
+        curKey = existingKey;
+        showKey(existingKey, expMs);
+        $btnGet.style.display = 'block';
+        $btnGet.textContent = 'GET NEW KEY →';
+        $btnCopy.style.display = 'block';
+        return;
       }
     } catch(e){}
     localStorage.removeItem(USER_K);
@@ -564,7 +560,6 @@ $btnGet.onclick = async function(){
       return;
     }
 
-    // Pilih link rotate
     var today = new Date().toISOString().slice(0,10);
     var used = JSON.parse(localStorage.getItem('used_links')||'{}');
     if (used.date !== today) used = { date:today, links:[] };
@@ -618,10 +613,7 @@ async function makeKey(){
   try {
     var res = await fetch(FUNCTION_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + SB_KEY
-      },
+      headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify({ token: curToken, fp: FP_ID })
     });
@@ -725,8 +717,8 @@ $btnCopy.onclick = function(){
 };
 
 setInterval(function(){
-  sbGet('config?id=eq.maintenance&select=value').then(function(rows){
-    var on = rows && rows.length > 0 && rows[0].value === true;
+  sbGet('config?id=eq.maintenance&select=maintenance').then(function(rows){
+    var on = rows && rows.length > 0 && rows[0].maintenance === true;
     if (on){
       $status.className = 'status off';
       $statusTxt.textContent = 'MAINTENANCE';
