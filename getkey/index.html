@@ -449,7 +449,6 @@ async function checkMaintenanceAndBroadcast() {
       $statusTxt.textContent = 'MAINTENANCE';
       document.getElementById('bgMaintMsg').textContent = msg;
       document.getElementById('bgMaint').classList.add('show');
-      // Sembunyikan Turnstile + tombol
       if ($turnstileBox) $turnstileBox.style.display = 'none';
       if ($btnGet) $btnGet.style.display = 'none';
       if ($btnCopy) $btnCopy.style.display = 'none';
@@ -471,17 +470,6 @@ async function checkMaintenanceAndBroadcast() {
   } catch(e) {
     console.log('check config error:', e);
   }
-}
-
-  try {
-    var bRows = await sbGet('broadcasts?show_web=eq.true&select=*&order=timestamp.desc&limit=1');
-    if (bRows && bRows.length > 0) {
-      var b = bRows[0];
-      document.getElementById('bgBcastTitle').textContent = '📢 ' + (b.title || 'PENGUMUMAN');
-      document.getElementById('bgBcastMsg').textContent = b.message || '';
-      document.getElementById('bgBcast').classList.add('show');
-    }
-  } catch(e){}
 }
 
 async function init(){
