@@ -424,30 +424,54 @@ function resetToStart(){
   if (window.turnstile && tsWidget !== null) turnstile.reset(tsWidget);
 }
 
-/* ============ CEK MAINTENANCE + BROADCAST ============ */
+/* ============ CEK MAINTENANCE + BROADCAST (via Edge Function) ============ */
+var CONFIG_URL = SB_URL + '/functions/v1/get-config';
+
 async function checkMaintenanceAndBroadcast() {
   try {
-    var mRows = await sbGet('config?id=eq.maintenance&select=maintenance,message,apply_web');
-    var m = (mRows && mRows[0]) || {};
+    var r = await fetch(CONFIG_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'check' })
+    });
+    var d = await r.json();
+    if (!d.ok) return;
+
+    var m = d.maintenance || {};
+    var b = d.broadcast || null;
+
+    // ===== MAINTENANCE =====
     if (m.maintenance === true && m.apply_web === true) {
-      // Tampilkan blok maintenance fullscreen
-      document.getElementById('maintBlockMsg').textContent = m.message || 'Server sedang maintenance, coba lagi nanti.';
+      var msg = m.message || 'Server sedang maintenance, coba lagi nanti.';
+      document.getElementById('maintBlockMsg').textContent = msg;
       document.getElementById('maintBlock').classList.add('show');
-      // Status badge
       $status.className = 'status off';
       $statusTxt.textContent = 'MAINTENANCE';
-      // Banner
-      document.getElementById('bgMaintMsg').textContent = m.message || 'Server sedang maintenance, coba lagi nanti.';
+      document.getElementById('bgMaintMsg').textContent = msg;
       document.getElementById('bgMaint').classList.add('show');
-      return true;
+      // Sembunyikan Turnstile + tombol
+      if ($turnstileBox) $turnstileBox.style.display = 'none';
+      if ($btnGet) $btnGet.style.display = 'none';
+      if ($btnCopy) $btnCopy.style.display = 'none';
     } else {
       document.getElementById('maintBlock').classList.remove('show');
       $status.className = 'status';
       $statusTxt.textContent = 'SYSTEM ONLINE';
       document.getElementById('bgMaint').classList.remove('show');
-      return false;
     }
-  } catch(e) { return false; }
+
+    // ===== BROADCAST =====
+    if (b && b.title) {
+      document.getElementById('bgBcastTitle').textContent = '📢 ' + (b.title || 'PENGUMUMAN');
+      document.getElementById('bgBcastMsg').textContent = b.message || '';
+      document.getElementById('bgBcast').classList.add('show');
+    } else {
+      document.getElementById('bgBcast').classList.remove('show');
+    }
+  } catch(e) {
+    console.log('check config error:', e);
+  }
+}
 
   try {
     var bRows = await sbGet('broadcasts?show_web=eq.true&select=*&order=timestamp.desc&limit=1');
