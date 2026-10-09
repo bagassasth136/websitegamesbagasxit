@@ -107,6 +107,20 @@ body{
 #toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-160%);background:linear-gradient(135deg,var(--green),#059669);color:#fff;padding:12px 22px;border-radius:12px;font-size:12px;font-weight:800;letter-spacing:.3px;box-shadow:0 12px 40px rgba(16,185,129,.45);transition:transform .35s cubic-bezier(.16,1,.3,1);z-index:9999;max-width:90%;text-align:center}
 #toast.show{transform:translateX(-50%) translateY(0)}
 #toast.err{background:linear-gradient(135deg,var(--red),#B91C1C);box-shadow:0 12px 40px rgba(239,68,68,.45)}
+.desk-block{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(5,5,6,.96);backdrop-filter:blur(10px);
+  align-items:center;justify-content:center;padding:20px;
+}
+.desk-block.show{display:flex}
+.desk-block-inner{
+  max-width:360px;text-align:center;padding:30px 20px;
+  background:var(--card);border:1px solid var(--red);
+  border-radius:20px;box-shadow:0 20px 60px rgba(239,68,68,.3);
+}
+.desk-block .ico{font-size:48px;margin-bottom:14px}
+.desk-block h2{font-size:18px;font-weight:900;color:var(--red);margin-bottom:10px}
+.desk-block p{font-size:13px;color:var(--txt-dim);line-height:1.6}
 </style>
 </head>
 <body>
@@ -114,6 +128,14 @@ body{
 <canvas id="bgCanvas"></canvas>
 <div class="aurora"></div>
 <div id="toast"></div>
+
+<div class="desk-block" id="deskBlock">
+  <div class="desk-block-inner">
+    <div class="ico">📱</div>
+    <h2>MOBILE ONLY</h2>
+    <p>Halaman ini hanya bisa diakses dari HP Android / iPhone.<br><br>Silakan buka dari HP kamu ya 🙏</p>
+  </div>
+</div>
 
 <main class="main">
   <div class="container">
@@ -192,6 +214,25 @@ body{
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstile" async defer></script>
 
 <script>
+/* ============ DESKTOP DETECTION + BLOCK ============ */
+(function(){
+  try {
+    var ua = navigator.userAgent || "";
+    var isMobileUA = /Mobile|Android|iPhone|iPad|iPod|Windows Phone|webOS|BlackBerry/i.test(ua);
+    var hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+    var isDesktop = !isMobileUA && !hasTouch;
+
+    if (isDesktop) {
+      document.getElementById('deskBlock').classList.add('show');
+    }
+
+    // expose global
+    window.__IS_DESKTOP__ = isDesktop;
+  } catch(e) {
+    window.__IS_DESKTOP__ = false;
+  }
+})();
+
 /* ============ DOMAIN GUARD ============ */
 (function(){
   var allowed = ['bxit.my.id', 'www.bxit.my.id'];
@@ -240,6 +281,7 @@ function getFp(){
   } catch(e){ return 'F_fallback'; }
 }
 var FP_ID = getFp();
+var IS_DESKTOP = window.__IS_DESKTOP__ === true;
 
 /* ============ BACKGROUND ============ */
 (function(){
@@ -283,7 +325,7 @@ var EXISTING_URL = SB_URL + '/functions/v1/verify-existing';
 
 var _sk = 'MHg0QUFBQUFBRkFzWVoxZ1BncUdXaDRx';
 
-/* ============ 20 LINK MOVE2LINK ============ */
+/* ======================= */
 var LINKS = [
   'https://move2link.co/088a26cf',
   'https://move2link.co/27df5d26',
@@ -379,6 +421,12 @@ function resetToStart(){
 }
 
 async function init(){
+  // Kalo desktop → STOP, jangan lanjut apa-apa
+  if (IS_DESKTOP) {
+    console.log("Desktop detected, blocking");
+    return;
+  }
+
   // Bersihin ?v= dari URL
   try {
     if (location.search) {
@@ -401,7 +449,8 @@ async function checkSession(){
           action: 'verify',
           fp: FP_ID,
           token: flowToken,
-          referrer: document.referrer || ""
+          referrer: document.referrer || "",
+          is_desktop: IS_DESKTOP
         })
       });
       var d = await r.json();
@@ -417,9 +466,7 @@ async function checkSession(){
         if (window.turnstile && tsWidget !== null) turnstile.reset(tsWidget);
         return;
       } else {
-        // Token gagal (expired / used / fp mismatch / not from move2link)
         if (d.error && d.error.indexOf("Too fast") === -1) {
-          // Kalau bukan "too fast", hapus token
           localStorage.removeItem(FLOW_TOKEN_KEY);
         }
       }
@@ -448,7 +495,6 @@ async function checkSession(){
     } catch(e){}
     localStorage.removeItem(USER_K);
   }
-  // Normal start (step 1)
 }
 
 $btnGet.onclick = async function(){
@@ -461,7 +507,7 @@ $btnGet.onclick = async function(){
       var r = await fetch(FLOW_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'start', fp: FP_ID })
+        body: JSON.stringify({ action: 'start', fp: FP_ID, is_desktop: IS_DESKTOP })
       });
       var d = await r.json();
       if (!d.ok || !d.token) {
@@ -470,7 +516,6 @@ $btnGet.onclick = async function(){
         $btnGet.textContent = 'CONTINUE →';
         return;
       }
-      // Simpen token di localStorage
       localStorage.setItem(FLOW_TOKEN_KEY, d.token);
     } catch(e) {
       toast('❌ ' + e.message, true);
