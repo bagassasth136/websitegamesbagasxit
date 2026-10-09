@@ -218,15 +218,14 @@ body{
 (function(){
   try {
     var ua = navigator.userAgent || "";
-    var isMobileUA = /Mobile|Android|iPhone|iPad|iPod|Windows Phone|webOS|BlackBerry/i.test(ua);
     var hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
-    var isDesktop = !isMobileUA && !hasTouch;
+    var wideScreen = window.innerWidth >= 900;
+    var isDesktop = wideScreen;
 
     if (isDesktop) {
       document.getElementById('deskBlock').classList.add('show');
     }
 
-    // expose global
     window.__IS_DESKTOP__ = isDesktop;
   } catch(e) {
     window.__IS_DESKTOP__ = false;
