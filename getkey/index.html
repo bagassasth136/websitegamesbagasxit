@@ -83,9 +83,40 @@ body{
 .timer .txt{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;color:var(--green);text-align:center;line-height:1.2}
 .timer .txt .lbl{display:block;font-family:'Inter',sans-serif;font-size:7px;color:var(--txt-mute);font-weight:700;letter-spacing:1px;margin-top:2px}
 .key-timer{color:var(--txt-mute);font-size:10px;margin-top:8px;font-weight:600;letter-spacing:.5px}
-.turnstile-box{background:rgba(10,10,13,.6);border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:12px;display:flex;justify-content:center;align-items:center;min-height:68px;overflow:hidden;width:100%;max-width:100%}
-.turnstile-box > div{max-width:100%;width:100%;display:flex;justify-content:center;align-items:center}
-.turnstile-box iframe{max-width:100% !important}
+
+/* TURNSTILE BOX — FIX KELUAR JALUR */
+.turnstile-box{
+  background:rgba(10,10,13,.6);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px 6px;
+  margin-bottom:12px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:68px;
+  width:100%;
+  max-width:100%;
+  overflow:hidden;
+  box-sizing:border-box;
+}
+.turnstile-box > div,
+.turnstile-box #cf-turnstile{
+  max-width:100% !important;
+  width:100% !important;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+.turnstile-box iframe{
+  max-width:100% !important;
+  width:100% !important;
+}
+.turnstile-box *{
+  max-width:100% !important;
+}
+
 .btn{width:100%;padding:15px;border-radius:12px;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:800;letter-spacing:.8px;transition:.2s;position:relative;overflow:hidden}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
@@ -320,13 +351,9 @@ var FLOW_TOKEN_KEY = '_ft_v3';
 var FUNCTION_URL = SB_URL + '/functions/v1/hyper-responder';
 var FLOW_URL = SB_URL + '/functions/v1/key-flow';
 var EXISTING_URL = SB_URL + '/functions/v1/verify-existing';
+var GET_LINK_URL = SB_URL + '/functions/v1/get-link';
 
 var _sk = 'MHg0QUFBQUFBRkFzWVoxZ1BncUdXaDRx';
-
-/* ============ 20 LINK MOVE2LINK ============ */
-var LINKS = [
-  'https://move2link.co/4fc5f1a7'
-];
 
 /* ============ DOM ============ */
 var $keyBox = document.getElementById('keyBox');
@@ -479,6 +506,7 @@ $btnGet.onclick = async function(){
     $infoTxt.textContent = '🔗 Preparing...';
 
     try {
+      // 1. Minta token ke key-flow
       var r = await fetch(FLOW_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -492,25 +520,30 @@ $btnGet.onclick = async function(){
         return;
       }
       localStorage.setItem(FLOW_TOKEN_KEY, d.token);
+
+      // 2. Minta link random ke get-link (rotate per-fingerprint)
+      var rl = await fetch(GET_LINK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fp: FP_ID })
+      });
+      var dl = await rl.json();
+      if (!dl.ok || !dl.url) {
+        toast('❌ ' + (dl.error||'Failed get link'), true);
+        $btnGet.disabled = false;
+        $btnGet.textContent = 'CONTINUE →';
+        return;
+      }
+
+      $infoTxt.textContent = '🔗 Redirecting...';
+      setTimeout(function(){ location.href = dl.url; }, 500);
+
     } catch(e) {
       toast('❌ ' + e.message, true);
       $btnGet.disabled = false;
       $btnGet.textContent = 'CONTINUE →';
       return;
     }
-
-    var today = new Date().toISOString().slice(0,10);
-    var used = JSON.parse(localStorage.getItem('used_links')||'{}');
-    if (used.date !== today) used = { date:today, links:[] };
-    var un = LINKS.filter(function(l){ return used.links.indexOf(l) === -1; });
-    var target;
-    if (un.length > 0) target = un[Math.floor(Math.random()*un.length)];
-    else { used.links = []; target = LINKS[Math.floor(Math.random()*LINKS.length)]; }
-    used.links.push(target);
-    localStorage.setItem('used_links', JSON.stringify(used));
-
-    $infoTxt.textContent = '🔗 Redirecting...';
-    setTimeout(function(){ location.href = target; }, 500);
     return;
   }
 };
