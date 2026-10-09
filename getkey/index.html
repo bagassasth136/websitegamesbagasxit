@@ -117,7 +117,6 @@ body{
 .desk-block h2{font-size:18px;font-weight:900;color:var(--red);margin-bottom:10px}
 .desk-block p{font-size:13px;color:var(--txt-dim);line-height:1.6}
 
-// ==========
 .bg-banner{
   display:none;position:fixed;top:0;left:0;right:0;z-index:9998;
   padding:10px 16px;font-size:12px;font-weight:700;
@@ -130,7 +129,6 @@ body{
 .bg-banner .bg-title{font-size:13px;font-weight:900;margin-bottom:2px}
 .bg-banner .bg-msg{font-weight:600;opacity:.95}
 
-//=====
 .maint-block{
   display:none;position:fixed;inset:0;z-index:9997;
   background:rgba(5,5,6,.98);backdrop-filter:blur(20px);
@@ -255,7 +253,7 @@ body{
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstile" async defer></script>
 
 <script>
-// ========================
+  
 (function(){
   try {
     var wideScreen = window.innerWidth >= 900;
@@ -269,7 +267,6 @@ body{
   }
 })();
 
-// ========================
 (function(){
   var allowed = ['bxit.my.id', 'www.bxit.my.id'];
   var host = location.hostname;
@@ -279,7 +276,6 @@ body{
   }
 })();
 
-// ========================
 function getFp(){
   try {
     var p = [
@@ -310,7 +306,6 @@ function getFp(){
 var FP_ID = getFp();
 var IS_DESKTOP = window.__IS_DESKTOP__ === true;
 
-// ========================
 (function(){
   var c = document.getElementById('bgCanvas');
   var ctx = c.getContext('2d');
@@ -337,7 +332,6 @@ var IS_DESKTOP = window.__IS_DESKTOP__ === true;
   draw();
 })();
 
-// ========================
 var _p1 = atob('aHR0cHM6Ly9xbHp3cWJidmpzY2ZqYWljYmhrcy5zdXBhYmFzZS5jbw==');
 var _p2 = 'sb_publishable_DRIOqI7O90TinECl4K6FJA_l0nIaPCY';
 var _cfg = JSON.parse(atob('eyJ0IjoiX3RfdjMiLCJ3IjoiX3dfdjMiLCJ1IjoiX3VfdjMiLCJsIjoiX2xfdjMiLCJkIjo5MDAwMCwicCI6ImJ4X3RfdjMifQ=='));
@@ -353,7 +347,6 @@ var GET_LINK_URL = SB_URL + '/functions/v1/get-link';
 
 var _sk = 'MHg0QUFBQUFBRkFzWVoxZ1BncUdXaDRx';
 
-// ========================
 var $keyBox = document.getElementById('keyBox');
 var $keyVal = document.getElementById('keyValue');
 var $keyTimer = document.getElementById('keyTimer');
@@ -438,8 +431,7 @@ async function checkMaintenanceAndBroadcast() {
 
     var m = d.maintenance || {};
     var b = d.broadcast || null;
-
-    // ==========
+  
     if (m.maintenance === true && m.apply_web === true) {
       var msg = m.message || 'Server sedang maintenance, coba lagi nanti.';
       document.getElementById('maintBlockMsg').textContent = msg;
@@ -458,7 +450,6 @@ async function checkMaintenanceAndBroadcast() {
       document.getElementById('bgMaint').classList.remove('show');
     }
 
-    // ==========
     if (b && b.title) {
       document.getElementById('bgBcastTitle').textContent = '📢 ' + (b.title || 'PENGUMUMAN');
       document.getElementById('bgBcastMsg').textContent = b.message || '';
@@ -483,12 +474,8 @@ async function init(){
     }
   } catch(e){}
 
-  // Cek maintenance + broadcast sebelum lanjut
   await checkMaintenanceAndBroadcast();
-
-  // Auto-refresh check tiap 30 detik
   setInterval(checkMaintenanceAndBroadcast, 30000);
-
   await checkSession();
 }
 
