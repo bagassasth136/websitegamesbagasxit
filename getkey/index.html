@@ -83,40 +83,11 @@ body{
 .timer .txt{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;color:var(--green);text-align:center;line-height:1.2}
 .timer .txt .lbl{display:block;font-family:'Inter',sans-serif;font-size:7px;color:var(--txt-mute);font-weight:700;letter-spacing:1px;margin-top:2px}
 .key-timer{color:var(--txt-mute);font-size:10px;margin-top:8px;font-weight:600;letter-spacing:.5px}
-
-/* TURNSTILE BOX — FIX KELUAR JALUR */
-.turnstile-box{
-  background:rgba(10,10,13,.6);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:10px 6px;
-  margin-bottom:12px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:68px;
-  width:100%;
-  max-width:100%;
-  overflow:hidden;
-  box-sizing:border-box;
-}
+.turnstile-box{background:rgba(10,10,13,.6);border:1px solid var(--border);border-radius:12px;padding:10px 6px;margin-bottom:12px;display:flex;justify-content:center;align-items:center;min-height:68px;width:100%;max-width:100%;overflow:hidden;box-sizing:border-box}
 .turnstile-box > div,
-.turnstile-box #cf-turnstile{
-  max-width:100% !important;
-  width:100% !important;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  overflow:hidden;
-}
-.turnstile-box iframe{
-  max-width:100% !important;
-  width:100% !important;
-}
-.turnstile-box *{
-  max-width:100% !important;
-}
-
+.turnstile-box #cf-turnstile{max-width:100% !important;width:100% !important;display:flex;justify-content:center;align-items:center;overflow:hidden}
+.turnstile-box iframe{max-width:100% !important;width:100% !important}
+.turnstile-box *{max-width:100% !important}
 .btn{width:100%;padding:15px;border-radius:12px;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:800;letter-spacing:.8px;transition:.2s;position:relative;overflow:hidden}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
@@ -139,20 +110,41 @@ body{
 #toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-160%);background:linear-gradient(135deg,var(--green),#059669);color:#fff;padding:12px 22px;border-radius:12px;font-size:12px;font-weight:800;letter-spacing:.3px;box-shadow:0 12px 40px rgba(16,185,129,.45);transition:transform .35s cubic-bezier(.16,1,.3,1);z-index:9999;max-width:90%;text-align:center}
 #toast.show{transform:translateX(-50%) translateY(0)}
 #toast.err{background:linear-gradient(135deg,var(--red),#B91C1C);box-shadow:0 12px 40px rgba(239,68,68,.45)}
-.desk-block{
-  display:none;position:fixed;inset:0;z-index:9999;
-  background:rgba(5,5,6,.96);backdrop-filter:blur(10px);
-  align-items:center;justify-content:center;padding:20px;
-}
+.desk-block{display:none;position:fixed;inset:0;z-index:9999;background:rgba(5,5,6,.96);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:20px}
 .desk-block.show{display:flex}
-.desk-block-inner{
-  max-width:360px;text-align:center;padding:30px 20px;
-  background:var(--card);border:1px solid var(--red);
-  border-radius:20px;box-shadow:0 20px 60px rgba(239,68,68,.3);
-}
+.desk-block-inner{max-width:360px;text-align:center;padding:30px 20px;background:var(--card);border:1px solid var(--red);border-radius:20px;box-shadow:0 20px 60px rgba(239,68,68,.3)}
 .desk-block .ico{font-size:48px;margin-bottom:14px}
 .desk-block h2{font-size:18px;font-weight:900;color:var(--red);margin-bottom:10px}
 .desk-block p{font-size:13px;color:var(--txt-dim);line-height:1.6}
+
+/* ===== BANNER MAINTENANCE & BROADCAST ===== */
+.bg-banner{
+  display:none;position:fixed;top:0;left:0;right:0;z-index:9998;
+  padding:10px 16px;font-size:12px;font-weight:700;
+  text-align:center;line-height:1.5;
+  box-shadow:0 4px 20px rgba(0,0,0,.5);
+}
+.bg-banner.show{display:block}
+.bg-banner.maint{background:linear-gradient(135deg,#DC2626,#991B1B);color:#fff}
+.bg-banner.bcast{background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff}
+.bg-banner .bg-title{font-size:13px;font-weight:900;margin-bottom:2px}
+.bg-banner .bg-msg{font-weight:600;opacity:.95}
+
+/* ===== MAINTENANCE BLOCK ===== */
+.maint-block{
+  display:none;position:fixed;inset:0;z-index:9997;
+  background:rgba(5,5,6,.98);backdrop-filter:blur(20px);
+  align-items:center;justify-content:center;padding:20px;
+}
+.maint-block.show{display:flex}
+.maint-block-inner{
+  max-width:400px;text-align:center;padding:32px 24px;
+  background:var(--card);border:1px solid var(--red);
+  border-radius:24px;box-shadow:0 20px 60px rgba(239,68,68,.4);
+}
+.maint-block .ico{font-size:56px;margin-bottom:16px}
+.maint-block h2{font-size:20px;font-weight:900;color:var(--red);margin-bottom:12px}
+.maint-block p{font-size:14px;color:var(--txt-dim);line-height:1.6}
 </style>
 </head>
 <body>
@@ -160,6 +152,23 @@ body{
 <canvas id="bgCanvas"></canvas>
 <div class="aurora"></div>
 <div id="toast"></div>
+
+<div class="bg-banner maint" id="bgMaint">
+  <div class="bg-title">🛠 MAINTENANCE</div>
+  <div class="bg-msg" id="bgMaintMsg">Server sedang maintenance, coba lagi nanti.</div>
+</div>
+<div class="bg-banner bcast" id="bgBcast">
+  <div class="bg-title" id="bgBcastTitle">📢 PENGUMUMAN</div>
+  <div class="bg-msg" id="bgBcastMsg">Ada info baru untuk kamu!</div>
+</div>
+
+<div class="maint-block" id="maintBlock">
+  <div class="maint-block-inner">
+    <div class="ico">🛠</div>
+    <h2>MAINTENANCE</h2>
+    <p id="maintBlockMsg">Server sedang maintenance, coba lagi nanti.</p>
+  </div>
+</div>
 
 <div class="desk-block" id="deskBlock">
   <div class="desk-block-inner">
@@ -251,11 +260,9 @@ body{
   try {
     var wideScreen = window.innerWidth >= 900;
     var isDesktop = wideScreen;
-
     if (isDesktop) {
       document.getElementById('deskBlock').classList.add('show');
     }
-
     window.__IS_DESKTOP__ = isDesktop;
   } catch(e) {
     window.__IS_DESKTOP__ = false;
@@ -276,35 +283,26 @@ body{
 function getFp(){
   try {
     var p = [
-      navigator.userAgent || '',
-      navigator.language || '',
-      navigator.platform || '',
-      screen.width + 'x' + screen.height,
-      screen.colorDepth || '',
+      navigator.userAgent || '', navigator.language || '', navigator.platform || '',
+      screen.width + 'x' + screen.height, screen.colorDepth || '',
       new Date().getTimezoneOffset(),
       (Intl.DateTimeFormat().resolvedOptions().timeZone) || '',
-      navigator.hardwareConcurrency || '',
-      navigator.deviceMemory || ''
+      navigator.hardwareConcurrency || '', navigator.deviceMemory || ''
     ];
     try {
       var cv = document.createElement('canvas');
       cv.width = 200; cv.height = 50;
       var cx = cv.getContext('2d');
-      cx.textBaseline = 'top';
-      cx.font = '14px Arial';
-      cx.fillStyle = '#f60';
-      cx.fillRect(125, 1, 62, 20);
-      cx.fillStyle = '#069';
-      cx.fillText('BAGASXIT', 2, 15);
-      cx.fillStyle = 'rgba(102,204,0,0.7)';
-      cx.fillText('BAGASXIT', 4, 17);
+      cx.textBaseline = 'top'; cx.font = '14px Arial';
+      cx.fillStyle = '#f60'; cx.fillRect(125, 1, 62, 20);
+      cx.fillStyle = '#069'; cx.fillText('BAGASXIT', 2, 15);
+      cx.fillStyle = 'rgba(102,204,0,0.7)'; cx.fillText('BAGASXIT', 4, 17);
       p.push(cv.toDataURL());
     } catch(e){}
     var raw = p.join('|');
     var h = 5381;
     for (var i = 0; i < raw.length; i++){
-      h = ((h << 5) + h) + raw.charCodeAt(i);
-      h = h & h;
+      h = ((h << 5) + h) + raw.charCodeAt(i); h = h & h;
     }
     return 'F' + Math.abs(h).toString(36) + '_' + raw.length.toString(36);
   } catch(e){ return 'F_fallback'; }
@@ -426,6 +424,42 @@ function resetToStart(){
   if (window.turnstile && tsWidget !== null) turnstile.reset(tsWidget);
 }
 
+/* ============ CEK MAINTENANCE + BROADCAST ============ */
+async function checkMaintenanceAndBroadcast() {
+  try {
+    var mRows = await sbGet('config?id=eq.maintenance&select=maintenance,message,apply_web');
+    var m = (mRows && mRows[0]) || {};
+    if (m.maintenance === true && m.apply_web === true) {
+      // Tampilkan blok maintenance fullscreen
+      document.getElementById('maintBlockMsg').textContent = m.message || 'Server sedang maintenance, coba lagi nanti.';
+      document.getElementById('maintBlock').classList.add('show');
+      // Status badge
+      $status.className = 'status off';
+      $statusTxt.textContent = 'MAINTENANCE';
+      // Banner
+      document.getElementById('bgMaintMsg').textContent = m.message || 'Server sedang maintenance, coba lagi nanti.';
+      document.getElementById('bgMaint').classList.add('show');
+      return true;
+    } else {
+      document.getElementById('maintBlock').classList.remove('show');
+      $status.className = 'status';
+      $statusTxt.textContent = 'SYSTEM ONLINE';
+      document.getElementById('bgMaint').classList.remove('show');
+      return false;
+    }
+  } catch(e) { return false; }
+
+  try {
+    var bRows = await sbGet('broadcasts?show_web=eq.true&select=*&order=timestamp.desc&limit=1');
+    if (bRows && bRows.length > 0) {
+      var b = bRows[0];
+      document.getElementById('bgBcastTitle').textContent = '📢 ' + (b.title || 'PENGUMUMAN');
+      document.getElementById('bgBcastMsg').textContent = b.message || '';
+      document.getElementById('bgBcast').classList.add('show');
+    }
+  } catch(e){}
+}
+
 async function init(){
   if (IS_DESKTOP) {
     console.log("Desktop detected, blocking");
@@ -437,6 +471,12 @@ async function init(){
       history.replaceState({}, document.title, location.pathname);
     }
   } catch(e){}
+
+  // Cek maintenance + broadcast sebelum lanjut
+  await checkMaintenanceAndBroadcast();
+
+  // Auto-refresh check tiap 30 detik
+  setInterval(checkMaintenanceAndBroadcast, 30000);
 
   await checkSession();
 }
@@ -506,7 +546,6 @@ $btnGet.onclick = async function(){
     $infoTxt.textContent = '🔗 Preparing...';
 
     try {
-      // 1. Minta token ke key-flow
       var r = await fetch(FLOW_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -521,7 +560,6 @@ $btnGet.onclick = async function(){
       }
       localStorage.setItem(FLOW_TOKEN_KEY, d.token);
 
-      // 2. Minta link random ke get-link (rotate per-fingerprint)
       var rl = await fetch(GET_LINK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -686,19 +724,6 @@ $btnCopy.onclick = function(){
     setTimeout(function(){ $btnCopy.textContent = '📋 COPY KEY'; }, 2000);
   });
 };
-
-setInterval(function(){
-  sbGet('config?id=eq.maintenance&select=maintenance').then(function(rows){
-    var on = rows && rows.length > 0 && rows[0].maintenance === true;
-    if (on){
-      $status.className = 'status off';
-      $statusTxt.textContent = 'MAINTENANCE';
-    } else {
-      $status.className = 'status';
-      $statusTxt.textContent = 'SYSTEM ONLINE';
-    }
-  }).catch(function(){});
-}, 30000);
 
 init();
 </script>
