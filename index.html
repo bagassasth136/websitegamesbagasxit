@@ -719,24 +719,6 @@ body{
   padding-top:16px;border-top:1px solid var(--border);
   margin-top:18px;letter-spacing:.5px;font-weight:600;
 }
-/* ===== BANNER MAINTENANCE & BROADCAST ===== */
-.bg-banner{
-  display:none;position:fixed;top:0;left:0;right:0;z-index:9999;
-  padding:10px 16px;font-size:12px;font-weight:700;
-  text-align:center;line-height:1.5;
-  box-shadow:0 4px 20px rgba(0,0,0,.5);
-}
-.bg-banner.show{display:block}
-.bg-banner.maint{
-  background:linear-gradient(135deg,#DC2626,#991B1B);
-  color:#fff;
-}
-.bg-banner.bcast{
-  background:linear-gradient(135deg,#7C3AED,#A855F7);
-  color:#fff;
-}
-.bg-banner .bg-title{font-size:13px;font-weight:900;margin-bottom:2px}
-.bg-banner .bg-msg{font-weight:600;opacity:.95}
 .loading{
   text-align:center;padding:40px 20px;color:var(--txt-mute);
   font-size:12px;font-weight:600;
@@ -751,15 +733,6 @@ body{
 </style>
 </head>
 <body>
-
-<div class="bg-banner maint" id="bgMaint">
-  <div class="bg-title">🛠 MAINTENANCE</div>
-  <div class="bg-msg" id="bgMaintMsg">Server sedang maintenance, coba lagi nanti.</div>
-</div>
-<div class="bg-banner bcast" id="bgBcast">
-  <div class="bg-title" id="bgBcastTitle">📢 PENGUMUMAN</div>
-  <div class="bg-msg" id="bgBcastMsg">Ada info baru untuk kamu!</div>
-</div>
 
 <!-- SIDEBAR -->
 <div class="sidebar-bg" id="sidebarBg" onclick="closeSidebar()"></div>
@@ -1142,7 +1115,6 @@ async function loadFavs() {
 }
 function isFav(k) { return favsCache.indexOf(k) > -1; }
 
-// ===== APPLY CONFIG =====
 function applyConfig() {
   if (!configData) return;
   const hot = document.getElementById('hotKeywords');
@@ -1168,7 +1140,6 @@ function applyConfig() {
   if (configData.allGamesTitle) document.getElementById('allTitle').innerHTML = configData.allGamesTitle;
 }
 
-// ===== APPLY MESSAGES =====
 function applyMessages() {
   if (!messagesData) return;
   const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
@@ -1187,7 +1158,6 @@ function applyMessages() {
   set('fBtm', messagesData.footerText);
 }
 
-// ===== NAVIGASI =====
 function showPage(p) {
   document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('[data-nav]').forEach(el => el.classList.remove('active'));
@@ -1205,8 +1175,6 @@ function closeSidebar() {
   document.getElementById('sidebar').classList.remove('show');
   document.getElementById('sidebarBg').classList.remove('show');
 }
-
-// ===== SEARCH =====
 function searchKW(k) {
   document.getElementById('searchInput').value = k;
   curSearch = k.toLowerCase();
@@ -1253,7 +1221,6 @@ document.querySelectorAll('.chip[data-cat]').forEach(c => {
 });
 function filterCat(c) { showPage('home'); setTimeout(() => searchKW(c), 100); }
 
-// ===== BADGE =====
 function getBadge(k) {
   const map = {
     ff_vip: ['badge-ff', 'Menu Mod'], epic_c2: ['badge-gold', 'Gold/Ruby'],
@@ -1266,7 +1233,6 @@ function getBadge(k) {
   return map[k] || ['badge-money', 'Money Mod'];
 }
 
-// ===== RENDER GRID =====
 function renderGrid() {
   const grid = document.getElementById('modsGrid');
   const keys = Object.keys(gameDB);
@@ -1298,7 +1264,6 @@ function renderGrid() {
   grid.innerHTML = html || '<div class="loading" style="grid-column:1/-1">Tidak ada hasil</div>';
 }
 
-// ===== TRENDING =====
 function parseDL(meta) { const m = (meta || '').match(/([\d.]+)\s*M/i); return m ? parseFloat(m[1]) : 0; }
 function renderTrending() {
   const grid = document.getElementById('trendGrid');
@@ -1316,7 +1281,6 @@ function renderTrending() {
     </div>`).join('');
 }
 
-// ===== CAROUSEL =====
 function initCarousel() {
   const box = document.getElementById('carousel');
   if (!configData.carousel || !configData.carousel.length) { box.style.display = 'none'; return; }
@@ -1347,7 +1311,6 @@ function initCarousel() {
   if (slides.length > 1) carouselTimer = setInterval(next, 4500);
 }
 
-// ===== DETAIL =====
 async function showDetail(k) {
   const g = gameDB[k]; if (!g) return;
   curKey = k;
@@ -1397,7 +1360,6 @@ function renderVerDetail(g, idx) {
 function closeDetail() { stopAutoLike(); document.getElementById('detail').classList.remove('show'); }
 function trackDL() { if (curKey) sbRpc('increment_stat', { p_game_key: curKey, p_type: 'download' }); }
 
-// ===== FAVORITE (SUPABASE) =====
 async function toggleFav() {
   if (!curKey) return;
   if (isFav(curKey)) {
@@ -1417,7 +1379,6 @@ async function updateFavUI() {
   else { btn.textContent = '♡'; btn.classList.remove('liked'); }
 }
 
-// ===== AUTO LIKE =====
 function startAutoLike() {
   if (autoLikeRunning) return;
   autoLikeRunning = true;
@@ -1439,7 +1400,6 @@ function stopAutoLike() {
   autoLikeRunning = false;
 }
 
-// ===== RATING & ULASAN (SUPABASE) =====
 document.querySelectorAll('#starsIn span').forEach(s => {
   s.addEventListener('click', function() {
     selectedRating = parseInt(this.dataset.v);
@@ -1486,7 +1446,6 @@ async function submitReview() {
   alert('✅ Ulasan terkirim. Terima kasih!');
 }
 
-// ===== REQUEST =====
 function submitRequest() {
   const n = document.getElementById('rName').value.trim();
   const l = document.getElementById('rLink').value.trim();
@@ -1503,7 +1462,6 @@ function submitRequest() {
   document.getElementById('rDesc').value = '';
 }
 
-// ===== WELCOME / FAB / SCROLL =====
 function closeWelcome() { document.getElementById('welcome').classList.remove('show'); }
 let fabTimer = null, fabAnim = false;
 function startFab() {
@@ -1532,39 +1490,11 @@ window.addEventListener('scroll', () => {
 });
 if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(() => {}); }
 
-// ===== CEK MAINTENANCE + BROADCAST =====
-async function checkMaintenanceAndBroadcast() {
-  try {
-    // 1. Cek maintenance
-    const mRows = await sbGet('config?id=eq.maintenance&select=maintenance,message,apply_main');
-    const m = (mRows && mRows[0]) || {};
-    if (m.maintenance === true && m.apply_main === true) {
-      document.getElementById('bgMaintMsg').textContent = m.message || 'Server sedang maintenance, coba lagi nanti.';
-      document.getElementById('bgMaint').classList.add('show');
-    } else {
-      document.getElementById('bgMaint').classList.remove('show');
-    }
-  } catch(e){}
-
-  try {
-    // 2. Cek broadcast terbaru (show_main = true)
-    const bRows = await sbGet('broadcasts?show_main=eq.true&select=*&order=timestamp.desc&limit=1');
-    if (bRows && bRows.length > 0) {
-      const b = bRows[0];
-      document.getElementById('bgBcastTitle').textContent = '📢 ' + (b.title || 'PENGUMUMAN');
-      document.getElementById('bgBcastMsg').textContent = b.message || '';
-      document.getElementById('bgBcast').classList.add('show');
-    } else {
-      document.getElementById('bgBcast').classList.remove('show');
-    }
-  } catch(e){}
-}
-
-// ===== INIT =====
 window.addEventListener('DOMContentLoaded', () => {
   loadAll();
-  checkMaintenanceAndBroadcast();
-  setInterval(checkMaintenanceAndBroadcast, 30000);
   setTimeout(() => document.getElementById('welcome').classList.add('show'), 400);
   setTimeout(startFab, 1200);
 });
+</script>
+</body>
+</html>
