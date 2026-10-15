@@ -150,13 +150,14 @@ body{
 }
 .bnav-item.active{color:var(--accent)}
 .bnav-item.active .ico{transform:scale(1.1)}
-.bnav-item.key-tab .ico{
+.bnav-item.key-tab .ico,
+.bnav-item.store-tab .ico{
   background:linear-gradient(135deg,var(--accent),var(--cyan));
   width:30px;height:30px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
   color:#fff;font-size:14px;
   box-shadow:0 4px 14px var(--accent-glow);
-  margin-top:-10px;
+  margin-top:-8px;
   border:3px solid var(--bg);
 }
 .bnav-item.key-tab{font-size:9px}
@@ -972,7 +973,7 @@ body{
   <a href="#" class="bnav-item" onclick="showPage('categories');return false;" data-nav="categories">
     <span class="ico">📁</span><span>Catalog</span>
   </a>
-  <a href="/store/" class="bnav-item">
+  <a href="/store/" class="bnav-item store-tab">
   <span class="ico">🛒</span><span>Store</span>
 </a>
   <a href="/getkey/" class="bnav-item key-tab">
