@@ -55,8 +55,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);min-he
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:.3s;position:relative;display:flex;flex-direction:column;animation:cardIn .5s cubic-bezier(.16,1,.3,1) backwards}
 @keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .card:hover{border-color:var(--accent2);box-shadow:0 12px 32px rgba(0,0,0,.6)}
-.card .thumb{width:100%;height:160px;background:linear-gradient(135deg,#0A0A0D,#14141C);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.card .thumb::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,var(--glow),transparent 65%);opacity:.55;pointer-events:none}
+.card .thumb{width:100%;height:180px;background:linear-gradient(135deg,#0A0A0D,#14141C);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.card .thumb .thumb-blur{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(40px) saturate(1.4) brightness(0.55);transform:scale(1.2);z-index:1}
+.card .thumb .thumb-main{position:relative;z-index:2;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
 .card .thumb .ico-wrap{position:relative;z-index:2;width:76px;height:76px;border-radius:22px;display:flex;align-items:center;justify-content:center;transition:.4s}
 .card:hover .thumb .ico-wrap{transform:scale(1.08) rotate(-3deg)}
 .ico-proxy{background:linear-gradient(135deg,#06B6D4,#0891B2);box-shadow:0 8px 24px rgba(6,182,212,.5)}
@@ -67,7 +68,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);min-he
 .ico-script{background:linear-gradient(135deg,#EC4899,#DB2777);box-shadow:0 8px 24px rgba(236,72,153,.5)}
 .ico-default{background:linear-gradient(135deg,#64748B,#475569);box-shadow:0 8px 24px rgba(100,116,139,.5)}
 .card .thumb .ico-wrap svg{width:38px;height:38px;color:#fff;stroke-width:2.2}
-.card .badge-cat{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);color:var(--cyan);font-size:8px;font-weight:900;padding:4px 10px;border-radius:6px;letter-spacing:.5px;z-index:3;text-transform:uppercase}
+.card .badge-cat{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);color:var(--cyan);font-size:8px;font-weight:900;padding:4px 10px;border-radius:6px;letter-spacing:.5px;z-index:5;text-transform:uppercase}
 .card .info{padding:16px 16px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
 .card .info h3{font-size:15px;font-weight:900;line-height:1.3}
 .card .meta{display:flex;gap:10px;flex-wrap:wrap;font-size:10px;color:var(--txt-dim);font-weight:700}
@@ -258,13 +259,13 @@ function renderGrid() {
           : `<button class="btn-key" disabled>${getkeyLabel}</button>`)
       : '';
 
+    const thumbHtml = p.screenshot
+      ? `<img src="${p.screenshot}" class="thumb-blur" alt=""><img src="${p.screenshot}" class="thumb-main" alt="${p.name}" onerror="this.parentNode.querySelector('.thumb-blur').style.display='none';this.style.display='none'">`
+      : `<div class="ico-wrap ${cfg.cls}">${cfg.svg}</div>`;
+
     return `<div class="card">
       <div class="badge-cat">${cfg.tag}</div>
-      <div class="thumb">
-        ${p.screenshot
-          ? `<img src="${p.screenshot}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;position:relative;z-index:2;" onerror="this.style.display='none'">`
-          : `<div class="ico-wrap ${cfg.cls}">${cfg.svg}</div>`}
-      </div>
+      <div class="thumb">${thumbHtml}</div>
       <div class="info">
         <h3>${p.name}</h3>
         <div class="meta">
