@@ -260,7 +260,11 @@ function renderGrid() {
 
     return `<div class="card">
       <div class="badge-cat">${cfg.tag}</div>
-      <div class="thumb"><div class="ico-wrap ${cfg.cls}">${cfg.svg}</div></div>
+      <div class="thumb">
+        ${p.screenshot
+          ? `<img src="${p.screenshot}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;position:relative;z-index:2;" onerror="this.style.display='none'">`
+          : `<div class="ico-wrap ${cfg.cls}">${cfg.svg}</div>`}
+      </div>
       <div class="info">
         <h3>${p.name}</h3>
         <div class="meta">
