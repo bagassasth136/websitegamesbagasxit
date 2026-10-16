@@ -182,8 +182,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);min-he
 const SB_URL = 'https://qlzwqbbvjscfjaicbhks.supabase.co';
 const SB_KEY = 'sb_publishable_DRIOqI7O90TinECl4K6FJA_l0nIaPCY';
 const SB_HDR = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
-const FN_URL = SB_URL + '/functions/v1/admin-api';
-const FN_PASS = 'BAGASXIT 2006';
+const FN_URL = SB_URL + '/functions/v1/public-api';
 
 const SVG_PROXY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
 const SVG_APKMODS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>';
@@ -208,7 +207,6 @@ let curFilter = 'ALL';
 let curSearch = '';
 let COMMENTS_CACHE = {};
 
-// ============ FINGERPRINT ============
 function getFp() {
   try {
     const p = [
@@ -228,9 +226,14 @@ const FP = getFp();
 function getDevice() {
   const ua = navigator.userAgent || '';
   let m = ua.match(/;\s*([^;)]+)\s+Build/);
-  if (m) return m[1].trim();
-  m = ua.match(/Android\s+[\d.]+;\s*([^)]+)\)/);
-  if (m) return m[1].trim().split(';')[0].trim();
+  if (m && m[1].trim().length > 2) return m[1].trim();
+  m = ua.match(/Android\s+([\d.]+);\s*([^)]+)\)/);
+  if (m) {
+    const androidVer = m[1];
+    const model = m[2].trim().split(';')[0].trim();
+    if (model.length > 2) return model;
+    return 'Android ' + androidVer;
+  }
   if (/iPhone/i.test(ua)) return 'iPhone';
   if (/iPad/i.test(ua)) return 'iPad';
   return 'Unknown';
@@ -244,7 +247,6 @@ async function getCountry() {
   } catch(e) { return ''; }
 }
 
-// ============ FETCH DATA ============
 async function loadApkList() {
   try {
     const r = await fetch(SB_URL + '/rest/v1/_apk_updates?select=*&is_active=eq.true&order=sort_order.asc', { headers: SB_HDR });
@@ -270,7 +272,6 @@ async function loadAllComments() {
   } catch(e) { COMMENTS_CACHE = {}; }
 }
 
-// ============ TABS ============
 function renderTabs() {
   const cats = ['ALL', ...new Set(ALL_APK.map(p => p.category))];
   const box = document.getElementById('tabs');
@@ -302,7 +303,6 @@ function applyFilters() {
   renderGrid();
 }
 
-// ============ RENDER ============
 function renderGrid() {
   const box = document.getElementById('grid');
   const cnt = document.getElementById('apkCount');
@@ -344,7 +344,7 @@ function renderGrid() {
     const commentsHtml = cmts.length
       ? cmts.map(c => `<div class="cmt">
           <div class="c-name">${escHtml(c.name)}</div>
-          <div class="c-meta">${escHtml(c.device || 'Unknown')} · ${escHtml(c.country || '?')} · ${fmtDate(c.created_at)}</div>
+          <div class="c-meta">📱 ${escHtml(c.device || 'Unknown')} · 🌍 ${escHtml(c.country || '?')} · 🕒 ${fmtDate(c.created_at)}</div>
           <div class="c-text">${escHtml(c.comment)}</div>
         </div>`).join('')
       : '<div class="cmt-empty">No comments yet. Be the first!</div>';
@@ -421,7 +421,6 @@ async function submitComment(apkId) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         action: 'add-comment',
-        pass: FN_PASS,
         apk_id: apkId,
         name: name,
         comment: comment,
