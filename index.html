@@ -176,7 +176,7 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 </style>
 </head>
 <body>
-<!-- SVG ICONS LIBRARY -->
+<!-- ICONS -->
 <svg style="display:none;">
   <symbol id="i-menu" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
   <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
@@ -200,14 +200,10 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
   <symbol id="i-check-circle" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
 </svg>
 
-<!-- SIDEBAR -->
 <div class="sidebar-bg" id="sidebarBg" onclick="closeSidebar()"></div>
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-head">
-    <div class="sidebar-logo">
-      <div class="mark">B</div>
-      <div class="txt">BAGASXIT</div>
-    </div>
+    <div class="sidebar-logo"><div class="mark">B</div><div class="txt">BAGASXIT</div></div>
     <button class="sidebar-close" onclick="closeSidebar()"><svg><use href="#i-x"/></svg></button>
   </div>
   <nav class="sidebar-menu">
@@ -221,13 +217,10 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
     <a href="#" onclick="showPage('about');closeSidebar();return false;" data-nav="about"><svg><use href="#i-info"/></svg> About</a>
   </nav>
   <div class="sidebar-footer">
-    <a href="/getkey/" class="sidebar-cta">
-      <svg><use href="#i-key"/></svg> Get Key Gratis
-    </a>
+    <a href="/getkey/" class="sidebar-cta"><svg><use href="#i-key"/></svg> Get Key Gratis</a>
   </div>
 </aside>
 
-<!-- HEADER -->
 <header class="header">
   <div class="header-inner">
     <button class="menu-btn" onclick="openSidebar()" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
@@ -237,14 +230,10 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
   </div>
 </header>
 
-<!-- HOME -->
 <div class="page active" id="page-home">
   <div class="wrap">
     <div class="search-sec">
-      <div class="search-wrap">
-        <svg><use href="#i-search"/></svg>
-        <input type="text" id="searchInput" placeholder="Cari mod game kesukaanmu..." autocomplete="off">
-      </div>
+      <div class="search-wrap"><svg><use href="#i-search"/></svg><input type="text" id="searchInput" placeholder="Cari mod game kesukaanmu..." autocomplete="off"></div>
     </div>
     <div class="filters" style="margin-top:16px">
       <div class="chip active" data-cat="all"><svg><use href="#i-grid"/></svg> All</div>
@@ -252,61 +241,42 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
       <div class="chip" data-cat="app"><svg><use href="#i-check-circle"/></svg> Aplikasi</div>
       <div class="chip" onclick="showPage('categories')"><svg><use href="#i-grid"/></svg> Kategori</div>
     </div>
-    <div class="sec-head">
-      <h2 id="allTitle">Semua <span class="hl">Game</span></h2>
-    </div>
-    <div class="grid" id="modsGrid">
-      <div class="loading" style="grid-column:1/-1">Memuat data game...</div>
-    </div>
+    <div class="sec-head"><h2 id="allTitle">Semua <span class="hl">Game</span></h2></div>
+    <div class="grid" id="modsGrid"><div class="loading" style="grid-column:1/-1">Memuat data game...</div></div>
   </div>
 </div>
 
-<!-- CATEGORIES -->
 <div class="page" id="page-categories">
   <div class="wrap">
-    <div class="sec-head" style="margin-top:22px">
-      <h2>Kategori</h2>
-    </div>
+    <div class="sec-head" style="margin-top:22px"><h2>Kategori</h2></div>
     <div class="cat-grid" id="catList"></div>
   </div>
 </div>
 
-<!-- CHAT -->
 <div class="page" id="page-chat">
   <div class="wrap">
-    <div class="sec-head" style="margin-top:22px">
-      <h2>Live Chat</h2>
-    </div>
+    <div class="sec-head" style="margin-top:22px"><h2>Live Chat</h2></div>
     <div class="chat-box">
       <iframe src="https://www5.cbox.ws/box/?boxid=967298&boxtag=LBrRLM" width="100%" height="500" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto" style="border-radius:8px;background:var(--card);"></iframe>
     </div>
   </div>
 </div>
 
-<!-- REQUEST -->
 <div class="page" id="page-request">
   <div class="wrap">
-    <div class="sec-head" style="margin-top:22px">
-      <h2>Request Mod</h2>
-    </div>
+    <div class="sec-head" style="margin-top:22px"><h2>Request Mod</h2></div>
     <div class="form-card">
-      <label>Nama Game / Mod</label>
-      <input type="text" id="rName" placeholder="Contoh: GTA 6 Mod">
-      <label>Link Download (opsional)</label>
-      <input type="text" id="rLink" placeholder="https://...">
-      <label>Deskripsi / Fitur</label>
-      <textarea id="rDesc" placeholder="Saya mau mod unlimited money..."></textarea>
+      <label>Nama Game / Mod</label><input type="text" id="rName" placeholder="Contoh: GTA 6 Mod">
+      <label>Link Download (opsional)</label><input type="text" id="rLink" placeholder="https://...">
+      <label>Deskripsi / Fitur</label><textarea id="rDesc" placeholder="Saya mau mod unlimited money..."></textarea>
       <button class="submit" onclick="submitRequest()">Kirim Permintaan</button>
     </div>
   </div>
 </div>
 
-<!-- ABOUT -->
 <div class="page" id="page-about">
   <div class="wrap">
-    <div class="sec-head" style="margin-top:22px">
-      <h2>Tentang BAGASXIT</h2>
-    </div>
+    <div class="sec-head" style="margin-top:22px"><h2>Tentang BAGASXIT</h2></div>
     <div class="about-card" style="background:var(--card);padding:20px;border-radius:12px;border:1px solid var(--border);margin-top:10px;">
       <p style="font-size:13px;color:var(--txt-dim);line-height:1.6;margin-bottom:10px;">Platform mod game terpercaya dengan koleksi APK mod terbaru dan terlengkap.</p>
       <div class="socials" style="display:flex;gap:10px;justify-content:center;margin-top:18px;">
@@ -317,44 +287,29 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
   </div>
 </div>
 
-<!-- DETAIL PAGE -->
 <div id="detail">
   <div class="detail-wrap">
     <div class="back-btn" onclick="closeDetail()"><svg><use href="#i-arrow-left"/></svg> Kembali</div>
     <div class="d-head">
       <img id="dIcon" src="" class="d-icon" alt="">
-      <div class="d-title">
-        <h2 id="dTitle">Nama Game</h2>
-        <div class="dev" id="dDev">Developer</div>
-        <div class="meta" id="dMeta">0 Ulasan</div>
-      </div>
+      <div class="d-title"><h2 id="dTitle">Nama Game</h2><div class="dev" id="dDev">Developer</div><div class="meta" id="dMeta">0 Ulasan</div></div>
     </div>
-    
     <div class="d-stats">
       <div class="d-stat-item"><h4 id="dStatDL">0</h4><p>Download</p></div>
       <div class="d-stat-item"><h4 id="dStatView">0</h4><p>Dilihat</p></div>
       <div class="d-stat-item"><h4 id="dStatRev">0</h4><p>Ulasan</p></div>
     </div>
-
     <div class="media-slider" id="mediaSlider"></div>
     <div class="d-desc" id="dDesc">Memuat...</div>
-    
     <div class="d-actions">
       <a id="dDownload" href="#" target="_blank" class="d-download" onclick="trackDL()"><svg><use href="#i-download"/></svg> Download</a>
       <button class="d-copy" onclick="copyLink()"><svg><use href="#i-link"/></svg></button>
     </div>
-
     <div class="d-sec-title">Versi Tersedia</div>
     <div id="verList"></div>
-
     <div class="rate-card">
-      <div class="rate-head">
-        <span><svg><use href="#i-star"/></svg> Rating & Ulasan</span>
-        <span class="rate-avg" id="rateAvg">0.0 (0)</span>
-      </div>
-      <div class="stars-in" id="starsIn">
-        <span data-v="1">☆</span><span data-v="2">☆</span><span data-v="3">☆</span><span data-v="4">☆</span><span data-v="5">☆</span>
-      </div>
+      <div class="rate-head"><span><svg><use href="#i-star"/></svg> Rating & Ulasan</span><span class="rate-avg" id="rateAvg">0.0 (0)</span></div>
+      <div class="stars-in" id="starsIn"><span data-v="1">☆</span><span data-v="2">☆</span><span data-v="3">☆</span><span data-v="4">☆</span><span data-v="5">☆</span></div>
       <textarea id="revText" placeholder="Tulis ulasanmu di sini..."></textarea>
       <button class="btn-send" onclick="submitReview()"><svg><use href="#i-send"/></svg> Kirim</button>
       <div class="reviews" id="reviews"></div>
@@ -362,7 +317,6 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
   </div>
 </div>
 
-<!-- WELCOME MODAL -->
 <div class="modal-bg" id="welcome">
   <div class="modal">
     <button class="modal-x" onclick="closeWelcome()"><svg><use href="#i-x"/></svg></button>
@@ -374,7 +328,6 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
   </div>
 </div>
 
-<!-- FAB -->
 <div class="fab">
   <a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P" class="fab-child fab-wa" id="fabWa" target="_blank"><svg><use href="#i-chat"/></svg></a>
   <button class="fab-main" id="fabMain"><svg><use href="#i-mail"/></svg></button>
@@ -382,7 +335,6 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 </div>
 <button class="to-top" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg><use href="#i-arrow-up"/></svg></button>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <a href="#" class="bnav-item active" onclick="showPage('home');return false;" data-nav="home"><svg><use href="#i-home"/></svg><span>Home</span></a>
   <a href="#" class="bnav-item" onclick="showPage('categories');return false;" data-nav="categories"><svg><use href="#i-grid"/></svg><span>Catalog</span></a>
@@ -391,22 +343,25 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
   <a href="/updatesapk/" class="bnav-item"><svg><use href="#i-phone"/></svg><span>APK</span></a>
 </nav>
 
+<footer class="footer">
+  <div class="foot-inner">
+    <div class="foot-col"><h5>BAGASXIT</h5><p>Platform mod game terpercaya dengan koleksi APK mod terbaru dan terlengkap.</p></div>
+    <div class="foot-col"><h5>Links</h5><a href="#" onclick="showPage('home');return false;">Home</a><a href="#" onclick="showPage('categories');return false;">Categories</a><a href="#" onclick="showPage('chat');return false;">Chat</a><a href="#" onclick="showPage('request');return false;">Request</a><a href="#" onclick="showPage('about');return false;">About</a></div>
+    <div class="foot-col"><h5>Social</h5><a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P" target="_blank">WhatsApp</a><a href="https://t.me/BagasXIT" target="_blank">Telegram</a></div>
+    <div class="foot-col"><h5>Disclaimer</h5><p>All mods are for educational purposes only. Download at your own risk.</p></div>
+  </div>
+  <div class="foot-btm">© 2026 BAGASXIT TRADING & MODS CO.</div>
+</footer>
+
 <script>
-// ===== SUPABASE =====
 const SB_URL = 'https://qlzwqbbvjscfjaicbhks.supabase.co';
 const SB_KEY = 'sb_publishable_DRIOqI7O90TinECl4K6FJA_l0nIaPCY';
 const SB_HDR = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
 
 function sbGet(path) { return fetch(SB_URL + '/rest/v1/' + path, { headers: SB_HDR }).then(r => r.ok ? r.json() : []); }
-function sbPost(path, body) {
-  return fetch(SB_URL + '/rest/v1/' + path, {
-    method: 'POST', headers: Object.assign({}, SB_HDR, { 'Prefer': 'return=representation' }), body: JSON.stringify(body)
-  }).then(r => r.ok ? r.json() : null);
-}
+function sbPost(path, body) { return fetch(SB_URL + '/rest/v1/' + path, { method: 'POST', headers: Object.assign({}, SB_HDR, { 'Prefer': 'return=representation' }), body: JSON.stringify(body) }).then(r => r.ok ? r.json() : null); }
 
-let gameDB = {};
-let curGame = null, curFilter = 'all';
-let selectedRating = 0;
+let gameDB = {}, curGame = null, curFilter = 'all', selectedRating = 0;
 
 function initTheme() {
   const isLight = localStorage.getItem('bxit_theme') === 'light';
@@ -422,49 +377,30 @@ function toggleTheme() {
 async function loadGames() {
   try {
     const data = await sbGet('games?select=*&is_active=eq.true&order=created_at.desc');
-    gameDB = {};
-    (data || []).forEach(g => { gameDB[g.game_id] = g; });
-    renderGrid();
-  } catch(e) {
-    document.getElementById('modsGrid').innerHTML = '<div class="loading" style="color:#EF4444">Gagal memuat data.</div>';
-  }
+    gameDB = {}; (data || []).forEach(g => { gameDB[g.game_id] = g; }); renderGrid();
+  } catch(e) { document.getElementById('modsGrid').innerHTML = '<div class="loading" style="color:#EF4444">Gagal memuat data.</div>'; }
 }
 
 function renderGrid() {
   const grid = document.getElementById('modsGrid');
   const keys = Object.keys(gameDB);
   if (!keys.length) { grid.innerHTML = '<div class="loading" style="grid-column:1/-1">Belum ada data game.</div>'; return; }
-  
   let html = '';
   keys.forEach(k => {
-    const g = gameDB[k];
-    if (curFilter !== 'all' && g.category !== curFilter) return;
-    html += `<div class="card" onclick="showDetail('${k}')">
-      <img src="${g.img}" class="thumb" loading="lazy" alt="${g.title}">
-      <div class="info">
-        <h4>${g.title}</h4>
-        <div class="dev">${g.developer}</div>
-        <div class="row"><span class="st">⭐⭐⭐⭐⭐</span></div>
-        <div class="badges"><span class="badge badge-cat">${g.category || 'MOD'}</span></div>
-      </div>
-    </div>`;
+    const g = gameDB[k]; if (curFilter !== 'all' && g.category !== curFilter) return;
+    html += `<div class="card" onclick="showDetail('${k}')"><img src="${g.img}" class="thumb" loading="lazy" alt="${g.title}"><div class="info"><h4>${g.title}</h4><div class="dev">${g.developer}</div><div class="row"><span class="st">⭐⭐⭐⭐⭐</span></div><div class="badges"><span class="badge badge-cat">${g.category || 'MOD'}</span></div></div></div>`;
   });
   grid.innerHTML = html || '<div class="loading" style="grid-column:1/-1">Tidak ada game di kategori ini.</div>';
 }
 
 document.querySelectorAll('.chip[data-cat]').forEach(c => {
   c.addEventListener('click', function() {
-    document.querySelectorAll('.chip[data-cat]').forEach(x => x.classList.remove('active'));
-    this.classList.add('active');
-    curFilter = this.dataset.cat;
-    renderGrid();
+    document.querySelectorAll('.chip[data-cat]').forEach(x => x.classList.remove('active')); this.classList.add('active'); curFilter = this.dataset.cat; renderGrid();
   });
 });
 
 async function showDetail(id) {
-  const g = gameDB[id]; if (!g) return;
-  curGame = g;
-
+  const g = gameDB[id]; if (!g) return; curGame = g;
   document.getElementById('dTitle').textContent = g.title;
   document.getElementById('dIcon').src = g.img;
   document.getElementById('dDev').textContent = g.developer;
@@ -476,85 +412,48 @@ async function showDetail(id) {
     if (m.type === 'video') {
       const vidId = m.url.split('v=')[1] || m.url.split('/').pop();
       return `<div class="media-item"><iframe src="https://www.youtube.com/embed/${vidId}" allowfullscreen></iframe></div>`;
-    } else {
-      return `<div class="media-item"><img src="${m.url}" alt="Screenshot"></div>`;
-    }
+    } else { return `<div class="media-item"><img src="${m.url}" alt="Screenshot"></div>`; }
   }).join('') || '<div class="media-item" style="display:flex;align-items:center;justify-content:center;color:#666;">Belum ada media</div>';
 
   const vers = await sbGet('game_versions?game_id=eq.' + id + '&order=created_at.desc');
   const verList = document.getElementById('verList');
   if (vers && vers.length > 0) {
     document.getElementById('dDownload').href = vers[0].link;
-    verList.innerHTML = vers.map(v => `
-      <div class="ver-item">
-        <div class="ver-left">
-          <div class="ver-head"><strong>${v.version}</strong><span class="ver-badge">${v.label || 'Mod'}</span></div>
-        </div>
-        <div class="ver-right"><a href="${v.link}" target="_blank" onclick="trackDL()"><svg><use href="#i-download"/></svg> Unduh</a></div>
-      </div>
-    `).join('');
-  } else {
-    verList.innerHTML = '<div class="loading">Belum ada versi.</div>';
-  }
+    verList.innerHTML = vers.map(v => `<div class="ver-item"><div class="ver-left"><div class="ver-head"><strong>${v.version}</strong><span class="ver-badge">${v.label || 'Mod'}</span></div></div><div class="ver-right"><a href="${v.link}" target="_blank" onclick="trackDL()"><svg><use href="#i-download"/></svg> Unduh</a></div></div>`).join('');
+  } else { verList.innerHTML = '<div class="loading">Belum ada versi.</div>'; }
 
   renderReviews(id);
-  document.getElementById('detail').classList.add('show');
-  window.scrollTo(0, 0);
+  document.getElementById('detail').classList.add('show'); window.scrollTo(0, 0);
 }
-
 function closeDetail() { document.getElementById('detail').classList.remove('show'); }
 
 async function renderReviews(id) {
   const list = document.getElementById('reviews'), avgEl = document.getElementById('rateAvg'), revCount = document.getElementById('dStatRev');
   const rows = await sbGet('game_reviews?game_id=eq.' + id + '&order=created_at.desc');
-  
-  if (!rows || !rows.length) {
-    list.innerHTML = '<div class="no-rev">Belum ada ulasan. Jadilah yang pertama!</div>';
-    avgEl.textContent = '0.0 (0)'; revCount.textContent = '0'; return;
-  }
-  
+  if (!rows || !rows.length) { list.innerHTML = '<div class="no-rev">Belum ada ulasan. Jadilah yang pertama!</div>'; avgEl.textContent = '0.0 (0)'; revCount.textContent = '0'; return; }
   const sum = rows.reduce((a, r) => a + r.rating, 0);
   avgEl.textContent = (sum / rows.length).toFixed(1) + ' (' + rows.length + ')';
-  document.getElementById('dMeta').textContent = `⭐ ${(sum / rows.length).toFixed(1)} | ${rows.length} Ulasan`;
-  revCount.textContent = rows.length;
-
-  list.innerHTML = rows.map(r => {
-    const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
-    const date = new Date(r.created_at).toLocaleDateString('id-ID');
-    return `<div class="rev"><span class="rs">${stars}</span><span class="rt">${r.review_text}</span><span class="rd">${r.user_name} - ${date}</span></div>`;
-  }).join('');
+  document.getElementById('dMeta').textContent = `⭐ ${(sum / rows.length).toFixed(1)} | ${rows.length} Ulasan`; revCount.textContent = rows.length;
+  list.innerHTML = rows.map(r => `<div class="rev"><span class="rs">${'★'.repeat(r.rating) + '☆'.repeat(5 - r.rating)}</span><span class="rt">${r.review_text}</span><span class="rd">${r.user_name} - ${new Date(r.created_at).toLocaleDateString('id-ID')}</span></div>`).join('');
 }
 
 document.querySelectorAll('#starsIn span').forEach(s => {
-  s.addEventListener('click', function() {
-    selectedRating = parseInt(this.dataset.v);
-    document.querySelectorAll('#starsIn span').forEach(st => {
-      st.textContent = parseInt(st.dataset.v) <= selectedRating ? '★' : '☆';
-      st.classList.toggle('on', parseInt(st.dataset.v) <= selectedRating);
-    });
-  });
+  s.addEventListener('click', function() { selectedRating = parseInt(this.dataset.v); document.querySelectorAll('#starsIn span').forEach(st => { st.textContent = parseInt(st.dataset.v) <= selectedRating ? '★' : '☆'; st.classList.toggle('on', parseInt(st.dataset.v) <= selectedRating); }); });
 });
 
 async function submitReview() {
-  if (!curGame) return;
-  if (!selectedRating) { alert('Pilih rating dulu!'); return; }
+  if (!curGame) return; if (!selectedRating) { alert('Pilih rating dulu!'); return; }
   const text = document.getElementById('revText').value.trim() || 'Tanpa komentar';
   const ok = await sbPost('game_reviews', { game_id: curGame.game_id, rating: selectedRating, review_text: text, user_name: 'Anonymous' });
   if (!ok) { alert('Gagal kirim ulasan.'); return; }
-  await renderReviews(curGame.game_id);
-  document.getElementById('revText').value = ''; selectedRating = 0;
-  document.querySelectorAll('#starsIn span').forEach(s => { s.textContent = '☆'; s.classList.remove('on'); });
-  alert('✅ Ulasan terkirim!');
+  await renderReviews(curGame.game_id); document.getElementById('revText').value = ''; selectedRating = 0;
+  document.querySelectorAll('#starsIn span').forEach(s => { s.textContent = '☆'; s.classList.remove('on'); }); alert('✅ Ulasan terkirim!');
 }
 
 function copyLink() {
   if (!curGame) return;
   const link = window.location.origin + window.location.pathname + '#game/' + curGame.game_id;
-  navigator.clipboard.writeText(link).then(() => {
-    alert('✅ Link berhasil disalin!');
-  }).catch(() => {
-    alert('❌ Gagal salin link.');
-  });
+  navigator.clipboard.writeText(link).then(() => { alert('✅ Link berhasil disalin!'); }).catch(() => { alert('❌ Gagal salin link.'); });
 }
 function trackDL() {}
 function openSidebar() { document.getElementById('sidebar').classList.add('show'); document.getElementById('sidebarBg').classList.add('show'); }
@@ -562,28 +461,17 @@ function closeSidebar() { document.getElementById('sidebar').classList.remove('s
 function closeWelcome() { document.getElementById('welcome').classList.remove('show'); }
 
 function showPage(p) {
-  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('[data-nav]').forEach(el => el.classList.remove('active'));
-  document.getElementById('page-' + p)?.classList.add('active');
-  document.querySelectorAll(`[data-nav="${p}"]`).forEach(el => el.classList.add('active'));
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active')); document.querySelectorAll('[data-nav]').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-' + p)?.classList.add('active'); document.querySelectorAll(`[data-nav="${p}"]`).forEach(el => el.classList.add('active'));
   window.scrollTo(0, 0);
 }
 
 function checkDeepLink() {
   const hash = window.location.hash;
-  if (hash.startsWith('#game/')) {
-    const id = hash.replace('#game/', '');
-    if (gameDB[id]) showDetail(id);
-  }
+  if (hash.startsWith('#game/')) { const id = hash.replace('#game/', ''); if (gameDB[id]) showDetail(id); }
 }
 window.addEventListener('hashchange', checkDeepLink);
-
-window.addEventListener('DOMContentLoaded', async () => {
-  initTheme();
-  await loadGames();
-  checkDeepLink();
-  setTimeout(() => document.getElementById('welcome').classList.add('show'), 1000);
-});
+window.addEventListener('DOMContentLoaded', async () => { initTheme(); await loadGames(); checkDeepLink(); setTimeout(() => document.getElementById('welcome').classList.add('show'), 1000); });
 </script>
 </body>
 </html>
