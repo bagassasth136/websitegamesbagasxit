@@ -29,24 +29,23 @@ body{
   font-family:'Inter',-apple-system,sans-serif;
   background:var(--bg);color:var(--txt);
   overflow-x:hidden;min-height:100vh;
-  padding-bottom:80px;
-  scroll-behavior:smooth;
+  padding-bottom:80px;scroll-behavior:smooth;
   transition:background .3s, color .3s;
 }
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px}
+svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 .header{position:sticky;top:0;z-index:100;background:rgba(5,5,6,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 16px}
 body.light-mode .header{background:rgba(255,255,255,.88)}
 .header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:12px}
 .menu-btn{width:38px;height:38px;border-radius:10px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;flex-shrink:0;color:var(--txt)}
 .menu-btn:active{transform:scale(.92);background:var(--card2)}
-.menu-btn svg{width:18px;height:18px}
 .logo{display:flex;flex-direction:column;line-height:1.1;font-weight:900;font-size:18px;letter-spacing:.5px;background:linear-gradient(135deg,var(--txt) 0%,#C4B5FD 60%,#67E8F9 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;flex:1;min-width:0;cursor:pointer}
 .logo small{font-size:8px;letter-spacing:3px;font-weight:600;-webkit-text-fill-color:var(--txt-mute)}
 .header-search{width:38px;height:38px;border-radius:10px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;flex-shrink:0;color:var(--txt-dim)}
 .header-search:active{transform:scale(.92)}
-.theme-toggle{background:transparent;border:none;color:var(--txt);font-size:20px;cursor:pointer;padding:0 10px}
+.theme-toggle{background:transparent;border:none;color:var(--txt);cursor:pointer;padding:0 10px;display:flex;align-items:center}
 .sidebar-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:998;opacity:0;pointer-events:none;transition:.3s}
 .sidebar-bg.show{opacity:1;pointer-events:auto}
 .sidebar{position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--bg2);border-right:1px solid var(--border);z-index:999;transform:translateX(-100%);transition:transform .35s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;padding:20px 16px}
@@ -55,21 +54,19 @@ body.light-mode .header{background:rgba(255,255,255,.88)}
 .sidebar-logo{display:flex;align-items:center;gap:10px}
 .sidebar-logo .mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--cyan));display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:16px;box-shadow:0 4px 14px var(--accent-glow)}
 .sidebar-logo .txt{font-weight:800;font-size:15px;letter-spacing:.3px}
-.sidebar-close{width:30px;height:30px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--txt-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}
+.sidebar-close{width:30px;height:30px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--txt-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .sidebar-menu{flex:1;overflow-y:auto}
 .sidebar-menu a{display:flex;align-items:center;gap:12px;padding:12px 12px;border-radius:10px;color:var(--txt);text-decoration:none;font-size:14px;font-weight:600;transition:.2s;margin-bottom:2px}
 .sidebar-menu a:hover,.sidebar-menu a.active{background:var(--card);color:var(--accent)}
-.sidebar-menu a .ico{width:22px;text-align:center;font-size:16px}
 .sidebar-footer{padding-top:16px;border-top:1px solid var(--border);margin-top:12px}
-.sidebar-cta{background:linear-gradient(135deg,var(--accent2),var(--accent));border-radius:12px;padding:14px;text-align:center;color:#fff;text-decoration:none;display:block;font-weight:800;font-size:13px;letter-spacing:.5px;box-shadow:0 6px 20px var(--accent-glow)}
-.sidebar-cta small{display:block;font-weight:500;font-size:10px;opacity:.85;margin-top:2px;letter-spacing:.3px}
+.sidebar-cta{background:linear-gradient(135deg,var(--accent2),var(--accent));border-radius:12px;padding:14px;text-align:center;color:#fff;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:13px;letter-spacing:.5px;box-shadow:0 6px 20px var(--accent-glow)}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:90;background:rgba(5,5,6,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;padding:8px 0 max(8px, env(safe-area-inset-bottom))}
 body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 .bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--txt-mute);text-decoration:none;font-size:9px;font-weight:700;letter-spacing:.3px;transition:.2s;padding:4px 0;position:relative}
-.bnav-item .ico{font-size:18px;line-height:1;transition:.2s}
 .bnav-item.active{color:var(--accent)}
-.bnav-item.active .ico{transform:scale(1.1)}
-.bnav-item.key-tab .ico,.bnav-item.store-tab .ico{background:linear-gradient(135deg,var(--accent),var(--cyan));width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;box-shadow:0 4px 14px var(--accent-glow);margin-top:-8px;border:3px solid var(--bg)}
+.bnav-item.active svg{transform:scale(1.1)}
+.bnav-item svg{width:18px;height:18px}
+.bnav-item.key-tab svg,.bnav-item.store-tab svg{background:linear-gradient(135deg,var(--accent),var(--cyan));width:30px;height:30px;padding:6px;border-radius:50%;color:#fff;box-shadow:0 4px 14px var(--accent-glow);margin-top:-8px;border:3px solid var(--bg)}
 .page{display:none;animation:fadeIn .35s ease}
 .page.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -77,6 +74,7 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 .search-sec{margin:16px 0 8px;position:relative}
 .search-wrap{display:flex;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:12px;transition:.25s;overflow:hidden}
 .search-wrap:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.search-wrap svg{color:var(--txt-mute);margin-left:14px}
 .search-wrap input{flex:1;background:transparent;border:none;outline:none;padding:14px 16px;color:var(--txt);font-size:13px;font-family:'Inter',sans-serif}
 .search-wrap input::placeholder{color:var(--txt-mute)}
 .sec-head{display:flex;justify-content:space-between;align-items:center;margin:22px 0 12px;gap:8px}
@@ -84,8 +82,9 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 .sec-head h2 .hl{color:var(--accent)}
 .filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin-bottom:14px}
 .filters::-webkit-scrollbar{display:none}
-.chip{flex:0 0 auto;padding:8px 16px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--txt-dim);font-size:11px;font-weight:700;cursor:pointer;transition:.2s;letter-spacing:.3px}
+.chip{flex:0 0 auto;padding:8px 16px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--txt-dim);font-size:11px;font-weight:700;cursor:pointer;transition:.2s;letter-spacing:.3px;display:flex;align-items:center;gap:6px}
 .chip.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent;box-shadow:0 4px 14px var(--accent-glow)}
+.chip svg{width:14px;height:14px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:16px}
 @media(max-width:420px){.grid{grid-template-columns:repeat(2,1fr);gap:10px}}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:.3s;position:relative;display:flex;flex-direction:column}
@@ -98,10 +97,8 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 .card .info .dev{font-size:9px;color:var(--accent);font-weight:600;margin-bottom:5px}
 .card .info .row{display:flex;align-items:center;gap:4px;margin-bottom:6px}
 .card .info .row .st{color:var(--yellow);font-size:9px;letter-spacing:-1px}
-.card .info .row .dl{color:var(--txt-mute);font-size:9px;font-weight:600}
 .badge{font-size:8px;font-weight:800;padding:3px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:.5px;color:#fff;display:inline-block;width:fit-content}
 .badge-cat{background:linear-gradient(135deg,var(--accent),var(--accent2))}
-/* Detail Page */
 #detail{display:none;position:fixed;inset:0;z-index:200;background:var(--bg);overflow-y:auto;padding:16px;opacity:0;transition:opacity .25s}
 #detail.show{display:block;opacity:1}
 .detail-wrap{max-width:720px;margin:0 auto}
@@ -118,31 +115,24 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 .d-stat-item:last-child{border-right:none}
 .d-stat-item h4{font-size:14px;font-weight:800;color:var(--txt)}
 .d-stat-item p{font-size:9px;color:var(--txt-mute);font-weight:600;margin-top:2px}
-/* Media Slider */
 .media-slider{display:flex;gap:10px;overflow-x:auto;padding-bottom:10px;margin-bottom:16px;scrollbar-width:none}
 .media-slider::-webkit-scrollbar{display:none}
 .media-item{flex:0 0 80%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--card2);position:relative}
 .media-item iframe,.media-item img{width:100%;height:100%;object-fit:cover;border:none}
 .d-desc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:13px;color:var(--txt-dim);line-height:1.7;margin-bottom:16px}
 .d-actions{display:flex;gap:8px;margin-bottom:16px}
-.d-download{flex:1;display:block;padding:16px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;text-align:center;text-decoration:none;font-weight:900;font-size:15px;letter-spacing:.5px;box-shadow:0 10px 30px var(--accent-glow)}
-.d-copy{width:50px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--border);border-radius:12px;color:var(--txt);font-size:20px;cursor:pointer}
-.d-share{display:flex;gap:8px;justify-content:center;margin-bottom:16px}
-.d-share a{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:10px;text-decoration:none;font-size:12px;font-weight:700;transition:.2s}
-.sh-wa{background:#25D366;color:#fff}
-.sh-tg{background:#0088CC;color:#fff}
-/* Versions */
+.d-download{flex:1;display:flex;justify-content:center;align-items:center;gap:8px;padding:16px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;text-align:center;text-decoration:none;font-weight:900;font-size:15px;letter-spacing:.5px;box-shadow:0 10px 30px var(--accent-glow)}
+.d-copy{width:50px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--border);border-radius:12px;color:var(--txt);cursor:pointer}
 .d-sec-title{font-size:14px;font-weight:800;color:var(--accent);margin:20px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .ver-item{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;flex-wrap:wrap}
 .ver-left{flex:1;min-width:0}
 .ver-head{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px}
 .ver-head strong{color:var(--accent);font-size:13px;font-weight:800}
 .ver-badge{background:var(--card2);color:var(--accent);font-size:9px;font-weight:700;padding:3px 8px;border-radius:5px}
-.ver-right a{background:var(--card2);border:1px solid var(--accent);color:var(--accent);padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:800;font-size:11px;white-space:nowrap}
-/* Review */
+.ver-right a{background:var(--card2);border:1px solid var(--accent);color:var(--accent);padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:800;font-size:11px;white-space:nowrap;display:flex;align-items:center;gap:4px}
 .rate-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0}
 .rate-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.rate-head span:first-child{font-weight:800;font-size:14px}
+.rate-head span:first-child{font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px}
 .rate-avg{font-size:13px;color:var(--txt-dim);font-weight:700}
 .stars-in{display:flex;gap:8px;justify-content:center;font-size:26px;cursor:pointer;margin-bottom:12px}
 .stars-in span{color:var(--txt-mute);transition:.15s;user-select:none}
@@ -154,13 +144,62 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 .rev .rs{color:var(--yellow);font-weight:700}
 .rev .rt{display:block;color:var(--txt-dim);margin-top:3px;line-height:1.5}
 .rev .rd{display:block;font-size:9px;color:var(--txt-mute);margin-top:4px;font-weight:600}
-/* Loading */
 .loading{text-align:center;padding:40px 20px;color:var(--txt-mute);font-size:12px;font-weight:600}
 .loading::after{content:'';display:block;width:30px;height:30px;border:3px solid var(--border2);border-top-color:var(--accent);border-radius:50%;margin:16px auto 0;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:.3s;}
+.modal-bg.show{opacity:1;pointer-events:auto}
+.modal{background:var(--card);border:1px solid var(--accent2);border-radius:18px;padding:24px;max-width:320px;width:100%;text-align:center;position:relative;transform:scale(.85);transition:transform .3s cubic-bezier(.16,1,.3,1);box-shadow:0 30px 60px rgba(0,0,0,.8), 0 0 60px var(--accent-glow);}
+.modal-bg.show .modal{transform:scale(1)}
+.modal-x{position:absolute;top:10px;right:14px;color:var(--txt-mute);cursor:pointer;background:none;border:none;display:flex;align-items:center;justify-content:center;}
+.modal .ico{display:flex;justify-content:center;color:var(--accent);margin-bottom:12px}
+.modal .ico svg{width:48px;height:48px;}
+.modal h3{font-size:16px;font-weight:900;margin-bottom:4px}
+.modal p{font-size:10px;color:var(--yellow);font-weight:800;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;}
+.modal-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;margin-bottom:8px;border-radius:10px;text-decoration:none;font-weight:800;font-size:12px;color:#fff;letter-spacing:.3px;}
+.m-wa{background:#25D366}
+.m-tg{background:#0088CC}
+.fab{position:fixed;bottom:90px;right:16px;z-index:80;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.fab-main{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;cursor:pointer;box-shadow:0 8px 24px var(--accent-glow);transition:all .4s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;justify-content:center;}
+.fab-child{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#fff;opacity:0;transform:scale(0);pointer-events:none;transition:all .4s cubic-bezier(.34,1.56,.64,1);}
+.fab-child.show{opacity:1;transform:scale(1);pointer-events:auto}
+.fab-wa{background:#25D366}
+.fab-tg{background:#0088CC}
+.to-top{position:fixed;bottom:90px;left:16px;z-index:80;width:42px;height:42px;border-radius:50%;background:var(--card);border:1px solid var(--border);color:var(--accent);cursor:pointer;opacity:0;pointer-events:none;transition:.3s;display:flex;align-items:center;justify-content:center;}
+.to-top.show{opacity:1;pointer-events:auto}
+.footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16px 16px;margin-top:24px;}
+.foot-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:18px;}
+.foot-col h5{font-size:11px;color:var(--accent);margin-bottom:8px;font-weight:800;letter-spacing:.5px;}
+.foot-col p,.foot-col a{font-size:10px;color:var(--txt-mute);text-decoration:none;display:block;margin-bottom:5px;transition:.2s;line-height:1.5;}
+.foot-col a:hover{color:var(--accent)}
+.foot-btm{text-align:center;font-size:9px;color:var(--txt-mute);padding-top:16px;border-top:1px solid var(--border);margin-top:18px;letter-spacing:.5px;font-weight:600;}
 </style>
 </head>
 <body>
+<!-- SVG ICONS LIBRARY -->
+<svg style="display:none;">
+  <symbol id="i-menu" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-arrow-up" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
+</svg>
+
 <!-- SIDEBAR -->
 <div class="sidebar-bg" id="sidebarBg" onclick="closeSidebar()"></div>
 <aside class="sidebar" id="sidebar">
@@ -169,32 +208,21 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
       <div class="mark">B</div>
       <div class="txt">BAGASXIT</div>
     </div>
-    <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+    <button class="sidebar-close" onclick="closeSidebar()"><svg><use href="#i-x"/></svg></button>
   </div>
   <nav class="sidebar-menu">
-    <a href="#" onclick="showPage('home');closeSidebar();return false;" data-nav="home">
-      <span class="ico">🏠</span><span>Home</span>
-    </a>
-    <a href="#" onclick="showPage('categories');closeSidebar();return false;" data-nav="categories">
-      <span class="ico">📁</span><span>Catalog</span>
-    </a>
-    <a href="/store/"><span class="ico">🛒</span><span>Store</span></a>
-    <a href="/getkey/"><span class="ico">🔑</span><span>Get Key</span></a>
-    <a href="/updatesapk/"><span class="ico">📱</span><span>Update APK</span></a>
-    <a href="#" onclick="showPage('chat');closeSidebar();return false;" data-nav="chat">
-      <span class="ico">💬</span><span>Chat</span>
-    </a>
-    <a href="#" onclick="showPage('request');closeSidebar();return false;" data-nav="request">
-      <span class="ico">📨</span><span>Request</span>
-    </a>
-    <a href="#" onclick="showPage('about');closeSidebar();return false;" data-nav="about">
-      <span class="ico">ℹ️</span><span>About</span>
-    </a>
+    <a href="#" onclick="showPage('home');closeSidebar();return false;" data-nav="home"><svg><use href="#i-home"/></svg> Home</a>
+    <a href="#" onclick="showPage('categories');closeSidebar();return false;" data-nav="categories"><svg><use href="#i-grid"/></svg> Catalog</a>
+    <a href="/store/"><svg><use href="#i-cart"/></svg> Store</a>
+    <a href="/getkey/"><svg><use href="#i-key"/></svg> Get Key</a>
+    <a href="/updatesapk/"><svg><use href="#i-phone"/></svg> Update APK</a>
+    <a href="#" onclick="showPage('chat');closeSidebar();return false;" data-nav="chat"><svg><use href="#i-chat"/></svg> Chat</a>
+    <a href="#" onclick="showPage('request');closeSidebar();return false;" data-nav="request"><svg><use href="#i-mail"/></svg> Request</a>
+    <a href="#" onclick="showPage('about');closeSidebar();return false;" data-nav="about"><svg><use href="#i-info"/></svg> About</a>
   </nav>
   <div class="sidebar-footer">
     <a href="/getkey/" class="sidebar-cta">
-      🔑 Get Key Gratis
-      <small>Ambil lisensi BAGASXIT</small>
+      <svg><use href="#i-key"/></svg> Get Key Gratis
     </a>
   </div>
 </aside>
@@ -202,16 +230,10 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 <!-- HEADER -->
 <header class="header">
   <div class="header-inner">
-    <button class="menu-btn" onclick="openSidebar()" aria-label="Menu">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-      </svg>
-    </button>
-    <div class="logo" onclick="showPage('home')">
-      BAGASXIT<small>MODS & APK</small>
-    </div>
-    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙</button>
-    <div class="header-search" onclick="focusSearch()">🔍</div>
+    <button class="menu-btn" onclick="openSidebar()" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
+    <div class="logo" onclick="showPage('home')">BAGASXIT<small>MODS & APK</small></div>
+    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()"><svg><use href="#i-moon"/></svg></button>
+    <div class="header-search" onclick="focusSearch()"><svg><use href="#i-search"/></svg></div>
   </div>
 </header>
 
@@ -220,19 +242,18 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
   <div class="wrap">
     <div class="search-sec">
       <div class="search-wrap">
-        <input type="text" id="searchInput" placeholder="🔍 Cari mod game kesukaanmu..." autocomplete="off">
+        <svg><use href="#i-search"/></svg>
+        <input type="text" id="searchInput" placeholder="Cari mod game kesukaanmu..." autocomplete="off">
       </div>
     </div>
-
     <div class="filters" style="margin-top:16px">
-      <div class="chip active" data-cat="all">🔥 All</div>
-      <div class="chip" data-cat="game">🎮 Game</div>
-      <div class="chip" data-cat="app">📱 Aplikasi</div>
-      <div class="chip" onclick="showPage('categories')">📁 Kategori</div>
+      <div class="chip active" data-cat="all"><svg><use href="#i-grid"/></svg> All</div>
+      <div class="chip" data-cat="game"><svg><use href="#i-phone"/></svg> Game</div>
+      <div class="chip" data-cat="app"><svg><use href="#i-check-circle"/></svg> Aplikasi</div>
+      <div class="chip" onclick="showPage('categories')"><svg><use href="#i-grid"/></svg> Kategori</div>
     </div>
-
     <div class="sec-head">
-      <h2 id="allTitle">🎮 <span class="hl">Semua Game</span></h2>
+      <h2 id="allTitle">Semua <span class="hl">Game</span></h2>
     </div>
     <div class="grid" id="modsGrid">
       <div class="loading" style="grid-column:1/-1">Memuat data game...</div>
@@ -243,9 +264,8 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 <!-- CATEGORIES -->
 <div class="page" id="page-categories">
   <div class="wrap">
-    <div class="page-head">
-      <h1>📁 Kategori</h1>
-      <p>Jelajahi mod berdasarkan genre</p>
+    <div class="sec-head" style="margin-top:22px">
+      <h2>Kategori</h2>
     </div>
     <div class="cat-grid" id="catList"></div>
   </div>
@@ -254,9 +274,8 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 <!-- CHAT -->
 <div class="page" id="page-chat">
   <div class="wrap">
-    <div class="page-head">
-      <h1 id="chatTitle">💬 Live Chat Global</h1>
-      <p id="chatSubtitle">Ngobrol bareng sesama pengunjung BAGASXIT. Bebas, anonim, real-time.</p>
+    <div class="sec-head" style="margin-top:22px">
+      <h2>Live Chat</h2>
     </div>
     <div class="chat-box">
       <iframe src="https://www5.cbox.ws/box/?boxid=967298&boxtag=LBrRLM" width="100%" height="500" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto" style="border-radius:8px;background:var(--card);"></iframe>
@@ -267,19 +286,17 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 <!-- REQUEST -->
 <div class="page" id="page-request">
   <div class="wrap">
-    <div class="page-head">
-      <h1 id="reqTitle">📨 Request Mod</h1>
-      <p id="reqDesc">Isi form di bawah untuk meminta game/mod yang belum tersedia.</p>
+    <div class="sec-head" style="margin-top:22px">
+      <h2>Request Mod</h2>
     </div>
     <div class="form-card">
       <label>Nama Game / Mod</label>
       <input type="text" id="rName" placeholder="Contoh: GTA 6 Mod">
       <label>Link Download (opsional)</label>
       <input type="text" id="rLink" placeholder="https://...">
-      <label>Deskripsi / Fitur yang diinginkan</label>
-      <textarea id="rDesc" placeholder="Saya mau mod dengan unlimited money..."></textarea>
-      <button class="submit" onclick="submitRequest()">📤 Kirim Permintaan</button>
-      <div class="msg" id="reqMsg"></div>
+      <label>Deskripsi / Fitur</label>
+      <textarea id="rDesc" placeholder="Saya mau mod unlimited money..."></textarea>
+      <button class="submit" onclick="submitRequest()">Kirim Permintaan</button>
     </div>
   </div>
 </div>
@@ -287,16 +304,14 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 <!-- ABOUT -->
 <div class="page" id="page-about">
   <div class="wrap">
-    <div class="page-head">
-      <h1 id="abTitle">ℹ️ Tentang BAGASXIT</h1>
+    <div class="sec-head" style="margin-top:22px">
+      <h2>Tentang BAGASXIT</h2>
     </div>
-    <div class="about-card">
-      <p id="abText1"></p>
-      <p id="abText2"></p>
-      <p id="abDisc"></p>
-      <div class="socials">
-        <a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P" target="_blank">💬 WhatsApp</a>
-        <a href="https://t.me/BagasXIT" target="_blank">✈️ Telegram</a>
+    <div class="about-card" style="background:var(--card);padding:20px;border-radius:12px;border:1px solid var(--border);margin-top:10px;">
+      <p style="font-size:13px;color:var(--txt-dim);line-height:1.6;margin-bottom:10px;">Platform mod game terpercaya dengan koleksi APK mod terbaru dan terlengkap.</p>
+      <div class="socials" style="display:flex;gap:10px;justify-content:center;margin-top:18px;">
+        <a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P" target="_blank" style="padding:10px 20px;border-radius:10px;background:var(--card2);border:1px solid var(--border);color:var(--txt);text-decoration:none;font-size:12px;font-weight:700;">WhatsApp</a>
+        <a href="https://t.me/BagasXIT" target="_blank" style="padding:10px 20px;border-radius:10px;background:var(--card2);border:1px solid var(--border);color:var(--txt);text-decoration:none;font-size:12px;font-weight:700;">Telegram</a>
       </div>
     </div>
   </div>
@@ -305,13 +320,13 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 <!-- DETAIL PAGE -->
 <div id="detail">
   <div class="detail-wrap">
-    <div class="back-btn" onclick="closeDetail()">← Kembali</div>
+    <div class="back-btn" onclick="closeDetail()"><svg><use href="#i-arrow-left"/></svg> Kembali</div>
     <div class="d-head">
       <img id="dIcon" src="" class="d-icon" alt="">
       <div class="d-title">
         <h2 id="dTitle">Nama Game</h2>
         <div class="dev" id="dDev">Developer</div>
-        <div class="meta" id="dMeta">⭐ 0.0 | 0 Ulasan</div>
+        <div class="meta" id="dMeta">0 Ulasan</div>
       </div>
     </div>
     
@@ -322,27 +337,26 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
     </div>
 
     <div class="media-slider" id="mediaSlider"></div>
-
     <div class="d-desc" id="dDesc">Memuat...</div>
     
     <div class="d-actions">
-      <a id="dDownload" href="#" target="_blank" class="d-download" onclick="trackDL()">⬇ Download Terbaru</a>
-      <button class="d-copy" onclick="copyLink()">🔗</button>
+      <a id="dDownload" href="#" target="_blank" class="d-download" onclick="trackDL()"><svg><use href="#i-download"/></svg> Download</a>
+      <button class="d-copy" onclick="copyLink()"><svg><use href="#i-link"/></svg></button>
     </div>
 
-    <div class="d-sec-title">📌 Versi Tersedia</div>
+    <div class="d-sec-title">Versi Tersedia</div>
     <div id="verList"></div>
 
     <div class="rate-card">
       <div class="rate-head">
-        <span>⭐ Rating & Ulasan</span>
+        <span><svg><use href="#i-star"/></svg> Rating & Ulasan</span>
         <span class="rate-avg" id="rateAvg">0.0 (0)</span>
       </div>
       <div class="stars-in" id="starsIn">
         <span data-v="1">☆</span><span data-v="2">☆</span><span data-v="3">☆</span><span data-v="4">☆</span><span data-v="5">☆</span>
       </div>
       <textarea id="revText" placeholder="Tulis ulasanmu di sini..."></textarea>
-      <button class="btn-send" onclick="submitReview()">Kirim Ulasan</button>
+      <button class="btn-send" onclick="submitReview()"><svg><use href="#i-send"/></svg> Kirim</button>
       <div class="reviews" id="reviews"></div>
     </div>
   </div>
@@ -351,66 +365,32 @@ body.light-mode .bottom-nav{background:rgba(255,255,255,.94)}
 <!-- WELCOME MODAL -->
 <div class="modal-bg" id="welcome">
   <div class="modal">
-    <button class="modal-x" onclick="closeWelcome()">✕</button>
-    <div class="ico">🎮</div>
-    <h3 id="wTitle">WELCOME TO BAGASXIT!</h3>
-    <p id="wSub">FREE TRIAL ACTIVE: ALL MODS INCLUDED</p>
-    <a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P" class="modal-btn m-wa" target="_blank">💬 WhatsApp Community</a>
-    <a href="https://t.me/BagasXIT" class="modal-btn m-tg" target="_blank">✈️ Telegram Community</a>
+    <button class="modal-x" onclick="closeWelcome()"><svg><use href="#i-x"/></svg></button>
+    <div class="ico"><svg><use href="#i-phone"/></svg></div>
+    <h3>WELCOME TO BAGASXIT!</h3>
+    <p>FREE TRIAL ACTIVE: ALL MODS INCLUDED</p>
+    <a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P" class="modal-btn m-wa" target="_blank"><svg><use href="#i-chat"/></svg> WhatsApp Community</a>
+    <a href="https://t.me/BagasXIT" class="modal-btn m-tg" target="_blank"><svg><use href="#i-send"/></svg> Telegram Community</a>
   </div>
 </div>
 
 <!-- FAB -->
 <div class="fab">
-  <a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P" class="fab-child fab-wa" id="fabWa" target="_blank"><img src="https://i.postimg.cc/YCvyn14Z/whatsapp.png" alt="WA"></a>
-  <button class="fab-main" id="fabMain">💬</button>
-  <a href="https://t.me/BagasXIT" class="fab-child fab-tg" id="fabTg" target="_blank"><img src="https://i.postimg.cc/yxnr5jy3/telegram.png" alt="TG"></a>
+  <a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P" class="fab-child fab-wa" id="fabWa" target="_blank"><svg><use href="#i-chat"/></svg></a>
+  <button class="fab-main" id="fabMain"><svg><use href="#i-mail"/></svg></button>
+  <a href="https://t.me/BagasXIT" class="fab-child fab-tg" id="fabTg" target="_blank"><svg><use href="#i-send"/></svg></a>
 </div>
-<button class="to-top" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
+<button class="to-top" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg><use href="#i-arrow-up"/></svg></button>
 
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <a href="#" class="bnav-item active" onclick="showPage('home');return false;" data-nav="home">
-    <span class="ico">🏠</span><span>Home</span>
-  </a>
-  <a href="#" class="bnav-item" onclick="showPage('categories');return false;" data-nav="categories">
-    <span class="ico">📁</span><span>Catalog</span>
-  </a>
-  <a href="/store/" class="bnav-item store-tab"><span class="ico">🛒</span><span>Store</span></a>
-  <a href="/getkey/" class="bnav-item key-tab"><span class="ico">🔑</span><span>Get Key</span></a>
-  <a href="/updatesapk/" class="bnav-item"><span class="ico">📱</span><span>APK</span></a>
-  <a href="#" class="bnav-item" onclick="showPage('chat');return false;" data-nav="chat">
-    <span class="ico">💬</span><span>Chat</span>
-  </a>
+  <a href="#" class="bnav-item active" onclick="showPage('home');return false;" data-nav="home"><svg><use href="#i-home"/></svg><span>Home</span></a>
+  <a href="#" class="bnav-item" onclick="showPage('categories');return false;" data-nav="categories"><svg><use href="#i-grid"/></svg><span>Catalog</span></a>
+  <a href="/store/" class="bnav-item store-tab"><svg><use href="#i-cart"/></svg><span>Store</span></a>
+  <a href="/getkey/" class="bnav-item key-tab"><svg><use href="#i-key"/></svg><span>Get Key</span></a>
+  <a href="/updatesapk/" class="bnav-item"><svg><use href="#i-phone"/></svg><span>APK</span></a>
 </nav>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="foot-inner">
-    <div class="foot-col">
-      <h5>🏠 BAGASXIT</h5>
-      <p id="fAbout">Platform mod game terpercaya dengan koleksi APK mod terbaru dan terlengkap.</p>
-    </div>
-    <div class="foot-col">
-      <h5>📌 Links</h5>
-      <a href="#" onclick="showPage('home');return false;">Home</a>
-      <a href="#" onclick="showPage('categories');return false;">Categories</a>
-      <a href="#" onclick="showPage('chat');return false;">Chat</a>
-      <a href="#" onclick="showPage('request');return false;">Request</a>
-      <a href="#" onclick="showPage('about');return false;">About</a>
-    </div>
-    <div class="foot-col">
-      <h5>📱 Social</h5>
-      <a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P" target="_blank">💬 WhatsApp</a>
-      <a href="https://t.me/BagasXIT" target="_blank">✈️ Telegram</a>
-    </div>
-    <div class="foot-col">
-      <h5>⚠️ Disclaimer</h5>
-      <p>All mods are for educational purposes only. Download at your own risk.</p>
-    </div>
-  </div>
-  <div class="foot-btm" id="fBtm">© 2026 BAGASXIT TRADING & MODS CO.</div>
-</footer>
 <script>
 // ===== SUPABASE =====
 const SB_URL = 'https://qlzwqbbvjscfjaicbhks.supabase.co';
@@ -424,24 +404,21 @@ function sbPost(path, body) {
   }).then(r => r.ok ? r.json() : null);
 }
 
-// ===== STATE =====
 let gameDB = {};
 let curGame = null, curFilter = 'all';
 let selectedRating = 0;
 
-// ===== THEME =====
 function initTheme() {
   const isLight = localStorage.getItem('bxit_theme') === 'light';
-  if (isLight) { document.body.classList.add('light-mode'); document.getElementById('themeBtn').textContent = '☀️'; }
+  if (isLight) { document.body.classList.add('light-mode'); document.getElementById('themeBtn').innerHTML = '<svg><use href="#i-sun"/></svg>'; }
 }
 function toggleTheme() {
   document.body.classList.toggle('light-mode');
   const isLight = document.body.classList.contains('light-mode');
   localStorage.setItem('bxit_theme', isLight ? 'light' : 'dark');
-  document.getElementById('themeBtn').textContent = isLight ? '☀️' : '🌙';
+  document.getElementById('themeBtn').innerHTML = isLight ? '<svg><use href="#i-sun"/></svg>' : '<svg><use href="#i-moon"/></svg>';
 }
 
-// ===== FETCH DATA =====
 async function loadGames() {
   try {
     const data = await sbGet('games?select=*&is_active=eq.true&order=created_at.desc');
@@ -449,7 +426,7 @@ async function loadGames() {
     (data || []).forEach(g => { gameDB[g.game_id] = g; });
     renderGrid();
   } catch(e) {
-    document.getElementById('modsGrid').innerHTML = '<div class="loading" style="color:#EF4444">❌ Gagal memuat data.</div>';
+    document.getElementById('modsGrid').innerHTML = '<div class="loading" style="color:#EF4444">Gagal memuat data.</div>';
   }
 }
 
@@ -484,7 +461,6 @@ document.querySelectorAll('.chip[data-cat]').forEach(c => {
   });
 });
 
-// ===== DETAIL PAGE =====
 async function showDetail(id) {
   const g = gameDB[id]; if (!g) return;
   curGame = g;
@@ -494,7 +470,6 @@ async function showDetail(id) {
   document.getElementById('dDev').textContent = g.developer;
   document.getElementById('dDesc').innerHTML = g.desc_game;
   
-  // Ambil Media
   const media = await sbGet('game_media?game_id=eq.' + id + '&order=sort_order.asc');
   const mediaSlider = document.getElementById('mediaSlider');
   mediaSlider.innerHTML = (media || []).map(m => {
@@ -506,7 +481,6 @@ async function showDetail(id) {
     }
   }).join('') || '<div class="media-item" style="display:flex;align-items:center;justify-content:center;color:#666;">Belum ada media</div>';
 
-  // Ambil Versi
   const vers = await sbGet('game_versions?game_id=eq.' + id + '&order=created_at.desc');
   const verList = document.getElementById('verList');
   if (vers && vers.length > 0) {
@@ -516,27 +490,20 @@ async function showDetail(id) {
         <div class="ver-left">
           <div class="ver-head"><strong>${v.version}</strong><span class="ver-badge">${v.label || 'Mod'}</span></div>
         </div>
-        <div class="ver-right"><a href="${v.link}" target="_blank" onclick="trackDL()">⬇ Unduh</a></div>
+        <div class="ver-right"><a href="${v.link}" target="_blank" onclick="trackDL()"><svg><use href="#i-download"/></svg> Unduh</a></div>
       </div>
     `).join('');
   } else {
     verList.innerHTML = '<div class="loading">Belum ada versi.</div>';
   }
 
-  // Ambil Review
   renderReviews(id);
-
-  // Hit Stat
-  document.getElementById('dStatDL').textContent = '0';
-  document.getElementById('dStatView').textContent = '0';
-
   document.getElementById('detail').classList.add('show');
   window.scrollTo(0, 0);
 }
 
 function closeDetail() { document.getElementById('detail').classList.remove('show'); }
 
-// ===== REVIEWS =====
 async function renderReviews(id) {
   const list = document.getElementById('reviews'), avgEl = document.getElementById('rateAvg'), revCount = document.getElementById('dStatRev');
   const rows = await sbGet('game_reviews?game_id=eq.' + id + '&order=created_at.desc');
@@ -580,7 +547,6 @@ async function submitReview() {
   alert('✅ Ulasan terkirim!');
 }
 
-// ===== LINK SHARE & COPY =====
 function copyLink() {
   if (!curGame) return;
   const link = window.location.origin + window.location.pathname + '#game/' + curGame.game_id;
@@ -590,14 +556,10 @@ function copyLink() {
     alert('❌ Gagal salin link.');
   });
 }
-
-function trackDL() {
-  // Opsional: Hit API untuk nambah stat download
-}
-
-// ===== NAVIGATION =====
+function trackDL() {}
 function openSidebar() { document.getElementById('sidebar').classList.add('show'); document.getElementById('sidebarBg').classList.add('show'); }
 function closeSidebar() { document.getElementById('sidebar').classList.remove('show'); document.getElementById('sidebarBg').classList.remove('show'); }
+function closeWelcome() { document.getElementById('welcome').classList.remove('show'); }
 
 function showPage(p) {
   document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
@@ -607,7 +569,6 @@ function showPage(p) {
   window.scrollTo(0, 0);
 }
 
-// ===== DEEP LINK (HASH) =====
 function checkDeepLink() {
   const hash = window.location.hash;
   if (hash.startsWith('#game/')) {
@@ -617,11 +578,11 @@ function checkDeepLink() {
 }
 window.addEventListener('hashchange', checkDeepLink);
 
-// ===== INIT =====
 window.addEventListener('DOMContentLoaded', async () => {
   initTheme();
   await loadGames();
   checkDeepLink();
+  setTimeout(() => document.getElementById('welcome').classList.add('show'), 1000);
 });
 </script>
 </body>
