@@ -90,9 +90,7 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 </style>
 </head>
 <body>
-<!-- BODY PLACEHOLDER -->
-</body>
-</html>
+
 <div class="sidebar-bg" id="sidebarBg" onclick="toggleSidebar()"></div>
 <aside class="sidebar" id="sidebar">
 <div style="font-weight:900;font-size:20px;color:var(--accent);margin-bottom:20px">BAGASXIT</div>
@@ -112,7 +110,6 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 <div class="icon-btn" onclick="toggleTheme()" id="btnTheme">☀</div>
 </header>
 
-<!-- PAGE: HOME -->
 <div class="page active" id="page-home">
 <div class="wrap">
 <div class="search-box">
@@ -130,7 +127,6 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 </div>
 </div>
 
-<!-- PAGE: CHAT -->
 <div class="page" id="page-chat">
 <div class="wrap">
 <div class="sec-title" data-i18n="chatTitle">💬 Live Chat</div>
@@ -140,7 +136,6 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 </div>
 </div>
 
-<!-- PAGE: REQUEST -->
 <div class="page" id="page-request">
 <div class="wrap">
 <div class="sec-title" data-i18n="reqTitle">📨 Request Mod</div>
@@ -153,7 +148,6 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 </div>
 </div>
 
-<!-- PAGE: DETAIL (Ditampilin via JS) -->
 <div class="page" id="page-detail">
 <div class="wrap">
 <div style="cursor:pointer;color:var(--accent);font-weight:700;margin-bottom:16px" onclick="showPage('home')">← <span data-i18n="back">Kembali</span></div>
@@ -212,6 +206,7 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 <div class="bnav-item" onclick="showPage('chat')" data-nav="chat"><span class="ico">💬</span><span data-i18n="chat">Chat</span></div>
 <div class="bnav-item" onclick="showPage('request')" data-nav="request"><span class="ico">📨</span><span data-i18n="req">Request</span></div>
 </nav>
+
 <script>
 const SB_URL='https://qlzwqbbvjscfjaicbhks.supabase.co',SB_KEY='sb_publishable_DRIOqI7O90TinECl4K6FJA_l0nIaPCY',HDR={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
 let games=[],categories=[],stats=[],history=[],curGame=null;
@@ -314,9 +309,6 @@ let wa=`https://wa.me/6283182456929?text=${encodeURIComponent('📨 REQUEST\n\nG
 window.open(wa,'_blank');alert('Request terkirim!');
 }
 
-window.addEventListener('scroll',()=>{document.getElementById('toTop').classList.toggle('show',window.scrollY>300)});
-document.addEventListener('DOMContentLoaded',initHome);
-</script>
 async function openDetail(id) {
     curGame = games.find(g => g.game_id === id);
     if (!curGame) return;
@@ -355,8 +347,6 @@ async function openDetail(id) {
     
     let rec = games.filter(g => g.category === curGame.category && g.game_id !== id).slice(0, 4);
     document.getElementById('recGrid').innerHTML = rec.map(g => renderCard(g, false)).join('');
-    let viewBody = { game_key: id, stat_type: 'view' };
-    // optional: add view stat here if needed
 }
 
 async function loadReviews(id) {
@@ -380,3 +370,9 @@ async function loadReviews(id) {
 
 function openLightbox(url) { document.getElementById('lightboxImg').src = url; document.getElementById('lightbox').classList.add('show'); }
 function closeLightbox() { document.getElementById('lightbox').classList.remove('show'); }
+
+window.addEventListener('scroll',()=>{document.getElementById('toTop').classList.toggle('show',window.scrollY>300)});
+document.addEventListener('DOMContentLoaded',initHome);
+</script>
+</body>
+</html>
