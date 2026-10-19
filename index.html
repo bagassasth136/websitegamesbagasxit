@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>BAGASXIT MODS</title>
+<title>BAGASXIT STORE</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#050506">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -35,8 +35,22 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 .wrap{max-width:800px;margin:0 auto;padding:16px}
 .skeleton{background:linear-gradient(90deg,var(--card) 25%,var(--card2) 50%,var(--card) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.sk-card{height:200px;border-radius:14px;margin-bottom:12px}
-.sec-title{font-size:16px;font-weight:800;margin:20px 0 12px;display:flex;align-items:center;gap:8px}
+.sk-card{height:160px;border-radius:14px;margin-bottom:12px}
+.sec-title{font-size:16px;font-weight:800;margin:16px 0 10px;display:flex;align-items:center;gap:8px}
+
+/* CAROUSEL RAPAT */
+.carousel{position:relative;margin-bottom:16px;border-radius:12px;overflow:hidden;background:var(--card);border:1px solid var(--border)}
+.slide{display:none;padding:16px;align-items:center;gap:12px}
+.slide.active{display:flex}
+.slide-info{flex:1}
+.slide-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:8px;font-weight:900;background:linear-gradient(135deg,#F59E0B,#EF4444);color:#fff;margin-bottom:6px;text-transform:uppercase}
+.slide-info h2{font-size:16px;font-weight:900;margin-bottom:4px;line-height:1.2}
+.slide-info p{font-size:11px;color:var(--dim);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.slide-img{width:60px;height:60px;border-radius:10px;object-fit:cover;border:1px solid var(--border2)}
+.dots{display:flex;justify-content:center;gap:6px;padding-bottom:10px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--border2);cursor:pointer;transition:.2s}
+.dot.active{background:var(--accent);width:16px;border-radius:3px}
+
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:.2s;position:relative}
 .card:active{transform:scale(.97)}
@@ -60,7 +74,7 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 .fab{position:fixed;bottom:80px;right:16px;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px var(--glow);z-index:80;opacity:0;pointer-events:none;transition:.3s;cursor:pointer}
 .fab.show{opacity:1;pointer-events:auto}
 .detail-hdr{display:flex;gap:16px;margin-bottom:20px}
-.detail-hdr img{width:84px;height:84px;border-radius:20px;border:1px solid var(--border)}
+.detail-hdr img{width:84px;height:84px;border-radius:20px;border:1px solid var(--border);object-fit:cover}
 .detail-info h1{font-size:20px;font-weight:900;margin-bottom:4px}
 .detail-info .dev{font-size:12px;color:var(--accent);font-weight:700}
 .detail-info .cat{font-size:11px;color:var(--dim);margin-top:4px}
@@ -115,16 +129,19 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 
 <div class="page active" id="page-home">
 <div class="wrap">
+<!-- CAROUSEL RAPAT -->
+<div class="carousel" id="carouselContainer"></div>
+
 <div class="search-box">
 <svg viewBox="0 0 24 24" style="color:var(--mute)"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-<input type="text" id="searchInput" placeholder="Cari game..." oninput="handleSearch(this.value)" autocomplete="off">
+<input type="text" id="searchInput" placeholder="Cari aplikasi atau game..." oninput="handleSearch(this.value)" autocomplete="off">
 </div>
 <div class="hist" id="historyContainer"></div>
 <div class="sec-title" data-i18n="trending">🔥 Trending</div>
 <div class="grid" id="trendGrid"></div>
 <div class="sec-title" data-i18n="newUpdate">✨ Baru Diupdate</div>
 <div class="grid" id="newGrid"></div>
-<div class="sec-title" data-i18n="allGames">🎮 Semua Game</div>
+<div class="sec-title">📱 Aplikasi & Game</div>
 <div class="filters" id="filterContainer"></div>
 <div class="grid" id="mainGrid"></div>
 </div>
@@ -143,7 +160,7 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 <div class="wrap">
 <div class="sec-title" data-i18n="reqTitle">📨 Request Mod</div>
 <div class="sec-box">
-<input type="text" id="rName" placeholder="Nama Game" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--txt);margin-bottom:10px">
+<input type="text" id="rName" placeholder="Nama Game/App" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--txt);margin-bottom:10px">
 <input type="text" id="rLink" placeholder="Link (Opsional)" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--txt);margin-bottom:10px">
 <textarea id="rDesc" placeholder="Deskripsi" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--txt);min-height:80px;margin-bottom:10px"></textarea>
 <button onclick="submitRequest()" style="width:100%;padding:14px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-weight:800;font-size:14px">Kirim Permintaan</button>
@@ -262,7 +279,7 @@ ${g.label_text?`<span class="label" style="background:${g.label_color||'#EF4444'
 <div class="info">
 <h4>${g.title}</h4>
 <div class="dev">${g.developer||'Unknown'}</div>
-<div class="meta"><span>⬇ ${getStat(g.game_id)}</span><span>⭐ 4.8</span></div>
+<div class="meta"><span>⬇ ${getStat(g.game_id)}</span><span>⭐ ${g.rating_avg||'0.0'}</span></div>
 </div></div>`;
 }
 
@@ -276,6 +293,7 @@ stats=await sbGet('stats?select=game_key,stat_type,count').then(rows=>{let c={};
 let favs=await loadFavs(),favKeys=favs.map(f=>f.game_key);
 history=JSON.parse(localStorage.getItem('bx_hist')||'[]');
 renderHistory();
+renderCarousel();
 
 let trend=[...games].sort((a,b)=>getStat(b.game_id)-getStat(a.game_id)).slice(0,4);
 document.getElementById('trendGrid').innerHTML=trend.map(g=>renderCard(g,favKeys.includes(g.game_id))).join('');
@@ -286,6 +304,23 @@ document.getElementById('newGrid').innerHTML=latest.map(g=>renderCard(g,favKeys.
 renderFilters();
 document.getElementById('mainGrid').innerHTML=games.map(g=>renderCard(g,favKeys.includes(g.game_id))).join('');
 }
+
+function renderCarousel(){
+let c=document.getElementById('carouselContainer');
+if(!games.length){c.style.display='none';return}
+let top=[...games].sort((a,b)=>getStat(b.game_id)-getStat(a.game_id)).slice(0,3);
+c.innerHTML=top.map((g,i)=>`
+<div class="slide ${i===0?'active':''}" onclick="openDetail('${g.game_id}')">
+<div class="slide-info">
+<span class="slide-badge">POPULER</span>
+<h2>${g.title}</h2>
+<p>${g.desc_game||'Aplikasi & Game terbaik'}</p>
+</div>
+<img src="${g.img||'https://via.placeholder.com/150'}" class="slide-img">
+</div>`).join('') + `<div class="dots">${top.map((_,i)=>`<div class="dot ${i===0?'active':''}" onclick="event.stopPropagation();goSlide(${i})"></div>`).join('')}</div>`;
+let idx=0;setInterval(()=>{let slides=c.querySelectorAll('.slide'),dots=c.querySelectorAll('.dot');if(!slides.length)return;slides.forEach(s=>s.classList.remove('active'));dots.forEach(d=>d.classList.remove('active'));idx=(idx+1)%slides.length;slides[idx].classList.add('active');dots[idx].classList.add('active')},4000);
+}
+function goSlide(i){let c=document.getElementById('carouselContainer'),slides=c.querySelectorAll('.slide'),dots=c.querySelectorAll('.dot');slides.forEach(s=>s.classList.remove('active'));dots.forEach(d=>d.classList.remove('active'));slides[i].classList.add('active');dots[i].classList.add('active')}
 
 function renderFilters(){
 let h=`<div class="chip active" onclick="filterCat(this,'all')">All</div>`;
@@ -301,7 +336,7 @@ document.getElementById('mainGrid').innerHTML=f.map(g=>renderCard(g,false)).join
 
 function handleSearch(q){
 if(!q){renderGridAll();return}
-let f=games.filter(g=>g.title.toLowerCase().includes(q.toLowerCase())||g.developer.toLowerCase().includes(q.toLowerCase()));
+let f=games.filter(g=>g.title.toLowerCase().includes(q.toLowerCase())||(g.developer||'').toLowerCase().includes(q.toLowerCase()));
 document.getElementById('mainGrid').innerHTML=f.map(g=>renderCard(g,false)).join('');
 }
 
@@ -322,7 +357,7 @@ else{await sbPost('favorites',{game_key:id,fp_hash:FP});el.classList.add('liked'
 function submitRequest(){
 let n=document.getElementById('rName').value,l=document.getElementById('rLink').value,d=document.getElementById('rDesc').value;
 if(!n){alert('Nama wajib diisi!');return}
-let wa=`https://wa.me/6283182456929?text=${encodeURIComponent('📨 REQUEST\n\nGame: '+n+'\nLink: '+l+'\nDesc: '+d)}`;
+let wa=`https://wa.me/6283182456929?text=${encodeURIComponent('📨 REQUEST\n\nGame/App: '+n+'\nLink: '+l+'\nDesc: '+d)}`;
 window.open(wa,'_blank');alert('Request terkirim!');
 }
 
@@ -333,7 +368,7 @@ async function openDetail(id) {
     document.getElementById('dImg').src = curGame.img || 'https://via.placeholder.com/150';
     document.getElementById('dTitle').innerText = curGame.title;
     document.getElementById('dDev').innerText = curGame.developer || 'Unknown';
-    document.getElementById('dCat').innerText = curGame.category || 'Game';
+    document.getElementById('dCat').innerText = curGame.category || 'Lainnya';
     document.getElementById('dDesc').innerText = curGame.desc_game || 'Belum ada deskripsi.';
     document.getElementById('dChangelog').innerText = curGame.changelog || 'Belum ada update terbaru.';
     document.getElementById('dSecurity').innerText = curGame.security_info || 'Tidak ada data yang dibagikan ke pihak ketiga.';
