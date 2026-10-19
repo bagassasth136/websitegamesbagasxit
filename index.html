@@ -15,39 +15,64 @@ body{-webkit-tap-highlight-color:transparent}
 .no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
 .skeleton{background:linear-gradient(90deg,rgba(255,255,255,.05) 25%,rgba(255,255,255,.1) 50%,rgba(255,255,255,.05) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.page{display:none;animation:fadeUp .3s ease forwards}
-.page.active{display:block}
+.page{display:none;animation:fadeUp .3s ease forwards}.page.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 #lightbox img{animation:zoomIn .3s cubic-bezier(.16,1,.3,1) forwards}
 @keyframes zoomIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
 #welcomeModal > div{animation:popIn .3s cubic-bezier(.16,1,.3,1) forwards}
 @keyframes popIn{from{opacity:0;transform:scale(.9) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .star-active{color:#EAB308!important}
+.sb-title{background:linear-gradient(135deg,#A855F7 0%,#3B82F6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sb-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;font-size:14px;font-weight:600;color:#94A3B8;transition:.2s;border:1px solid transparent;margin-bottom:4px}
+.sb-item.active{background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.3);color:#A855F7}
+.sb-item svg{color:#A855F7;opacity:.7;transition:.2s}
+.sb-item.active svg{opacity:1}
+.sb-bottom-panel{background:rgba(20,20,25,.5);border:1px solid #1C1C24;border-radius:16px;padding:12px;backdrop-filter:blur(10px)}
+.sec-head{border-left:4px solid #A855F7;padding-left:8px;margin-bottom:12px}
+#toast{position:fixed;top:20px;left:50%;transform:translate(-50%,-100px);background:#10B981;color:#fff;padding:12px 24px;border-radius:12px;font-weight:bold;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.3);transition:.3s;z-index:9999;opacity:0}
+#toast.show{transform:translate(-50%,0);opacity:1}
+#toast.err{background:#EF4444}
 </style>
 </head>
 <body class="bg-slate-50 dark:bg-[#050506] text-slate-900 dark:text-slate-100 font-sans min-h-screen pb-24 transition-colors duration-300">
+<div id="toast">Pesan</div>
 
 <header class="sticky top-0 z-40 bg-white/80 dark:bg-[#050506]/80 backdrop-blur-md border-b border-slate-200 dark:border-[#1C1C24] px-4 py-3 flex items-center gap-3">
 <button onclick="toggleSidebar()" class="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] text-slate-700 dark:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-<div id="webTitle" class="flex-1 font-black text-lg tracking-wide bg-gradient-to-r from-slate-800 to-accent dark:from-white dark:to-accent bg-clip-text text-transparent">BXIT ID</div>
+<div id="webTitle" class="flex-1 font-black text-lg tracking-wide sb-title">BXIT ID</div>
 <button onclick="toggleTheme()" id="btnTheme" class="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] text-slate-700 dark:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
 </header>
 
 <div id="sidebarBg" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 opacity-0 pointer-events-none transition-opacity" onclick="toggleSidebar()"></div>
 <aside id="sidebar" class="fixed top-0 left-0 bottom-0 w-64 bg-white dark:bg-[#0A0A0D] z-50 -translate-x-full transition-transform duration-300 border-r border-slate-200 dark:border-[#1C1C24] p-5 flex flex-col">
-<div id="sideTitle" class="font-black text-xl text-accent mb-6">BXIT ID</div>
-<nav class="flex-1 space-y-1">
-<a href="#" onclick="showPage('home');toggleSidebar();return false" data-nav="home" class="flex items-center gap-3 p-3 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#141419] hover:text-accent transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home</a>
-<a href="/getkey/" class="flex items-center gap-3 p-3 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#141419] hover:text-accent transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> Get Key</a>
-<a href="/store/" class="flex items-center gap-3 p-3 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#141419] hover:text-accent transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Store</a>
-<a href="/updatesapk/" class="flex items-center gap-3 p-3 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#141419] hover:text-accent transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> APK Updates</a>
-<a href="#" onclick="showPage('chat');toggleSidebar();return false" data-nav="chat" class="flex items-center gap-3 p-3 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#141419] hover:text-accent transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Chat</a>
-<a href="#" onclick="showPage('request');toggleSidebar();return false" data-nav="request" class="flex items-center gap-3 p-3 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#141419] hover:text-accent transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Request</a>
-<a href="#" onclick="showPage('about');toggleSidebar();return false" data-nav="about" class="flex items-center gap-3 p-3 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#141419] hover:text-accent transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> About</a>
+<div id="sideTitle" class="font-black text-2xl sb-title mb-6">BXIT ID</div>
+<nav class="flex-1 space-y-1 overflow-y-auto no-scrollbar">
+<a href="#" onclick="showPage('home');toggleSidebar();return false" data-nav="home" class="sb-item active"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home</a>
+<a href="/getkey/" class="sb-item"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> Get Key</a>
+<a href="/store/" class="sb-item"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Store</a>
+<a href="/updatesapk/" class="sb-item"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> APK Updates</a>
+<a href="#" onclick="showPage('chat');toggleSidebar();return false" data-nav="chat" class="sb-item"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Chat</a>
+<a href="#" onclick="showPage('request');toggleSidebar();return false" data-nav="request" class="sb-item"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Request</a>
+<a href="#" onclick="showPage('about');toggleSidebar();return false" data-nav="about" class="sb-item"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> About</a>
 </nav>
+<div class="pt-4 mt-2 sb-bottom-panel space-y-3">
+<div class="flex gap-2 justify-center">
+<a href="#" id="sbWa" target="_blank" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-[#1C1C24] flex items-center justify-center text-green-500 hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a>
+<a href="#" id="sbTg" target="_blank" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-[#1C1C24] flex items-center justify-center text-blue-500 hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></a>
+<a href="#" id="sbIg" target="_blank" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-[#1C1C24] flex items-center justify-center text-pink-500 hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+</div>
+<div class="flex gap-2">
+<button onclick="setLang('id')" class="flex-1 py-2 rounded-lg bg-slate-100 dark:bg-[#1C1C24] text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-accent">ID</button>
+<button onclick="setLang('en')" class="flex-1 py-2 rounded-lg bg-slate-100 dark:bg-[#1C1C24] text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-accent">EN</button>
+</div>
+<button onclick="toggleTheme()" class="w-full py-2 rounded-lg bg-slate-100 dark:bg-[#1C1C24] flex items-center justify-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-accent">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg> Tema
+</button>
+</div>
 </aside>
-
 <main class="max-w-2xl mx-auto px-4 mt-4">
+
+<!-- HOME -->
 <div id="page-home" class="page active">
 <div id="carouselContainer" class="mb-4"></div>
 <div class="flex items-center bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-xl px-3 mb-4 focus-within:ring-2 focus-within:ring-accent/50 transition-all">
@@ -55,21 +80,35 @@ body{-webkit-tap-highlight-color:transparent}
 <input type="text" id="searchInput" placeholder="Cari aplikasi atau game..." oninput="handleSearch(this.value)" autocomplete="off" class="flex-1 bg-transparent border-none outline-none p-4 text-sm text-slate-800 dark:text-white placeholder-slate-400">
 </div>
 <div id="historyContainer" class="flex flex-wrap gap-2 mb-4"></div>
-<div class="flex items-center gap-2 mb-3 mt-6"><svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/></svg><h2 class="font-bold text-base">Trending</h2></div>
+<div class="sec-head flex items-center gap-2 mt-6"><svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg><h2 class="font-bold text-base">Trending</h2></div>
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" id="trendGrid"></div>
-<div class="flex items-center gap-2 mb-3 mt-6"><svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><h2 class="font-bold text-base">Baru Diupdate</h2></div>
+<div class="sec-head flex items-center gap-2 mt-6"><svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><h2 class="font-bold text-base">Baru Diupdate</h2></div>
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" id="newGrid"></div>
-<div class="flex items-center gap-2 mb-3 mt-6"><svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg><h2 class="font-bold text-base">Aplikasi & Game</h2></div>
+<div class="sec-head flex items-center gap-2 mt-6"><svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg><h2 class="font-bold text-base">Aplikasi & Game</h2></div>
 <div id="filterContainer" class="flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-1"></div>
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" id="mainGrid"></div>
 </div>
 
+<!-- SEARCH PAGE -->
+<div id="page-search" class="page hidden">
+<div class="flex items-center bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-xl px-3 mb-4 focus-within:ring-2 focus-within:ring-accent/50 transition-all mt-2">
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+<input type="text" id="searchPageInput" placeholder="Cari aplikasi atau game..." oninput="handleSearchPage(this.value)" autocomplete="off" class="flex-1 bg-transparent border-none outline-none p-4 text-sm text-slate-800 dark:text-white placeholder-slate-400">
+</div>
+<div id="searchPageHistory" class="mb-4"></div>
+<div class="sec-head flex items-center gap-2 mt-6"><svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><h2 class="font-bold text-base">Rekomendasi Pencarian</h2></div>
+<div class="grid grid-cols-2 gap-3 mb-4" id="searchSuggestions"></div>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" id="searchResultGrid"></div>
+</div>
+
+<!-- CHAT -->
 <div id="page-chat" class="page hidden">
 <div class="bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-2xl overflow-hidden h-[500px] mt-4 shadow-sm">
 <iframe src="https://www5.cbox.ws/box/?boxid=967298&boxtag=LBrRLM" width="100%" height="100%" frameborder="0" class="border-none"></iframe>
 </div>
 </div>
 
+<!-- REQUEST -->
 <div id="page-request" class="page hidden">
 <div class="bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-2xl p-5 mt-4 shadow-sm">
 <input type="text" id="rName" placeholder="Nama Game/App" class="w-full bg-slate-50 dark:bg-[#0A0A0D] border border-slate-200 dark:border-[#1C1C24] rounded-xl p-3 text-sm text-slate-800 dark:text-white mb-3 outline-none focus:border-accent">
@@ -79,6 +118,7 @@ body{-webkit-tap-highlight-color:transparent}
 </div>
 </div>
 
+<!-- ABOUT -->
 <div id="page-about" class="page hidden">
 <div class="bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-2xl p-5 mt-4 shadow-sm text-center flex flex-col items-center">
 <p id="abText1" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-4"></p>
@@ -90,6 +130,7 @@ body{-webkit-tap-highlight-color:transparent}
 </div>
 </div>
 
+<!-- DETAIL -->
 <div id="page-detail" class="page hidden">
 <button onclick="showPage('home')" class="flex items-center gap-1 text-accent font-bold text-sm mb-4 mt-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Kembali</button>
 <div class="flex gap-4 items-center mb-5">
@@ -107,7 +148,7 @@ body{-webkit-tap-highlight-color:transparent}
 <div class="bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-2xl p-5 mb-4 shadow-sm"><h3 class="text-xs font-black text-accent uppercase tracking-wider mb-3">Yang Baru</h3><p id="dChangelog" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed"></p></div>
 <div class="bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-2xl p-5 mb-4 shadow-sm"><h3 class="text-xs font-black text-accent uppercase tracking-wider mb-3">Keamanan Data</h3><p id="dSecurity" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed"></p></div>
 <div class="bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-2xl p-5 mb-4 shadow-sm"><h3 class="text-xs font-black text-accent uppercase tracking-wider mb-3">Deskripsi</h3><p id="dDesc" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed"></p></div>
-<div class="flex items-center gap-2 mb-3 mt-6"><svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><h2 class="font-bold text-base">Rating & Ulasan</h2></div>
+<div class="sec-head flex items-center gap-2 mt-6"><svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><h2 class="font-bold text-base">Rating & Ulasan</h2></div>
 <div class="bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-2xl p-5 mb-4 shadow-sm"><div class="flex items-center gap-5"><div><div id="rateAvgTxt" class="text-5xl font-black leading-none tracking-tighter">0.0</div><div id="rateStars" class="text-yellow-500 text-sm mt-1">☆☆☆☆☆</div><div id="rateCount" class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">0 ulasan</div></div><div class="flex-1 space-y-1.5" id="rateBars"></div></div></div>
 
 <div class="bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-2xl p-5 mb-4 shadow-sm">
@@ -125,11 +166,10 @@ body{-webkit-tap-highlight-color:transparent}
 </div>
 
 <div id="reviewList" class="space-y-3"></div>
-<div class="flex items-center gap-2 mb-3 mt-6"><svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg><h2 class="font-bold text-base">Mungkin Kamu Suka</h2></div>
+<div class="sec-head flex items-center gap-2 mt-6"><svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg><h2 class="font-bold text-base">Mungkin Kamu Suka</h2></div>
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" id="recGrid"></div>
 </div>
 </main>
-
 <div id="welcomeModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[90] hidden items-center justify-center p-4">
 <div class="bg-white dark:bg-[#0E0E12] w-full max-w-sm rounded-3xl p-6 text-center border border-slate-200 dark:border-[#1C1C24] shadow-2xl relative">
 <button onclick="closeWelcome()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors">✕</button>
@@ -153,18 +193,31 @@ body{-webkit-tap-highlight-color:transparent}
 <a href="/getkey/" class="flex flex-col items-center gap-1 text-[9px] font-bold text-slate-400 dark:text-slate-500 transition-colors hover:text-accent"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>Get Key</a>
 <a href="/store/" class="flex flex-col items-center gap-1 text-[9px] font-bold text-slate-400 dark:text-slate-500 transition-colors hover:text-accent"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Store</a>
 <a href="/updatesapk/" class="flex flex-col items-center gap-1 text-[9px] font-bold text-slate-400 dark:text-slate-500 transition-colors hover:text-accent"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>APK</a>
+<a href="#" onclick="showPage('search');return false" data-nav="search" class="bnav-item flex flex-col items-center gap-1 text-[9px] font-bold text-slate-400 dark:text-slate-500 transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search</a>
 <a href="#" onclick="showPage('chat');return false" data-nav="chat" class="bnav-item flex flex-col items-center gap-1 text-[9px] font-bold text-slate-400 dark:text-slate-500 transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chat</a>
 <a href="#" onclick="showPage('request');return false" data-nav="request" class="bnav-item flex flex-col items-center gap-1 text-[9px] font-bold text-slate-400 dark:text-slate-500 transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Request</a>
+<a href="#" onclick="showPage('about');return false" data-nav="about" class="bnav-item flex flex-col items-center gap-1 text-[9px] font-bold text-slate-400 dark:text-slate-500 transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>About</a>
 </nav>
 
 <script>
 const SB_URL='https://qlzwqbbvjscfjaicbhks.supabase.co',SB_KEY='sb_publishable_DRIOqI7O90TinECl4K6FJA_l0nIaPCY',HDR={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
 let games=[],categories=[],stats=[],history=[],curGame=null,settings={},currentRating=0;
 
-if(localStorage.getItem('theme')==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}
+function showToast(msg, isErr=false){let t=document.getElementById('toast');t.innerText=msg;t.className=isErr?'err show':'show';setTimeout(()=>{t.className=''},3000)}
 function toggleTheme(){let isDark=document.documentElement.classList.contains('dark');if(isDark){document.documentElement.classList.remove('dark');localStorage.setItem('theme','light')}else{document.documentElement.classList.add('dark');localStorage.setItem('theme','dark')}}
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('-translate-x-full');document.getElementById('sidebarBg').classList.toggle('opacity-0');document.getElementById('sidebarBg').classList.toggle('pointer-events-none')}
-function showPage(p){document.querySelectorAll('.page').forEach(el=>{el.classList.remove('active');el.classList.add('hidden')});document.querySelectorAll('.bnav-item').forEach(el=>el.classList.remove('text-accent'));let target=document.getElementById('page-'+p);target.classList.remove('hidden');target.classList.add('active');document.querySelectorAll(`[data-nav="${p}"]`).forEach(el=>el.classList.add('text-accent'));window.scrollTo(0,0);}
+function showPage(p){
+document.querySelectorAll('.page').forEach(el=>{el.classList.remove('active');el.classList.add('hidden')});
+document.querySelectorAll('.bnav-item').forEach(el=>el.classList.remove('text-accent'));
+let target=document.getElementById('page-'+p);if(target){target.classList.remove('hidden');target.classList.add('active')}
+document.querySelectorAll(`[data-nav="${p}"]`).forEach(el=>el.classList.add('text-accent'));
+window.scrollTo(0,0);
+if(p==='search'){setTimeout(()=>document.getElementById('searchPageInput').focus(),100);renderSearchSuggestions()}
+}
+
+if(localStorage.getItem('theme')==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}
+
+function setLang(lang){localStorage.setItem('lang',lang);location.reload()}
 
 function getFp(){try{let p=[navigator.userAgent,navigator.language,screen.width+'x'+screen.height,(Intl.DateTimeFormat().resolvedOptions().timeZone)],raw=p.join('|'),h=5381;for(let i=0;i<raw.length;i++){h=((h<<5)+h)+raw.charCodeAt(i);h=h&h}return'F'+Math.abs(h).toString(36)}catch(e){return'F_fallback'}}
 const FP=getFp();
@@ -187,8 +240,9 @@ document.getElementById('webTitle').innerText=settings.site_title||'BXIT ID';
 document.getElementById('sideTitle').innerText=settings.site_title||'BXIT ID';
 if(settings.about_text) document.getElementById('abText1').innerText=settings.about_text;
 if(settings.footer_text) document.getElementById('abText2').innerText=settings.footer_text;
-if(settings.wa_channel) {document.getElementById('abWa').href=settings.wa_channel;document.getElementById('welWa').href=settings.wa_channel;}
-if(settings.tg_channel) {document.getElementById('abTg').href=settings.tg_channel;document.getElementById('welTg').href=settings.tg_channel;}
+if(settings.wa_channel) {document.getElementById('abWa').href=settings.wa_channel;document.getElementById('welWa').href=settings.wa_channel;document.getElementById('sbWa').href=settings.wa_channel;}
+if(settings.tg_channel) {document.getElementById('abTg').href=settings.tg_channel;document.getElementById('welTg').href=settings.tg_channel;document.getElementById('sbTg').href=settings.tg_channel;}
+document.getElementById('sbIg').href=settings.ig_channel||'#';
 
 games=await sbGet('games?is_active=eq.true&order=created_at.desc');
 categories=await sbGet('game_categories?select=*&order=name.asc');
@@ -212,6 +266,9 @@ function filterCat(el,cat){document.querySelectorAll('.chip').forEach(c=>{c.clas
 function handleSearch(q){if(!q){renderGridAll();return}let f=games.filter(g=>g.title.toLowerCase().includes(q.toLowerCase())||(g.developer||'').toLowerCase().includes(q.toLowerCase()));document.getElementById('mainGrid').innerHTML=f.map(g=>renderCard(g,false)).join('');}
 function renderGridAll(){document.getElementById('mainGrid').innerHTML=games.map(g=>renderCard(g,false)).join('')}
 function renderHistory(){let h=document.getElementById('historyContainer');if(!history.length){h.innerHTML='';return}h.innerHTML=history.slice(0,3).map(x=>`<span class="text-[11px] bg-slate-200 dark:bg-[#141419] px-3 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 cursor-pointer" onclick="document.getElementById('searchInput').value='${x}';handleSearch('${x}')">${x}</span>`).join('');}
+
+function handleSearchPage(q){let f=games.filter(g=>g.title.toLowerCase().includes(q.toLowerCase())||(g.developer||'').toLowerCase().includes(q.toLowerCase()));document.getElementById('searchResultGrid').innerHTML=f.map(g=>renderCard(g,false)).join('');}
+function renderSearchSuggestions(){let sug=['Free Fire','Minecraft','Mobile Legends','PUBG','GTA'];document.getElementById('searchSuggestions').innerHTML=sug.map(s=>`<div class="bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-accent" onclick="document.getElementById('searchPageInput').value='${s}';handleSearchPage('${s}')"><span class="text-xs font-bold">${s}</span><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>`).join('');}
 
 async function openDetail(id) {
     curGame = games.find(g => g.game_id === id); if (!curGame) return; showPage('detail');
@@ -238,8 +295,8 @@ async function openDetail(id) {
     let rec = games.filter(g => g.category === curGame.category && g.game_id !== id).slice(0, 4); document.getElementById('recGrid').innerHTML = rec.map(g => renderCard(g, false)).join('');
 }
 
-function shareGame() { if (!curGame) return; let urlToShare = curGame.share_url ? curGame.share_url : window.location.href; if (navigator.share) { navigator.share({ title: curGame.title, text: 'Download ' + curGame.title + ' di BAGASXIT!', url: urlToShare }).catch(() => {}); } else { navigator.clipboard.writeText(urlToShare); alert('Link berhasil disalin!'); } }
-function submitRequest(){let n=document.getElementById('rName').value,l=document.getElementById('rLink').value,d=document.getElementById('rDesc').value;if(!n){alert('Nama wajib diisi!');return}let wa=`https://wa.me/${settings.wa_request||'6283182456929'}?text=${encodeURIComponent('📨 REQUEST\n\nGame/App: '+n+'\nLink: '+l+'\nDesc: '+d)}`;window.open(wa,'_blank');alert('Request terkirim!');}
+function shareGame() { if (!curGame) return; let urlToShare = curGame.share_url ? curGame.share_url : window.location.href; if (navigator.share) { navigator.share({ title: curGame.title, text: 'Download ' + curGame.title + ' di BAGASXIT!', url: urlToShare }).catch(() => {}); } else { navigator.clipboard.writeText(urlToShare); showToast('Link berhasil disalin!'); } }
+function submitRequest(){let n=document.getElementById('rName').value,l=document.getElementById('rLink').value,d=document.getElementById('rDesc').value;if(!n){showToast('Nama wajib diisi!',true);return}let wa=`https://wa.me/${settings.wa_request||'6283182456929'}?text=${encodeURIComponent('📨 REQUEST\n\nGame/App: '+n+'\nLink: '+l+'\nDesc: '+d)}`;window.open(wa,'_blank');showToast('Request terkirim!');}
 
 function setRating(n) {
     currentRating = n;
@@ -251,20 +308,20 @@ function setRating(n) {
 
 async function submitReview() {
     if (!curGame) return;
-    if (!currentRating) { alert('Pilih rating bintang dulu!'); return; }
+    if (!currentRating) { showToast('Pilih rating bintang dulu!', true); return; }
     let name = document.getElementById('revName').value.trim() || 'Anonim';
     let text = document.getElementById('revText').value.trim() || '';
     let body = { game_id: curGame.game_id, name: name, rating: currentRating, review_text: text };
     let ok = await sbPost('game_reviews', body);
     if (ok) {
-        alert('Ulasan berhasil dikirim!');
+        showToast('Ulasan berhasil dikirim!');
         document.getElementById('revName').value = '';
         document.getElementById('revText').value = '';
         currentRating = 0;
         document.querySelectorAll('#starInput span').forEach(s => s.classList.remove('text-yellow-500'));
         await loadReviews(curGame.game_id);
     } else {
-        alert('Gagal mengirim ulasan. Coba lagi.');
+        showToast('Gagal mengirim ulasan.', true);
     }
 }
 
