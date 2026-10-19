@@ -24,10 +24,11 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 .sb-menu{flex:1}
 .sb-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;font-size:14px;font-weight:600;color:var(--txt);margin-bottom:4px;transition:.2s}
 .sb-item:hover,.sb-item.active{background:var(--card);color:var(--accent)}
+.sb-item svg{width:18px;height:18px}
 .bnav{position:fixed;bottom:0;left:0;right:0;z-index:90;background:var(--bg);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0 max(8px,env(safe-area-inset-bottom))}
 .bnav-item{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:700;color:var(--dim);cursor:pointer}
 .bnav-item.active{color:var(--accent)}
-.bnav-item .ico{font-size:20px}
+.bnav-item svg{width:22px;height:22px}
 .page{display:none;animation:fadeIn .3s ease}
 .page.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -35,7 +36,6 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 .skeleton{background:linear-gradient(90deg,var(--card) 25%,var(--card2) 50%,var(--card) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .sk-card{height:200px;border-radius:14px;margin-bottom:12px}
-.sk-text{height:16px;border-radius:4px;margin-bottom:8px;width:60%}
 .sec-title{font-size:16px;font-weight:800;margin:20px 0 12px;display:flex;align-items:center;gap:8px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:.2s;position:relative}
@@ -86,6 +86,8 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 .sec-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
 .sec-box h3{font-size:13px;font-weight:800;color:var(--accent);margin-bottom:10px}
 .sec-box p{font-size:12px;color:var(--dim);line-height:1.6}
+.socials{display:flex;gap:10px;justify-content:center;margin-top:18px}
+.socials a{padding:10px 20px;border-radius:10px;background:var(--card2);border:1px solid var(--border);color:var(--txt);font-size:12px;font-weight:700;transition:.2s}
 @media(max-width:420px){.grid{grid-template-columns:repeat(2,1fr);gap:10px}}
 </style>
 </head>
@@ -95,19 +97,20 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 <aside class="sidebar" id="sidebar">
 <div style="font-weight:900;font-size:20px;color:var(--accent);margin-bottom:20px">BAGASXIT</div>
 <div class="sb-menu">
-<a href="#" class="sb-item active" onclick="showPage('home');toggleSidebar();return false" data-nav="home">🏠 <span data-i18n="home">Home</span></a>
-<a href="/getkey/" class="sb-item">🔑 <span data-i18n="getkey">Get Key</span></a>
-<a href="/store/" class="sb-item">🛒 <span data-i18n="store">Store</span></a>
-<a href="/apkupdates/" class="sb-item">📱 <span data-i18n="apk">APK Updates</span></a>
-<a href="#" class="sb-item" onclick="showPage('chat');toggleSidebar();return false" data-nav="chat">💬 <span data-i18n="chat">Chat</span></a>
-<a href="#" class="sb-item" onclick="showPage('request');toggleSidebar();return false" data-nav="request">📨 <span data-i18n="req">Request</span></a>
+<a href="#" class="sb-item active" onclick="showPage('home');toggleSidebar();return false" data-nav="home"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> <span data-i18n="home">Home</span></a>
+<a href="/getkey/" class="sb-item"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> <span data-i18n="getkey">Get Key</span></a>
+<a href="/store/" class="sb-item"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> <span data-i18n="store">Store</span></a>
+<a href="/apkupdates/" class="sb-item"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> <span data-i18n="apk">APK Updates</span></a>
+<a href="#" class="sb-item" onclick="showPage('chat');toggleSidebar();return false" data-nav="chat"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> <span data-i18n="chat">Chat</span></a>
+<a href="#" class="sb-item" onclick="showPage('request');toggleSidebar();return false" data-nav="request"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> <span data-i18n="req">Request</span></a>
+<a href="#" class="sb-item" onclick="showPage('about');toggleSidebar();return false" data-nav="about"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> <span data-i18n="about">About</span></a>
 </div>
 </aside>
 
 <header class="header">
 <div class="icon-btn" onclick="toggleSidebar()"><svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
 <div class="logo">BAGASXIT</div>
-<div class="icon-btn" onclick="toggleTheme()" id="btnTheme">☀</div>
+<div class="icon-btn" onclick="toggleTheme()" id="btnTheme"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
 </header>
 
 <div class="page active" id="page-home">
@@ -144,6 +147,20 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 <input type="text" id="rLink" placeholder="Link (Opsional)" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--txt);margin-bottom:10px">
 <textarea id="rDesc" placeholder="Deskripsi" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--txt);min-height:80px;margin-bottom:10px"></textarea>
 <button onclick="submitRequest()" style="width:100%;padding:14px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-weight:800;font-size:14px">Kirim Permintaan</button>
+</div>
+</div>
+</div>
+
+<div class="page" id="page-about">
+<div class="wrap">
+<div class="sec-title" data-i18n="about">ℹ️ Tentang BAGASXIT</div>
+<div class="sec-box">
+<p id="abText1">BAGASXIT adalah platform penyedia mod game dan aplikasi terpercaya. Kami menyediakan berbagai macam mod dengan kualitas terbaik dan update terbaru.</p>
+<p id="abText2" style="margin-top:10px">Semua mod yang kami sediakan telah melalui proses pengujian untuk memastikan kualitas dan keamanannya.</p>
+<div class="socials">
+<a href="https://whatsapp.com/channel/0029Vb6Eyam7oQhZLQKN9E3P" target="_blank">WhatsApp</a>
+<a href="https://t.me/BagasXIT" target="_blank">Telegram</a>
+</div>
 </div>
 </div>
 </div>
@@ -196,15 +213,15 @@ svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-l
 <img id="lightboxImg" src="">
 </div>
 
-<div class="fab" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</div>
+<div class="fab" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></div>
 
 <nav class="bnav">
-<div class="bnav-item active" onclick="showPage('home')" data-nav="home"><span class="ico">🏠</span><span data-i18n="home">Home</span></div>
-<a href="/getkey/" class="bnav-item"><span class="ico">🔑</span><span data-i18n="getkey">Get Key</span></a>
-<a href="/store/" class="bnav-item"><span class="ico">🛒</span><span data-i18n="store">Store</span></a>
-<a href="/apkupdates/" class="bnav-item"><span class="ico">📱</span><span data-i18n="apk">APK</span></a>
-<div class="bnav-item" onclick="showPage('chat')" data-nav="chat"><span class="ico">💬</span><span data-i18n="chat">Chat</span></div>
-<div class="bnav-item" onclick="showPage('request')" data-nav="request"><span class="ico">📨</span><span data-i18n="req">Request</span></div>
+<div class="bnav-item active" onclick="showPage('home')" data-nav="home"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span data-i18n="home">Home</span></div>
+<a href="/getkey/" class="bnav-item"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg><span data-i18n="getkey">Get Key</span></a>
+<a href="/store/" class="bnav-item"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span data-i18n="store">Store</span></a>
+<a href="/apkupdates/" class="bnav-item"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg><span data-i18n="apk">APK</span></a>
+<div class="bnav-item" onclick="showPage('chat')" data-nav="chat"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span data-i18n="chat">Chat</span></div>
+<div class="bnav-item" onclick="showPage('request')" data-nav="request"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span data-i18n="req">Request</span></div>
 </nav>
 
 <script>
@@ -212,13 +229,13 @@ const SB_URL='https://qlzwqbbvjscfjaicbhks.supabase.co',SB_KEY='sb_publishable_D
 let games=[],categories=[],stats=[],history=[],curGame=null;
 
 const i18n={
-id:{home:"Home",getkey:"Get Key",store:"Store",apk:"APK Updates",chat:"Chat",req:"Request",trending:"🔥 Trending",newUpdate:"✨ Baru Diupdate",allGames:"🎮 Semua Game",back:"Kembali",download:"DOWNLOAD",changelog:"Yang Baru",security:"Keamanan Data",desc:"Deskripsi",rating:"Rating & Ulasan",rec:"Mungkin Kamu Suka",chatTitle:"💬 Live Chat",reqTitle:"📨 Request Mod"},
-en:{home:"Home",getkey:"Get Key",store:"Store",apk:"APK Updates",chat:"Chat",req:"Request",trending:"🔥 Trending",newUpdate:"✨ New Updates",allGames:"🎮 All Games",back:"Back",download:"DOWNLOAD",changelog:"What's New",security:"Data Safety",desc:"Description",rating:"Ratings & Reviews",rec:"You Might Like",chatTitle:"💬 Live Chat",reqTitle:"📨 Request Mod"}
+id:{home:"Home",getkey:"Get Key",store:"Store",apk:"APK Updates",chat:"Chat",req:"Request",about:"About",trending:"🔥 Trending",newUpdate:"✨ Baru Diupdate",allGames:"🎮 Semua Game",back:"Kembali",download:"DOWNLOAD",changelog:"Yang Baru",security:"Keamanan Data",desc:"Deskripsi",rating:"Rating & Ulasan",rec:"Mungkin Kamu Suka",chatTitle:"💬 Live Chat",reqTitle:"📨 Request Mod"},
+en:{home:"Home",getkey:"Get Key",store:"Store",apk:"APK Updates",chat:"Chat",req:"Request",about:"About",trending:"🔥 Trending",newUpdate:"✨ New Updates",allGames:"🎮 All Games",back:"Back",download:"DOWNLOAD",changelog:"What's New",security:"Data Safety",desc:"Description",rating:"Ratings & Reviews",rec:"You Might Like",chatTitle:"💬 Live Chat",reqTitle:"📨 Request Mod"}
 };
 const lang=navigator.language.startsWith('id')?'id':'en';
 document.querySelectorAll('[data-i18n]').forEach(el=>{if(i18n[lang][el.dataset.i18n])el.innerText=i18n[lang][el.dataset.i18n]});
 
-function toggleTheme(){document.body.classList.toggle('light');document.getElementById('btnTheme').innerText=document.body.classList.contains('light')?'☾':'☀'}
+function toggleTheme(){document.body.classList.toggle('light');const ic=document.getElementById('btnTheme').querySelector('svg');if(document.body.classList.contains('light')){ic.innerHTML='<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>'}else{ic.innerHTML='<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'}}
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('show');document.getElementById('sidebarBg').classList.toggle('show')}
 function showPage(p){
 document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
