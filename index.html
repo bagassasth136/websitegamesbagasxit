@@ -131,7 +131,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 <img id="dImg" src="" alt="" class="w-20 h-20 rounded-2xl object-cover border border-slate-200 dark:border-[#1C1C24] shadow-md bg-slate-200 dark:bg-[#141419]">
 <div class="flex-1 min-w-0">
 <h1 id="dTitle" class="text-xl font-black leading-tight mb-1 truncate"></h1>
-<div id="dDev" onclick="showDeveloper()" class="text-xs font-bold text-accent mb-1 cursor-pointer"></div>
+<div id="dDev" class="text-xs font-bold text-accent mb-1"></div>
 <div id="dCat" class="text-[11px] text-slate-500 dark:text-slate-400"></div>
 <div class="mt-2"><span id="dLabel" class="hidden px-2 py-1 rounded-md text-[9px] font-black text-white uppercase shadow-sm"></span></div>
 </div>
@@ -191,10 +191,10 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 
 <script>
 const SB_URL='https://qlzwqbbvjscfjaicbhks.supabase.co',SB_KEY='sb_publishable_DRIOqI7O90TinECl4K6FJA_l0nIaPCY',HDR={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
-let games=[],categories=[],stats=[],history=[],curGame=null,settings={},currentRating=0;
+let games=[],categories=[],stats=[],history=[],curGame=null,settings={},currentRating=0,favCache=[];
 
-function showToast(msg, isErr=false){let t=document.getElementById('toast');t.innerText=msg;t.className=isErr?'err show':'show';setTimeout(()=>{t.className=''},3000)}
-function toggleTheme(){let isDark=document.documentElement.classList.contains('dark');if(isDark){document.documentElement.classList.remove('dark');localStorage.setItem('theme','light')}else{document.documentElement.classList.add('dark');localStorage.setItem('theme','dark')}}
+function showToast(msg,isErr=false){let t=document.getElementById('toast');t.innerText=msg;t.className=isErr?'err show':'show';setTimeout(()=>{t.className=''},3000)}
+function toggleTheme(){let d=document.documentElement.classList.contains('dark');if(d){document.documentElement.classList.remove('dark');localStorage.setItem('theme','light')}else{document.documentElement.classList.add('dark');localStorage.setItem('theme','dark')}}
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('-translate-x-full');document.getElementById('sidebarBg').classList.toggle('opacity-0');document.getElementById('sidebarBg').classList.toggle('pointer-events-none')}
 function showPage(p){
 document.querySelectorAll('.page').forEach(el=>{el.classList.remove('active');el.classList.add('hidden')});
@@ -206,7 +206,7 @@ if(p==='search'){setTimeout(()=>document.getElementById('searchPageInput').focus
 }
 if(localStorage.getItem('theme')==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}
 function setLang(lang){localStorage.setItem('lang',lang);location.reload()}
-function getFp(){try{let p=[navigator.userAgent,navigator.language,screen.width+'x'+screen.height,(Intl.DateTimeFormat().resolvedOptions().timeZone)],raw=p.join('|'),h=5381;for(let i=0;i<raw.length;i++){h=((h<<5)+h)+raw.charCodeAt(i);h=h&h}return'F'+Math.abs(h).toString(36)}catch(e){return'F_fallback'}}
+function getFp(){try{let p=[navigator.userAgent,navigator.language,(Intl.DateTimeFormat().resolvedOptions().timeZone)],raw=p.join('|'),h=5381;for(let i=0;i<raw.length;i++){h=((h<<5)+h)+raw.charCodeAt(i);h=h&h}return'F'+Math.abs(h).toString(36)}catch(e){return'F_fallback'}}
 const FP=getFp();
 
 async function sbGet(path){const r=await fetch(SB_URL+'/rest/v1/'+path,{headers:HDR});return r.ok?r.json():[]}
@@ -214,10 +214,14 @@ async function sbPost(path,body){const r=await fetch(SB_URL+'/rest/v1/'+path,{me
 async function sbDel(path){const r=await fetch(SB_URL+'/rest/v1/'+path,{method:'DELETE',headers:HDR});return r.ok}
 
 function getStat(k){let s=stats.find(x=>x.game_key===k);return s?s.download:0}
-function renderCard(g,isFav){return`<div class="bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-xl overflow-hidden cursor-pointer transition-all hover:border-accent hover:shadow-lg hover:shadow-accent/10 active:scale-95 relative" onclick="openDetail('${g.game_id}')"><img src="${g.img||'https://via.placeholder.com/150'}" class="w-full aspect-square object-cover bg-slate-100 dark:bg-[#141419]" loading="lazy">${g.label_text?`<span class="absolute top-2 left-2 text-[9px] font-black px-2 py-1 rounded-md text-white uppercase shadow-sm" style="background:${g.label_color||'#EF4444'}">${g.label_text}</span>`:''}<button class="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white z-10 ${isFav?'text-red-500 bg-red-500/20 border-red-500/30':''}" onclick="event.stopPropagation();toggleFav('${g.game_id}',this)">${isFav?'❤️':'♡'}</button><div class="p-3"><h4 class="font-extrabold text-[13px] truncate mb-0.5 text-slate-800 dark:text-white">${g.title}</h4><div class="text-[10px] text-slate-500 dark:text-slate-400 truncate">${g.developer||'Unknown'}</div><div class="flex items-center justify-between mt-2 text-[10px] text-slate-400 dark:text-slate-500 font-bold"><span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> ${getStat(g.game_id)}</span><span class="flex items-center gap-1 text-yellow-500"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${g.rating_avg||'0.0'}</span></div></div></div>`;}
+function esc(s){return String(s||'').replace(/'/g,"\\'").replace(/"/g,'"')}
+
+function renderCard(g,isFav){
+let favState = isFav !== undefined ? isFav : favCache.includes(g.game_id);
+return`<div class="bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-xl overflow-hidden cursor-pointer transition-all hover:border-accent hover:shadow-lg hover:shadow-accent/10 active:scale-95 relative" onclick="openDetail('${esc(g.game_id)}')"><img src="${g.img||'https://via.placeholder.com/150'}" class="w-full aspect-square object-cover bg-slate-100 dark:bg-[#141419]" loading="lazy">${g.label_text?`<span class="absolute top-2 left-2 text-[9px] font-black px-2 py-1 rounded-md text-white uppercase shadow-sm" style="background:${g.label_color||'#EF4444'}">${g.label_text}</span>`:''}<button class="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white z-10 ${favState?'text-red-500 bg-red-500/20 border-red-500/30':''}" onclick="event.stopPropagation();toggleFav('${esc(g.game_id)}',this)">${favState?'❤️':'♡'}</button><div class="p-3"><h4 class="font-extrabold text-[13px] truncate mb-0.5 text-slate-800 dark:text-white">${g.title}</h4><div class="text-[10px] text-slate-500 dark:text-slate-400 truncate">${g.developer||'Unknown'}</div><div class="flex items-center justify-between mt-2 text-[10px] text-slate-400 dark:text-slate-500 font-bold"><span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> ${getStat(g.game_id)}</span><span class="flex items-center gap-1 text-yellow-500"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${g.rating_avg||'0.0'}</span></div></div></div>`;}
 
 async function loadFavs(){return await sbGet('favorites?fp_hash=eq.'+encodeURIComponent(FP)+'&select=game_key')}
-async function toggleFav(id,el){let isFav=el.classList.contains('text-red-500');if(isFav){await sbDel(`favorites?game_key=eq.${id}&fp_hash=eq.${encodeURIComponent(FP)}`);el.classList.remove('text-red-500','bg-red-500/20','border-red-500/30');el.innerText='♡'}else{await sbPost('favorites',{game_key:id,fp_hash:FP});el.classList.add('text-red-500','bg-red-500/20','border-red-500/30');el.innerText='❤️'}}
+async function toggleFav(id,el){let isFav=el.classList.contains('text-red-500');if(isFav){await sbDel(`favorites?game_key=eq.${id}&fp_hash=eq.${encodeURIComponent(FP)}`);el.classList.remove('text-red-500','bg-red-500/20','border-red-500/30');el.innerText='♡';favCache=favCache.filter(x=>x!==id)}else{await sbPost('favorites',{game_key:id,fp_hash:FP});el.classList.add('text-red-500','bg-red-500/20','border-red-500/30');el.innerText='❤️';favCache.push(id)}}
 
 async function initHome(){
 document.getElementById('mainGrid').innerHTML='<div class="skeleton rounded-xl aspect-square"></div><div class="skeleton rounded-xl aspect-square"></div><div class="skeleton rounded-xl aspect-square"></div><div class="skeleton rounded-xl aspect-square"></div>';
@@ -231,28 +235,35 @@ if(settings.accent_color) {document.documentElement.style.setProperty('--accent'
 document.getElementById('searchInput').placeholder=settings.search_placeholder||'Cari aplikasi atau game...';document.getElementById('searchPageInput').placeholder=settings.search_placeholder||'Cari aplikasi atau game...';
 document.getElementById('welTitle').innerText=settings.welcome_title||'WELCOME!';document.getElementById('welSub').innerText=settings.welcome_subtitle||'FREE TRIAL ACTIVE: ALL MODS INCLUDED';
 document.getElementById('welWa').innerText=settings.welcome_btn1_text||'WhatsApp Community';document.getElementById('welWa').href=settings.welcome_btn1_link||'#';document.getElementById('welTg').innerText=settings.welcome_btn2_text||'Telegram Community';document.getElementById('welTg').href=settings.welcome_btn2_link||'#';
-if(settings.show_carousel==='false') document.getElementById('carouselContainer').style.display='none';
+if(String(settings.show_carousel)==='false') document.getElementById('carouselContainer').style.display='none';
 
 games=await sbGet('games?is_active=eq.true&order=created_at.desc');categories=await sbGet('game_categories?select=*&order=name.asc');stats=await sbGet('stats?select=game_key,stat_type,count').then(rows=>{let c={};(rows||[]).forEach(r=>{if(r.stat_type==='download')c[r.game_key]=(c[r.game_key]||0)+r.count});return Object.keys(c).map(k=>({game_key:k,download:c[k]}))});
-let favs=await loadFavs(),favKeys=favs.map(f=>f.game_key);history=JSON.parse(localStorage.getItem('bx_hist')||'[]');renderHistory();renderCarousel();
-renderFilters();document.getElementById('mainGrid').innerHTML=games.map(g=>renderCard(g,favKeys.includes(g.game_id))).join('');
-if(settings.welcome_active==='true'){setTimeout(()=>{document.getElementById('welcomeModal').classList.remove('hidden');document.getElementById('welcomeModal').classList.add('flex')},1500);}
+let favs=await loadFavs();favCache=favs.map(f=>f.game_key);history=JSON.parse(localStorage.getItem('bx_hist')||'[]');renderHistory();renderCarousel();
+renderFilters();document.getElementById('mainGrid').innerHTML=games.map(g=>renderCard(g)).join('');
+if(String(settings.welcome_active)==='true'){setTimeout(()=>{document.getElementById('welcomeModal').classList.remove('hidden');document.getElementById('welcomeModal').classList.add('flex')},1500);}
 }
 
-function renderCarousel(){let c=document.getElementById('carouselContainer');if(!games.length){c.style.display='none';return}let top=[...games].sort((a,b)=>getStat(b.game_id)-getStat(a.game_id)).slice(0,3);c.innerHTML=top.map((g,i)=>`<div class="slide ${i===0?'block':'hidden'} p-4 flex items-center gap-3 bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-2xl shadow-sm cursor-pointer" onclick="openDetail('${g.game_id}')"><div class="flex-1 min-w-0"><span class="inline-block px-2 py-0.5 rounded text-[8px] font-black bg-gradient-to-r from-yellow-500 to-red-500 text-white uppercase mb-1.5">POPULER</span><h2 class="font-black text-base leading-tight mb-1 truncate text-slate-800 dark:text-white">${g.title}</h2><p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-snug">${g.desc_game||'Aplikasi & Game terbaik'}</p></div><img src="${g.img||'https://via.placeholder.com/150'}" class="w-16 h-16 rounded-xl object-cover border border-slate-200 dark:border-[#262631] flex-shrink-0"></div>`).join('') + `<div class="flex justify-center gap-1.5 py-2">${top.map((_,i)=>`<div class="dot ${i===0?'bg-accent w-4':'bg-slate-300 dark:bg-slate-700 w-1.5'} h-1.5 rounded-full cursor-pointer transition-all" onclick="event.stopPropagation();goSlide(${i})"></div>`).join('')}</div>`;let idx=0;setInterval(()=>{let slides=c.querySelectorAll('.slide'),dots=c.querySelectorAll('.dot');if(!slides.length)return;slides.forEach(s=>{s.classList.remove('block');s.classList.add('hidden')});dots.forEach(d=>{d.classList.remove('bg-accent','w-4');d.classList.add('bg-slate-300','dark:bg-slate-700','w-1.5')});idx=(idx+1)%slides.length;slides[idx].classList.remove('hidden');slides[idx].classList.add('block');dots[idx].classList.remove('bg-slate-300','dark:bg-slate-700','w-1.5');dots[idx].classList.add('bg-accent','w-4')},4000);}
+function renderCarousel(){
+let c=document.getElementById('carouselContainer');if(!games.length){c.style.display='none';return}
+let featured=games.filter(g=>g.is_carousel===true);
+let top=featured.length>0?featured.slice(0,5):[...games].sort((a,b)=>getStat(b.game_id)-getStat(a.game_id)).slice(0,3);
+c.innerHTML=top.map((g,i)=>`<div class="slide ${i===0?'block':'hidden'} p-4 flex items-center gap-3 bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-2xl shadow-sm cursor-pointer" onclick="openDetail('${esc(g.game_id)}')"><div class="flex-1 min-w-0"><span class="inline-block px-2 py-0.5 rounded text-[8px] font-black bg-gradient-to-r from-yellow-500 to-red-500 text-white uppercase mb-1.5">${featured.length>0?'PILIHAN':'POPULER'}</span><h2 class="font-black text-base leading-tight mb-1 truncate text-slate-800 dark:text-white">${g.title}</h2><p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-snug">${g.desc_game||'Aplikasi & Game terbaik'}</p></div><img src="${g.img||'https://via.placeholder.com/150'}" class="w-16 h-16 rounded-xl object-cover border border-slate-200 dark:border-[#262631] flex-shrink-0"></div>`).join('') + `<div class="flex justify-center gap-1.5 py-2">${top.map((_,i)=>`<div class="dot ${i===0?'bg-accent w-4':'bg-slate-300 dark:bg-slate-700 w-1.5'} h-1.5 rounded-full cursor-pointer transition-all" onclick="event.stopPropagation();goSlide(${i})"></div>`).join('')}</div>`;
+let idx=0;setInterval(()=>{let slides=c.querySelectorAll('.slide'),dots=c.querySelectorAll('.dot');if(!slides.length)return;slides.forEach(s=>{s.classList.remove('block');s.classList.add('hidden')});dots.forEach(d=>{d.classList.remove('bg-accent','w-4');d.classList.add('bg-slate-300','dark:bg-slate-700','w-1.5')});idx=(idx+1)%slides.length;slides[idx].classList.remove('hidden');slides[idx].classList.add('block');dots[idx].classList.remove('bg-slate-300','dark:bg-slate-700','w-1.5');dots[idx].classList.add('bg-accent','w-4')},4000);}
+
 function goSlide(i){let c=document.getElementById('carouselContainer'),slides=c.querySelectorAll('.slide'),dots=c.querySelectorAll('.dot');slides.forEach(s=>{s.classList.remove('block');s.classList.add('hidden')});dots.forEach(d=>{d.classList.remove('bg-accent','w-4');d.classList.add('bg-slate-300','dark:bg-slate-700','w-1.5')});slides[i].classList.remove('hidden');slides[i].classList.add('block');dots[i].classList.remove('bg-slate-300','dark:bg-slate-700','w-1.5');dots[i].classList.add('bg-accent','w-4')}
 
-function renderFilters(){let h=`<button class="chip px-4 py-2 rounded-full bg-accent text-white text-xs font-bold whitespace-nowrap shadow-sm" onclick="filterCat(this,'all')">All</button>`;categories.forEach(c=>h+=`<button class="chip px-4 py-2 rounded-full bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] text-slate-500 dark:text-slate-400 text-xs font-bold whitespace-nowrap" onclick="filterCat(this,'${c.name}')">${c.name}</button>`);document.getElementById('filterContainer').innerHTML=h;}
-function filterCat(el,cat){document.querySelectorAll('.chip').forEach(c=>{c.classList.remove('bg-accent','text-white','border-transparent');c.classList.add('bg-white','dark:bg-[#0E0E12]','border-slate-200','dark:border-[#1C1C24]','text-slate-500','dark:text-slate-400')});el.classList.remove('bg-white','dark:bg-[#0E0E12]','border-slate-200','dark:border-[#1C1C24]','text-slate-500','dark:text-slate-400');el.classList.add('bg-accent','text-white','border-transparent');let f=cat==='all'?games:games.filter(g=>g.category===cat);document.getElementById('mainGrid').innerHTML=f.map(g=>renderCard(g,false)).join('');}
-function handleSearch(q){if(!q){renderGridAll();return}let f=games.filter(g=>g.title.toLowerCase().includes(q.toLowerCase())||(g.developer||'').toLowerCase().includes(q.toLowerCase()));document.getElementById('mainGrid').innerHTML=f.map(g=>renderCard(g,false)).join('');}
-function renderGridAll(){document.getElementById('mainGrid').innerHTML=games.map(g=>renderCard(g,false)).join('')}
+function renderFilters(){let h=`<button class="chip px-4 py-2 rounded-full bg-accent text-white text-xs font-bold whitespace-nowrap shadow-sm" onclick="filterCat(this,'all')">All</button>`;categories.forEach(c=>h+=`<button class="chip px-4 py-2 rounded-full bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] text-slate-500 dark:text-slate-400 text-xs font-bold whitespace-nowrap" onclick="filterCat(this,'${esc(c.name)}')">${c.name}</button>`);document.getElementById('filterContainer').innerHTML=h;}
+function filterCat(el,cat){document.querySelectorAll('.chip').forEach(c=>{c.classList.remove('bg-accent','text-white','border-transparent');c.classList.add('bg-white','dark:bg-[#0E0E12]','border-slate-200','dark:border-[#1C1C24]','text-slate-500','dark:text-slate-400')});el.classList.remove('bg-white','dark:bg-[#0E0E12]','border-slate-200','dark:border-[#1C1C24]','text-slate-500','dark:text-slate-400');el.classList.add('bg-accent','text-white','border-transparent');let f=cat==='all'?games:games.filter(g=>g.category===cat);document.getElementById('mainGrid').innerHTML=f.map(g=>renderCard(g,favCache.includes(g.game_id))).join('');}
+function handleSearch(q){if(!q){renderGridAll();return}let f=games.filter(g=>g.title.toLowerCase().includes(q.toLowerCase())||(g.developer||'').toLowerCase().includes(q.toLowerCase()));document.getElementById('mainGrid').innerHTML=f.map(g=>renderCard(g,favCache.includes(g.game_id))).join('');}
+function renderGridAll(){document.getElementById('mainGrid').innerHTML=games.map(g=>renderCard(g,favCache.includes(g.game_id))).join('')}
 function renderHistory(){let h=document.getElementById('historyContainer');if(!history.length){h.innerHTML='';return}h.innerHTML=history.slice(0,3).map(x=>`<span class="text-[11px] bg-slate-200 dark:bg-[#141419] px-3 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 cursor-pointer" onclick="document.getElementById('searchInput').value='${x}';handleSearch('${x}')">${x}</span>`).join('');}
 
-function handleSearchPage(q){let f=games.filter(g=>g.title.toLowerCase().includes(q.toLowerCase())||(g.developer||'').toLowerCase().includes(q.toLowerCase()));document.getElementById('searchResultGrid').innerHTML=f.map(g=>renderCard(g,false)).join('');}
-function renderSearchSuggestions(){let sug=[...games].sort((a,b)=>getStat(b.game_id)-getStat(a.game_id)).slice(0,5);document.getElementById('searchSuggestions').innerHTML=sug.map(g=>`<div class="bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-accent" onclick="document.getElementById('searchPageInput').value='${g.title}';handleSearchPage('${g.title}')"><span class="text-xs font-bold truncate pr-2">${g.title}</span><svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>`).join('');}
+function handleSearchPage(q){let f=games.filter(g=>g.title.toLowerCase().includes(q.toLowerCase())||(g.developer||'').toLowerCase().includes(q.toLowerCase()));document.getElementById('searchResultGrid').innerHTML=f.map(g=>renderCard(g,favCache.includes(g.game_id))).join('');}
+function renderSearchSuggestions(){let sug=[...games].sort((a,b)=>getStat(b.game_id)-getStat(a.game_id)).slice(0,5);document.getElementById('searchSuggestions').innerHTML=sug.map(g=>`<div class="bg-white dark:bg-[#0E0E12] border border-slate-200 dark:border-[#1C1C24] rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-accent" onclick="document.getElementById('searchPageInput').value='${esc(g.title)}';handleSearchPage('${esc(g.title)}')"><span class="text-xs font-bold truncate pr-2">${g.title}</span><svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>`).join('');}
 
 async function openDetail(id) {
     curGame = games.find(g => g.game_id === id); if (!curGame) return; showPage('detail');
+    history.replaceState(null, '', '?game=' + encodeURIComponent(id));
     document.getElementById('dImg').src = curGame.img || 'https://via.placeholder.com/150';document.getElementById('dTitle').innerText = curGame.title; document.getElementById('dDev').innerText = curGame.developer || 'Unknown'; document.getElementById('dCat').innerText = curGame.category || 'Lainnya';document.getElementById('dDesc').innerText = curGame.desc_game || 'Belum ada deskripsi.'; document.getElementById('dChangelog').innerText = curGame.changelog || 'Belum ada update terbaru.';document.getElementById('dSecurity').innerText = curGame.security_info || 'Tidak ada data yang dibagikan ke pihak ketiga.'; document.getElementById('dDownload').href = curGame.apk_url || '#';
     let lb = document.getElementById('dLabel'); if (curGame.label_text) { lb.innerText = curGame.label_text; lb.style.background = curGame.label_color || '#EF4444'; lb.style.display = 'inline-block'; } else lb.style.display = 'none';
     let hist = JSON.parse(localStorage.getItem('bx_hist') || '[]'); if (!hist.includes(curGame.title)) { hist.unshift(curGame.title); localStorage.setItem('bx_hist', JSON.stringify(hist.slice(0, 5))); }
@@ -265,48 +276,29 @@ async function openDetail(id) {
             const match = m.url.match(regExp);
             if (match && match[2].length === 11) { vidId = match[2]; }
             if (!vidId) return `<div class="flex-shrink-0 w-[260px] h-[150px] rounded-xl border border-slate-200 dark:border-[#1C1C24] bg-slate-100 dark:bg-[#141419] flex items-center justify-center text-xs text-slate-400">Video Invalid</div>`;
-            return `<div class="flex-shrink-0 w-[260px] h-[150px] rounded-xl overflow-hidden border border-slate-200 dark:border-[#1C1C24] bg-slate-100 dark:bg-[#141419] snap-start"><iframe src="https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&loop=1&playlist=${vidId}" class="w-full h-full border-none object-cover" allow="autoplay" allowfullscreen></iframe></div>`;
+            return `<div class="flex-shrink-0 w-[260px] h-[150px] rounded-xl overflow-hidden border border-slate-200 dark:border-[#1C1C24] bg-slate-100 dark:bg-[#141419] snap-start" onclick="playVid(this,'${vidId}')"><div class="yt-thumb" style="background-image:url('https://img.youtube.com/vi/${vidId}/hqdefault.jpg')"></div></div>`;
         }
         return `<div class="flex-shrink-0 w-[260px] h-[150px] rounded-xl overflow-hidden border border-slate-200 dark:border-[#1C1C24] bg-slate-100 dark:bg-[#141419] snap-start cursor-pointer" onclick="openLightbox('${m.url}')"><img src="${m.url}" class="w-full h-full object-cover"></div>`;
     }).join('');
 
     let chipsBox = document.getElementById('dChips');
-    if (curGame.category) {
-        chipsBox.innerHTML = curGame.category.split(',').map(c => `<span class="px-3 py-1.5 rounded-full border border-slate-300 dark:border-[#333] text-xs font-bold cursor-pointer hover:border-accent" onclick="searchKW('${c.trim()}')">${c.trim()}</span>`).join('');
-    } else chipsBox.innerHTML = '';
+    if (curGame.category) { chipsBox.innerHTML = curGame.category.split(',').map(c => `<span class="px-3 py-1.5 rounded-full border border-slate-300 dark:border-[#333] text-xs font-bold cursor-pointer hover:border-accent" onclick="searchKW('${esc(c.trim())}')">${c.trim()}</span>`).join(''); } else chipsBox.innerHTML = '';
 
     await loadReviews(id);
-    let rec = games.filter(g => g.category === curGame.category && g.game_id !== id).slice(0, 4); document.getElementById('recGrid').innerHTML = rec.map(g => renderCard(g, false)).join('');
+    let rec = games.filter(g => g.category === curGame.category && g.game_id !== id).slice(0, 4); document.getElementById('recGrid').innerHTML = rec.map(g => renderCard(g,favCache.includes(g.game_id))).join('');
 }
 
+function playVid(el, vid) { el.innerHTML = `<iframe src="https://www.youtube.com/embed/${vid}?autoplay=1&mute=0" class="w-full h-full border-none object-cover" allow="autoplay; fullscreen" allowfullscreen></iframe>`; }
 function shareGame() { if (!curGame) return; let urlToShare = curGame.share_url ? curGame.share_url : window.location.href; if (navigator.share) { navigator.share({ title: curGame.title, text: 'Download ' + curGame.title + ' di BAGASXIT!', url: urlToShare }).catch(() => {}); } else { navigator.clipboard.writeText(urlToShare); showToast('Link berhasil disalin!'); } }
 function submitRequest(){let n=document.getElementById('rName').value,l=document.getElementById('rLink').value,d=document.getElementById('rDesc').value;if(!n){showToast('Nama wajib diisi!',true);return}let wa=`https://wa.me/${settings.wa_request||'6283182456929'}?text=${encodeURIComponent('📨 REQUEST\n\nGame/App: '+n+'\nLink: '+l+'\nDesc: '+d)}`;window.open(wa,'_blank');showToast('Request terkirim!');}
 
-function setRating(n) {
-    currentRating = n;
-    document.querySelectorAll('#starInput span').forEach((s, i) => {
-        if (i < n) s.classList.add('text-yellow-500');
-        else s.classList.remove('text-yellow-500');
-    });
-}
-
+function setRating(n) { currentRating = n; document.querySelectorAll('#starInput span').forEach((s, i) => { if (i < n) s.classList.add('text-yellow-500'); else s.classList.remove('text-yellow-500'); }); }
 async function submitReview() {
-    if (!curGame) return;
-    if (!currentRating) { showToast('Pilih rating bintang dulu!', true); return; }
-    let name = document.getElementById('revName').value.trim() || 'Anonim';
-    let text = document.getElementById('revText').value.trim() || '';
+    if (!curGame) return; if (!currentRating) { showToast('Pilih rating bintang dulu!', true); return; }
+    let name = document.getElementById('revName').value.trim() || 'Anonim'; let text = document.getElementById('revText').value.trim() || '';
     let body = { game_id: curGame.game_id, name: name, rating: currentRating, review_text: text };
     let ok = await sbPost('game_reviews', body);
-    if (ok) {
-        showToast('Ulasan berhasil dikirim!');
-        document.getElementById('revName').value = '';
-        document.getElementById('revText').value = '';
-        currentRating = 0;
-        document.querySelectorAll('#starInput span').forEach(s => s.classList.remove('text-yellow-500'));
-        await loadReviews(curGame.game_id);
-    } else {
-        showToast('Gagal mengirim ulasan.', true);
-    }
+    if (ok) { showToast('Ulasan berhasil dikirim!'); document.getElementById('revName').value = ''; document.getElementById('revText').value = ''; currentRating = 0; document.querySelectorAll('#starInput span').forEach(s => s.classList.remove('text-yellow-500')); await loadReviews(curGame.game_id); } else { showToast('Gagal mengirim ulasan.', true); }
 }
 
 async function loadReviews(id) {
@@ -321,8 +313,19 @@ async function loadReviews(id) {
 function openLightbox(url) { document.getElementById('lightboxImg').src = url; document.getElementById('lightbox').classList.remove('hidden');document.getElementById('lightbox').classList.add('flex'); }
 function closeLightbox() { document.getElementById('lightbox').classList.add('hidden');document.getElementById('lightbox').classList.remove('flex'); }
 function closeWelcome() { document.getElementById('welcomeModal').classList.add('hidden');document.getElementById('welcomeModal').classList.remove('flex'); }
+function searchKW(k){showPage('home');document.getElementById('searchInput').value=k;handleSearch(k)}
 
-document.addEventListener('DOMContentLoaded',()=>{ initHome(); });
+document.addEventListener('DOMContentLoaded',()=>{
+    initHome();
+    const urlParams = new URLSearchParams(window.location.search);
+    const gameParam = urlParams.get('game');
+    if (gameParam) {
+        setTimeout(async () => {
+            let g = games.find(x => x.game_id === gameParam);
+            if (g) openDetail(g.game_id);
+        }, 800);
+    }
+});
 </script>
 </body>
 </html>
