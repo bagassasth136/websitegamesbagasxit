@@ -437,9 +437,23 @@ function closeWelcome() { document.getElementById('welcomeModal').style.display=
 
 // --- INISIALISASI AWAL ---
 document.addEventListener('DOMContentLoaded',()=>{ 
+  // Cek titipan dari 404.html
+  var urlParams = new URLSearchParams(window.location.search);
+  var redirectPath = urlParams.get('redirect');
+  
+  if (redirectPath) {
+    // Bersihin parameter dari URL bar, balikin ke /game/...
+    window.history.replaceState({}, '', redirectPath);
+  }
+  
   initHome(); 
-  if(new URLSearchParams(location.search).has('id') || location.pathname.startsWith('/game/')){ 
-    let id = new URLSearchParams(location.search).get('id') || location.pathname.split('/')[2]; 
+  
+  // Ambil ID game dari URL yang udah dibersihin
+  var currentPath = window.location.pathname;
+  var currentSearch = new URLSearchParams(window.location.search);
+  
+  if(currentSearch.has('id') || currentPath.startsWith('/game/')){ 
+    let id = currentSearch.get('id') || currentPath.split('/')[2]; 
     setTimeout(()=>{ if(games.length) openDetail(id); }, 2000); 
   } 
 });
