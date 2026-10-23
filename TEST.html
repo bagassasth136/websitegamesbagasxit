@@ -5,135 +5,111 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Preview - BXIT ID</title>
 <style>
-:root{--bg-body:#050506;--text-main:#f8fafc;--text-muted:#94a3b8;--card-bg:#0E0E12;--border-color:#1C1C24;--header-bg:rgba(5,5,6,0.8);--accent:#A855F7;--accent2:#7C3AED;--danger:#ef4444;--success:#10b981}
+:root{--bg-body:#050506;--text-main:#f8fafc;--text-muted:#94a3b8;--card-bg:#0E0E12;--border-color:#1C1C24;--header-bg:rgba(5,5,6,0.8);--accent:#A855F7;--accent2:#7C3AED}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none}
-body{background-color:var(--bg-body);color:var(--text-main);font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:80px;overflow-x:hidden}
+body{background-color:var(--bg-body);color:var(--text-main);font-family:sans-serif;min-height:100vh;padding-bottom:80px;overflow-x:hidden}
 .container{max-width:600px;margin:0 auto;padding:0 16px}
 h1,h2,h3,h4{font-weight:900;line-height:1.2}
-
-/* HEADER KACA (GLASSMORPHISM) */
 header{background-color:var(--header-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border-color);padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:40}
 header .sb-title{flex:1;font-size:18px;font-weight:900;background:linear-gradient(135deg,var(--accent) 0%,#3B82F6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-
-/* ANIMASI PINDAH HALAMAN (CROSS-FADE + SLIDE) */
 .page{display:none;opacity:0;transform:translateY(15px);transition:opacity 0.4s ease, transform 0.4s ease}
 .page.active{display:block;opacity:1;transform:translateY(0)}
-
-/* CAROUSEL SMOOTH (TRANSLATE X) */
 .carousel-wrap{overflow:hidden;border-radius:16px;margin-bottom:16px;position:relative}
-.carousel-track{display:flex;transition:transform 0.5s cubic-bezier(0.25,1,0.5,1);will-change:transform}
+.carousel-track{display:flex;transition:transform 0.7s ease-in-out;will-change:transform}
 .carousel-slide{flex:0 0 100%;padding:16px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;display:flex;align-items:center;gap:12px}
 .carousel-dots{display:flex;justify-content:center;gap:6px;padding:8px 0;position:absolute;bottom:0;left:0;right:0}
 .carousel-dot{width:6px;height:6px;border-radius:3px;background:var(--text-muted);transition:all 0.3s}
 .carousel-dot.active{width:16px;background:var(--accent)}
-
-/* TAP FEEDBACK (EFEK KLIK) */
 .tap-effect{transition:transform 0.1s ease, box-shadow 0.2s ease;cursor:pointer}
 .tap-effect:active{transform:scale(0.96);box-shadow:0 0 15px rgba(168,85,247,0.3)}
-
-/* CARD GAME */
 .grid-card{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .card{background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;overflow:hidden;position:relative}
 .card-img{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--border-color)}
 .card-body{padding:12px}
 .card-title{font-size:14px;font-weight:900;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-sub{font-size:12px;color:var(--text-muted);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-/* SKELETON FADE OUT */
-.skeleton{background:linear-gradient(90deg,rgba(255,255,255,0.05) 25%,rgba(255,255,255,0.1) 50%,rgba(255,255,255,0.05) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:12px;aspect-ratio:1/1;transition:opacity 0.5s ease}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
-/* LAINNYA */
 .search-bar{display:flex;align-items:center;background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;padding:0 12px;margin-bottom:16px;transition:border-color 0.3s}
 .search-bar:focus-within{border-color:var(--accent);box-shadow:0 0 10px rgba(168,85,247,0.1)}
 .search-bar input{flex:1;background:transparent;border:none;outline:none;padding:16px 12px;font-size:14px;color:var(--text-main)}
 .sec-head{border-left:4px solid var(--accent);padding-left:8px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .sec-head h2{font-size:16px;font-weight:800}
 .sec-head svg{width:20px;height:20px;color:var(--accent)}
-.chips-wrap{display:flex;gap:8px;overflow-x:auto;margin-bottom:16px;padding-bottom:4px}
-.chip{padding:8px 16px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap;background:var(--card-bg);border:1px solid var(--border-color);color:var(--text-muted)}
-.chip.active{background:var(--accent);color:#fff;border-color:transparent}
+.detail-header{display:flex;gap:16px;align-items:center;margin-bottom:20px;margin-top:16px}
+.detail-img{width:80px;height:80px;border-radius:16px;object-fit:cover;border:1px solid var(--border-color);background:#333}
+.btn-back{display:flex;align-items:center;gap:4px;color:var(--accent);font-weight:700;font-size:14px;background:none;border:none;margin-bottom:16px;margin-top:8px;cursor:pointer}
 </style>
 </head>
 <body>
 <header><div class="sb-title">BXIT MY ID (PREVIEW)</div></header>
 <main class="container mt-4">
-<!-- HALAMAN HOME -->
-<div id="page-home" class="page active">
   
-  <!-- CAROUSEL SMOOTH -->
-  <div class="carousel-wrap">
-    <div class="carousel-track" id="carouselTrack">
-      <!-- Slide 1 -->
-      <div class="carousel-slide">
-        <div style="flex:1;min-width:0;">
-          <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:900;background:linear-gradient(to right,#eab308,#ef4444);color:#fff;text-transform:uppercase;margin-bottom:6px;">POPULER</span>
-          <h2 style="font-size:16px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Free Fire</h2>
-          <p style="font-size:12px;color:var(--text-muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Game Battle Royale terbaik dengan fitur lengkap.</p>
+  <!-- HALAMAN HOME -->
+  <div id="page-home" class="page active">
+    <div class="carousel-wrap">
+      <div class="carousel-track" id="carouselTrack">
+        <div class="carousel-slide tap-effect" onclick="openDetail('Free Fire', 'Garena', 'Game Battle Royale terbaik dengan fitur lengkap.')">
+          <div style="flex:1;min-width:0;"><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:900;background:linear-gradient(to right,#eab308,#ef4444);color:#fff;text-transform:uppercase;margin-bottom:6px;">POPULER</span><h2 style="font-size:16px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Free Fire</h2><p style="font-size:12px;color:var(--text-muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Game Battle Royale terbaik dengan fitur lengkap.</p></div>
+          <div style="width:64px;height:64px;border-radius:12px;background:#333;flex-shrink:0;"></div>
         </div>
-        <div style="width:64px;height:64px;border-radius:12px;background:#333;flex-shrink:0;"></div>
-      </div>
-      <!-- Slide 2 -->
-      <div class="carousel-slide">
-        <div style="flex:1;min-width:0;">
-          <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:900;background:linear-gradient(to right,#eab308,#ef4444);color:#fff;text-transform:uppercase;margin-bottom:6px;">POPULER</span>
-          <h2 style="font-size:16px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Smart Launcher</h2>
-          <p style="font-size:12px;color:var(--text-muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Launcher kustomisasi paling keren.</p>
+        <div class="carousel-slide tap-effect" onclick="openDetail('Smart Launcher', 'Smart Team', 'Launcher kustomisasi paling keren.')">
+          <div style="flex:1;min-width:0;"><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:900;background:linear-gradient(to right,#eab308,#ef4444);color:#fff;text-transform:uppercase;margin-bottom:6px;">POPULER</span><h2 style="font-size:16px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Smart Launcher</h2><p style="font-size:12px;color:var(--text-muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Launcher kustomisasi paling keren.</p></div>
+          <div style="width:64px;height:64px;border-radius:12px;background:#444;flex-shrink:0;"></div>
         </div>
-        <div style="width:64px;height:64px;border-radius:12px;background:#444;flex-shrink:0;"></div>
       </div>
-      <!-- Slide 3 -->
-      <div class="carousel-slide">
-        <div style="flex:1;min-width:0;">
-          <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:900;background:linear-gradient(to right,#eab308,#ef4444);color:#fff;text-transform:uppercase;margin-bottom:6px;">POPULER</span>
-          <h2 style="font-size:16px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Mobile Legends</h2>
-          <p style="font-size:12px;color:var(--text-muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">MOBA 5v5 terbaik di Android.</p>
-        </div>
-        <div style="width:64px;height:64px;border-radius:12px;background:#555;flex-shrink:0;"></div>
+      <div class="carousel-dots" id="carouselDots"><div class="carousel-dot active"></div><div class="carousel-dot"></div></div>
+    </div>
+
+    <div class="search-bar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--text-muted);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Cari aplikasi atau game..."></div>
+
+    <div class="sec-head"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg><h2>Katalog</h2></div>
+    
+    <div class="grid-card">
+      <div class="card tap-effect" onclick="openDetail('Free Fire', 'Garena', 'Game Battle Royale terbaik dengan fitur lengkap.')">
+        <div class="card-img" style="background:#333;"></div><div class="card-body"><div class="card-title">Free Fire</div><div class="card-sub">Garena</div></div>
       </div>
-    </div>
-    <div class="carousel-dots" id="carouselDots">
-      <div class="carousel-dot active"></div>
-      <div class="carousel-dot"></div>
-      <div class="carousel-dot"></div>
-    </div>
-  </div>
-
-  <div class="search-bar">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--text-muted);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" placeholder="Cari aplikasi atau game...">
-  </div>
-
-  <div class="sec-head"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg><h2>Katalog</h2></div>
-  
-  <div class="chips-wrap">
-    <button class="chip active">All</button>
-    <button class="chip">Action</button>
-    <button class="chip">RPG</button>
-  </div>
-
-  <div class="grid-card" id="mainGrid">
-    <!-- Contoh Card dengan Tap Effect -->
-    <div class="card tap-effect">
-      <div class="card-img"></div>
-      <div class="card-body">
-        <div class="card-title">Free Fire</div>
-        <div class="card-sub">Garena</div>
-      </div>
-    </div>
-    <div class="card tap-effect">
-      <div class="card-img"></div>
-      <div class="card-body">
-        <div class="card-title">Smart Launcher</div>
-        <div class="card-sub">Smart Team</div>
+      <div class="card tap-effect" onclick="openDetail('Smart Launcher', 'Smart Team', 'Launcher kustomisasi paling keren.')">
+        <div class="card-img" style="background:#444;"></div><div class="card-body"><div class="card-title">Smart Launcher</div><div class="card-sub">Smart Team</div></div>
       </div>
     </div>
   </div>
 
-</div>
+  <!-- HALAMAN DETAIL (BUAT NGETES ANIMASI) -->
+  <div id="page-detail" class="page">
+    <button class="btn-back" onclick="goHome()"><svg style="width:16px;height:16px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Kembali</button>
+    <div class="detail-header">
+      <div class="detail-img"></div>
+      <div style="flex:1;min-width:0;">
+        <h1 id="dTitle" style="font-size:20px;margin-bottom:4px;">Nama Game</h1>
+        <div id="dDev" style="font-size:12px;color:var(--accent);font-weight:700;margin-bottom:4px;">Developer</div>
+        <div style="font-size:12px;color:var(--text-muted);">Kategori</div>
+      </div>
+    </div>
+    <div style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;padding:20px;margin-bottom:16px;">
+      <h3 style="font-size:12px;font-weight:900;color:var(--accent);text-transform:uppercase;margin-bottom:12px;">Deskripsi</h3>
+      <p id="dDesc" style="font-size:14px;color:var(--text-muted);line-height:1.6;">Deskripsi game bakal muncul di sini.</p>
+    </div>
+  </div>
+
 </main>
 <script>
-// --- LOGIKA CAROUSEL SMOOTH ---
+// --- LOGIKA PINDAH HALAMAN ---
+function openDetail(title, dev, desc) {
+  document.getElementById('dTitle').innerText = title;
+  document.getElementById('dDev').innerText = dev;
+  document.getElementById('dDesc').innerText = desc;
+  
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-detail').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function goHome() {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-home').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// --- LOGIKA CAROUSEL ---
 let currentSlide = 0;
 const track = document.getElementById('carouselTrack');
 const dots = document.querySelectorAll('.carousel-dot');
@@ -148,36 +124,13 @@ function goToSlide(index) {
   });
 }
 
-// Auto-play carousel setiap 4 detik
 setInterval(() => {
   let next = (currentSlide + 1) % totalSlides;
   goToSlide(next);
-}, 4000);
+}, 5000); // Auto-play 5 detik
 
-// Klik dot untuk pindah manual
 dots.forEach((dot, index) => {
   dot.addEventListener('click', () => goToSlide(index));
-});
-
-// --- EFEK SKELETON FADE OUT (Simulasi Loading) ---
-window.addEventListener('DOMContentLoaded', () => {
-  const grid = document.getElementById('mainGrid');
-  // Simulasi delay 1.5 detik seolah-olah lagi narik data dari Supabase
-  setTimeout(() => {
-    // Di sini nanti data asli bakal muncul, sementara ini kita biarin card dummy-nya
-    console.log("Data loaded (simulasi)");
-  }, 1500);
-});
-
-// --- EFEK TAP (RIPPLE SEDERHANA) ---
-document.querySelectorAll('.tap-effect').forEach(el => {
-  el.addEventListener('click', function(e) {
-    // Animasi ini cuma buat nunjukin efek klik, gak ngapa-ngapain
-    this.style.transform = 'scale(0.96)';
-    setTimeout(() => {
-      this.style.transform = 'scale(1)';
-    }, 150);
-  });
 });
 </script>
 </body>
