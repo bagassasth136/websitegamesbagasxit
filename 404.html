@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Loading...</title>
+  <script>
+    // Ambil URL asli yang diketik user (misal: /game/123)
+    var path = window.location.pathname;
+    var search = window.location.search;
+    var hash = window.location.hash;
+    
+    // Simpan URL aslinya ke sessionStorage
+    sessionStorage.setItem('redirectPath', path + search + hash);
+    
+    // Lempar user ke index.html
+    window.location.replace('/index.html');
+  </script>
+</head>
+<body></body>
+</html>
