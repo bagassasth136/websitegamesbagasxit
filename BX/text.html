@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAGASXIT ADMIN PANEL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { bg: '#0A0A0F', panel: '#141419', card: '#14141C', input: '#0F0B21', primary: '#A78BFA', primaryHover: '#8B5CF6', border: '#262630', textMain: '#F8FAFC', textMuted: '#94A3B8', textDark: '#64748B', danger: '#EF4444', success: '#22C55E', warning: '#F59E0B' }, borderRadius: { capsule: '50px', card: '14px', btn: '10px' } } }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #14141C; }
+        ::-webkit-scrollbar-thumb { background: #262630; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #A78BFA; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-bg text-textMain font-sans h-screen flex overflow-hidden antialiased">
+
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/60 z-20 hidden transition-opacity" onclick="toggleSidebar()"></div>
+
+    <aside id="sidebar" class="fixed md:relative z-30 w-[260px] h-full bg-panel border-r border-border flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+        <div class="p-5 border-b border-border">
+            <h1 class="text-xl font-bold text-primary tracking-wide">BAGASXIT</h1>
+            <p class="text-[10px] text-textDark uppercase tracking-widest mt-1">Admin Panel</p>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1" id="sidebarMenu"></ul>
+        </nav>
+        <div class="p-4 border-t border-border text-center"><p class="text-[10px] text-textDark">BAGASXIT v2.0</p></div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full w-full min-w-0 bg-bg relative">
+        <header class="bg-panel px-4 py-3 flex items-center justify-between border-b border-border shrink-0">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="md:hidden text-primary text-2xl focus:outline-none hover:text-primaryHover">☰</button>
+                <div>
+                    <h2 class="font-bold text-sm tracking-wider text-textMain">BAGASXIT</h2>
+                    <p class="text-[9px] text-textDark uppercase tracking-widest">Admin Panel</p>
+                </div>
+            </div>
+            <div class="text-right text-[10px] sm:text-xs">
+                <p class="text-textMain font-medium">🔑 Keys: <span id="statKeys">0</span></p>
+                <p class="text-success font-bold mt-0.5">🟢 Online: <span id="statOnline">0</span></p>
+            </div>
+        </header>
+        <div class="bg-panel px-3 pb-2 shrink-0 overflow-x-auto no-scrollbar border-b border-border/50">
+            <div id="subTabContainer" class="flex space-x-1.5 pt-1"></div>
+        </div>
+        <div id="contentFrame" class="flex-1 overflow-y-auto p-4 relative"></div>
+    </main>
+
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+        // --- CORE API & UTILS ---
+        const SB_URL = "https://qlzwqbbvjscfjaicbhks.supabase.co";
+        const SB_ANON = "sb_publishable_DRIOqI7O90TinECl4K6FJA_l0nIaPCY";
+        const ADMIN_PASS = "BAGASXIT 2006";
+        const ADMIN_API = SB_URL + "/functions/v1/admin-api";
+
+        function showToast(msg, type = 'info') {
+            const c = document.getElementById('toastContainer');
+            const t = document.createElement('div');
+            t.className = `px-4 py-3 rounded-card text-sm font-bold shadow-lg border transition-all duration-300 pointer-events-auto ${type === 'error' ? 'bg-card border-danger text-danger' : type === 'success' ? 'bg-card border-success text-success' : 'bg-card border-primary text-primary'}`;
+            t.innerText = msg; c.appendChild(t);
+            setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
+        }
+
+        function parseIso(iso) {
+            if (!iso || iso === "null") return 0;
+            try { let c = iso.trim(); if (c.includes(".")) c = c.substring(0, c.indexOf(".")); if (c.endsWith("Z")) c = c.slice(0, -1); if (c.includes("+")) c = c.substring(0, c.indexOf("+")); return new Date(c + "Z").getTime(); } catch (e) { return 0; }
+        }
+
+        async function callAdmin(payload) {
+            payload.pass = ADMIN_PASS;
+            const res = await fetch(ADMIN_API, { method: 'POST', headers: { 'apikey': SB_ANON, 'Authorization': `Bearer ${SB_ANON}`, 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            const json = await res.json();
+            if (!json.ok) throw new Error(json.error || "API Error");
+            return json;
+        }
+
+        async function callRest(endpoint, method = 'GET', body = null, admin = false) {
+            const headers = { 'apikey': SB_ANON, 'Authorization': `Bearer ${SB_ANON}`, 'Content-Type': 'application/json' };
+            if (admin) headers['x-admin-key'] = ADMIN_PASS;
+            if (method !== 'GET' && method !== 'DELETE') headers['Prefer'] = 'return=representation';
+            const res = await fetch(`${SB_URL}/rest/v1/${endpoint}`, { method, headers, body: body ? JSON.stringify(body) : null });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return await res.json();
+        }
+
+        // --- ROUTER & STATE ---
+        const MENUS = [
+            { id: 'dash', name: 'Dashboard', icon: '🏠', tabs: ['Overview'] },
+            { id: 'web', name: 'Web Utama', icon: '🌐', tabs: ['List Game', 'Kategori', 'Ulasan', 'Web Settings'] },
+            { id: 'key', name: 'Key System', icon: '🔑', tabs: ['Generate', 'List Key', 'List Multi'] },
+            { id: 'store', name: 'Store', icon: '🛒', tabs: ['Katalog'] },
+            { id: 'apk', name: 'APK File', icon: '📱', tabs: ['Update APK', 'Komentar', 'Kategori', 'Filter'] },
+            { id: 'system', name: 'System', icon: '⚙️', tabs: ['Broadcast', 'Logs', 'Suspect', 'Links', 'Monitor', 'Security'] }
+        ];
+
+        let currentMenu = 0;
+        let currentSubTab = 0;
+
+        function initSidebar() {
+            document.getElementById('sidebarMenu').innerHTML = MENUS.map((m, i) => `<li><button onclick="openMenu(${i})" class="nav-btn w-full flex items-center px-5 py-3 text-sm text-textMain hover:bg-card transition-colors border-l-2 border-transparent"><span class="mr-3 text-lg">${m.icon}</span> ${m.name}</button></li>`).join('');
+        }
+
+        function toggleSidebar() {
+            const s = document.getElementById('sidebar'), o = document.getElementById('sidebarOverlay');
+            s.classList.toggle('-translate-x-full'); o.classList.toggle('hidden');
+        }
+
+        function openMenu(idx) {
+            currentMenu = idx; currentSubTab = 0;
+            if (window.innerWidth < 768) toggleSidebar();
+            document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+                btn.classList.toggle('bg-card', i === idx); btn.classList.toggle('text-primary', i === idx);
+                btn.classList.toggle('border-primary', i === idx); btn.classList.toggle('border-transparent', i !== idx);
+            });
+            renderSubTabs(); routeContent(); loadStats();
+        }
+
+        function renderSubTabs() {
+            document.getElementById('subTabContainer').innerHTML = MENUS[currentMenu].tabs.map((tab, i) => `<button onclick="currentSubTab=${i}; renderSubTabs(); routeContent();" class="whitespace-nowrap px-4 py-1.5 text-xs font-bold rounded-btn transition-colors ${i === currentSubTab ? 'bg-primary text-bg' : 'bg-transparent text-textMuted hover:text-textMain'}">${tab}</button>`).join('');
+        }
+
+        function routeContent() {
+            const f = document.getElementById('contentFrame');
+            f.innerHTML = '<div class="flex justify-center py-20 text-primary animate-pulse font-bold tracking-widest text-sm">LOADING MODULE...</div>';
+            if (currentMenu === 0) loadDashboard(f);
+            else if (currentMenu === 1) loadKeysSystem(f, currentSubTab);
+            else if (currentMenu === 2) loadStore(f);
+            else if (currentMenu === 3) loadApkSystem(f, currentSubTab);
+else if (currentMenu === 4) loadSysSystem(f, currentSubTab);
+else if (currentMenu === 5) loadWebSystem(f, currentSubTab);
+        }
+
+        // --- MODUL: DASHBOARD ---
+        async function loadStats() {
+            try { const k = await callAdmin({ action: "list-keys" }); document.getElementById('statKeys').innerText = k.data?.length || 0; } catch (e) {}
+            try { const o = await callAdmin({ action: "live-users" }); const now = Date.now(); let a = 0; o.data?.forEach(x => { if (x.last_seen && (now - x.last_seen) <= 120000) a++; }); document.getElementById('statOnline').innerText = a; } catch (e) {}
+        }
+
+        async function loadDashboard(f) {
+            f.innerHTML = `<div class="space-y-4"><div class="grid grid-cols-2 gap-4"><div class="bg-card p-4 rounded-card border border-border"><p class="text-[9px] text-textDark font-bold">TOTAL KEYS</p><p id="dTotal" class="text-2xl font-bold">-</p></div><div class="bg-card p-4 rounded-card border border-border"><p class="text-[9px] text-textDark font-bold">LIVE USERS</p><p id="dOnline" class="text-2xl font-bold text-success">-</p></div></div><div class="bg-card p-4 rounded-card border border-border space-y-2"><p class="text-[10px] font-bold text-primary">STATISTIK KEY</p><p id="dAct" class="text-xs">✅ Active: -</p><p id="dExp" class="text-xs text-danger">❌ Expired: -</p><p id="dBnd" class="text-xs text-warning">🟡 Bound: -</p></div><div class="bg-card p-4 rounded-card border border-border"><p class="text-[10px] font-bold text-primary mb-2">RECENT ACTIVITY</p><div id="dLog" class="text-[11px] text-textMuted space-y-1"></div></div></div>`;
+            try {
+                const k = await callAdmin({ action: "list-keys" }); const keys = k.data || []; const now = Date.now(); let a = 0, e = 0, b = 0;
+                keys.forEach(o => { const exp = parseIso(o.expires_at); const h = o.hwid || ""; const act = o.is_active; const isB = h.length > 0; const isE = exp > 0 && now > exp; if (act && !isE) a++; if (isE) e++; if (isB) b++; });
+                document.getElementById('dTotal').innerText = keys.length; document.getElementById('dAct').innerText = `✅ Active: ${a}`; document.getElementById('dExp').innerText = `❌ Expired: ${e}`; document.getElementById('dBnd').innerText = `🟡 Bound: ${b}`;
+            } catch (e) {}
+            try { const l = await callAdmin({ action: "list-logs" }); const logs = (l.data || []).slice(0, 5); document.getElementById('dLog').innerHTML = logs.length ? logs.map(o => `<p>• ${o.action}</p>`).join('') : '<p class="text-textDark">Belum ada aktivitas</p>'; } catch (e) {}
+        }
+
+        // --- MODUL: KEY SYSTEM ---
+        let cachedKeys = [], currentFilter = "all", currentSearch = "", renderOffset = 0;
+        const RENDER_STEP = 50;
+
+        function loadKeysSystem(f, subTab) {
+            if (subTab === 0) {
+                f.innerHTML = `<div class="bg-card p-4 rounded-card border border-border max-w-lg mx-auto"><input id="genKey" placeholder="Key Code (e.g. BX-ABC123)" class="w-full bg-input border border-border rounded-btn p-3 text-sm mb-2"><button onclick="document.getElementById('genKey').value='BX-'+Math.random().toString(36).substring(2,8).toUpperCase()" class="w-full bg-primary text-bg font-bold text-xs py-2 rounded-btn mb-2">⚡ AUTO GENERATE</button><input id="genDur" type="number" placeholder="Duration (hours)" class="w-full bg-input border border-border rounded-btn p-3 text-sm mb-2"><div class="grid grid-cols-4 gap-2 mb-4">${[24, 72, 168, 720].map(h => `<button onclick="document.getElementById('genDur').value='${h}'" class="bg-primary text-bg font-bold text-xs py-2 rounded-btn">${h/24}D</button>`).join('')}</div><button onclick="submitGenKey()" class="w-full bg-primary text-bg font-bold text-sm py-3 rounded-btn">+ CREATE & SAVE KEY</button></div>`;
+            } else if (subTab === 1) {
+                f.innerHTML = `<div class="space-y-4"><input id="searchKey" oninput="currentSearch=this.value.toLowerCase(); renderOffset=0; renderKeys();" placeholder="🔍 Search key..." class="w-full bg-input border border-border rounded-btn p-3 text-sm"><div class="grid grid-cols-4 gap-2">${['all', 'active', 'expired', 'bound'].map(t => `<button onclick="setKeyFilter('${t}')" id="f-${t}" class="bg-input text-textMuted font-bold text-[10px] py-2 rounded-btn border border-border">${t.toUpperCase()}</button>`).join('')}</div><button onclick="deleteFilteredKeys()" id="btnDelFiltered" class="w-full bg-danger text-white font-bold text-xs py-3 rounded-btn">⚠ DELETE ALL</button><div id="keysContainer" class="space-y-3"></div></div>`;
+                setKeyFilter('all'); fetchKeys();
+            } else if (subTab === 2) {
+                f.innerHTML = `<div class="bg-card p-4 rounded-card border border-border max-w-lg mx-auto"><input id="mKey" placeholder="Multi Key Code" class="w-full bg-input border border-border rounded-btn p-3 text-sm mb-2"><button onclick="document.getElementById('mKey').value='BX-MULTI-'+Math.random().toString(36).substring(2,8).toUpperCase()" class="w-full bg-primary text-bg font-bold text-xs py-2 rounded-btn mb-2">⚡ AUTO GENERATE</button><input id="mDur" type="number" placeholder="Duration (hours)" class="w-full bg-input border border-border rounded-btn p-3 text-sm mb-2"><div class="grid grid-cols-4 gap-2 mb-2">${[24, 72, 168, 720].map(h => `<button onclick="document.getElementById('mDur').value='${h}'" class="bg-primary text-bg font-bold text-xs py-2 rounded-btn">${h/24}D</button>`).join('')}</div><p class="text-[10px] text-textMuted mt-2 mb-1">Max Devices</p><div class="grid grid-cols-4 gap-2 mb-2">${[5, 50, 100, 1000].map(n => `<button onclick="setMaxDev(${n},this)" class="dev-btn bg-input border border-border text-textMain font-bold text-[10px] py-2 rounded-btn">${n}</button>`).join('')}</div><div class="grid grid-cols-3 gap-2 mb-4"><button onclick="setMaxDev(0,this)" class="dev-btn bg-input border border-border text-textMain font-bold text-[10px] py-2 rounded-btn col-span-1">♾ UNLIMITED</button><input id="mCustomDev" type="number" placeholder="Custom" class="col-span-2 bg-input border border-border rounded-btn p-2 text-sm"><input type="hidden" id="mMaxDev" value="5"></div><p id="mDevLabel" class="text-center text-primary font-bold text-[10px] mb-3">Selected: 5 devices</p><button onclick="submitMultiKey()" class="w-full bg-primary text-bg font-bold text-sm py-3 rounded-btn">+ CREATE MULTI KEY</button></div><div id="multiContainer" class="space-y-3 mt-4"></div>`;
+                fetchMultiKeys();
+            }
+        }
+
+        async function submitGenKey() {
+            const k = document.getElementById('genKey').value.trim(), d = document.getElementById('genDur').value.trim();
+            if (!k || !d) return showToast("Isi key dan durasi!", "error");
+            try { await callAdmin({ action: "create-key", key: k, duration_ms: parseInt(d) * 3600000, max_devices: 1, assigned_to: "Admin-Panel" }); showToast("Key dibuat", "success"); callAdmin({ action: "add-log", log: `Created key: ${k}` }); document.getElementById('genKey').value = ''; document.getElementById('genDur').value = ''; loadStats(); } catch (e) { showToast(e.message, "error"); }
+        }
+
+        async function fetchKeys() { try { const r = await callAdmin({ action: "list-keys" }); cachedKeys = r.data || []; renderKeys(); } catch (e) { showToast("Gagal load keys", "error"); } }
+
+        function setKeyFilter(f) {
+            currentFilter = f; renderOffset = 0;
+            ['all', 'active', 'expired', 'bound'].forEach(t => { const b = document.getElementById(`f-${t}`); if (!b) return; b.className = t === f ? "bg-primary text-bg font-bold text-[10px] py-2 rounded-btn" : "bg-input text-textMuted font-bold text-[10px] py-2 rounded-btn border border-border"; });
+            const btn = document.getElementById('btnDelFiltered'); if (btn) btn.innerText = `⚠ DELETE ${f.toUpperCase()}`;
+            renderKeys();
+        }
+
+        function renderKeys() {
+            const c = document.getElementById('keysContainer'); if (!c) return; c.innerHTML = '';
+            const now = Date.now(); let mc = 0, rd = 0;
+            cachedKeys.forEach(o => {
+                const kn = o.key || "", exp = parseIso(o.expires_at), hw = o.hwid || "", act = o.is_active, md = o.max_devices || 1;
+                const bnd = hw.length > 0, expd = exp > 0 && now > exp;
+                if (md > 1 || md === 0) return;
+                if (currentFilter === 'active' && (expd || !act)) return;
+                if (currentFilter === 'expired' && !expd) return;
+                if (currentFilter === 'bound' && !bnd) return;
+                if (currentSearch && !kn.toLowerCase().includes(currentSearch)) return;
+                if (mc >= renderOffset && mc < renderOffset + RENDER_STEP) { c.innerHTML += cardKey(o, kn, exp, hw, bnd, md); rd++; }
+                mc++;
+            });
+            if (mc === 0) c.innerHTML = '<p class="text-center text-textDark text-xs py-10">Tidak ada key</p>';
+            else {
+                if (renderOffset + RENDER_STEP < mc) c.innerHTML += `<button onclick="renderOffset+=${RENDER_STEP}; renderKeys();" class="w-full bg-primary/20 text-primary border border-primary font-bold text-xs py-3 rounded-btn mt-2">LOAD MORE (${mc - (renderOffset + RENDER_STEP)} left)</button>`;
+                c.innerHTML += `<p class="text-center text-textDark text-[10px] py-2">Showing ${rd} of ${mc} keys</p>`;
+            }
+        }
+
+        function cardKey(o, key, exp, hwid, bound, maxDev) {
+            const isM = maxDev > 1 || maxDev === 0, hl = o.hwid_list || [], conn = isM ? hl.length : (bound ? 1 : 0);
+            const title = isM ? `${key} · ${conn}/${maxDev === 0 ? '∞' : maxDev}` : `${bound ? 'BOUND' : 'FREE'} · ${key}`;
+            const expStr = exp > 0 ? new Date(exp).toLocaleString() : '-';
+            const rem = exp - Date.now(), remStr = rem > 0 ? `${Math.floor(rem/3600000)}h left` : 'expired';
+            return `<div class="bg-card border ${isM ? 'border-primary' : 'border-border'} p-4 rounded-card"><p class="font-bold text-sm mb-1">${title}</p>${exp > 0 ? `<p class="text-[10px] text-textMuted mb-3">${expStr} · ${remStr}</p>` : ''}<div class="grid grid-cols-2 gap-2 mb-2"><button onclick="navigator.clipboard.writeText('${key}');showToast('Copied','success')" class="bg-primary/10 text-primary border border-primary font-bold text-[10px] py-2 rounded-btn">COPY KEY</button>${isM ? `<button onclick="showDevList('${key}',${JSON.stringify(hl).replace(/"/g,'&quot;')},${maxDev})" class="bg-success/10 text-success border border-success font-bold text-[10px] py-2 rounded-btn">DEVICES</button>` : `<button onclick="navigator.clipboard.writeText('${hwid}');showToast('HWID Copied','success')" class="bg-success/10 text-success border border-success font-bold text-[10px] py-2 rounded-btn">COPY HWID</button>`}</div><div class="grid grid-cols-2 gap-2"><button onclick="resetKey('${key}',${isM})" class="bg-warning/10 text-warning border border-warning font-bold text-[10px] py-2 rounded-btn">RESET</button><button onclick="delKey('${key}')" class="bg-danger/10 text-danger border border-danger font-bold text-[10px] py-2 rounded-btn">DELETE</button></div></div>`;
+        }
+
+        async function resetKey(k, isM) { if (!confirm('Reset?')) return; try { await callAdmin({ action: isM ? "reset-all-devices" : "reset-hwid", key: k }); showToast("Reset OK", "success"); fetchKeys(); } catch (e) { showToast(e.message, "error"); } }
+        async function delKey(k) { if (!confirm('Hapus?')) return; try { await callAdmin({ action: "delete-key", key: k }); showToast("Terhapus", "success"); fetchKeys(); loadStats(); } catch (e) { showToast(e.message, "error"); } }
+        function showDevList(k, hl, md) { let h = `<div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onclick="this.remove()"><div class="bg-card p-5 rounded-card w-full max-w-md" onclick="event.stopPropagation()"><h3 class="text-primary font-bold text-center mb-4">${hl.length}/${md === 0 ? '∞' : md} DEVICES</h3>`; if (!hl.length) h += `<p class="text-center text-textDark text-xs py-4">Kosong</p>`; else hl.forEach(x => h += `<div class="flex justify-between bg-input p-2 rounded mb-2"><span class="text-xs truncate">${x}</span><button onclick="rmDev('${k}','${x}')" class="bg-danger/20 text-danger text-[10px] px-2 py-1 rounded">RM</button></div>`); h += `<button onclick="this.closest('.fixed').remove()" class="w-full bg-primary text-bg font-bold text-xs py-2 rounded-btn mt-4">TUTUP</button></div></div>`; document.body.insertAdjacentHTML('beforeend', h); }
+        async function rmDev(k, h) { try { await callAdmin({ action: "remove-device", key: k, hwid: h }); showToast("Removed", "success"); document.querySelector('.fixed.inset-0')?.remove(); fetchKeys(); } catch (e) { showToast(e.message, "error"); } }
+
+        async function deleteFilteredKeys() {
+            if (!confirm(`Hapus filter ${currentFilter}?`)) return;
+            const now = Date.now(), del = [];
+            cachedKeys.forEach(o => { const kn = o.key, exp = parseIso(o.expires_at), h = o.hwid || "", a = o.is_active, b = h.length > 0, e = exp > 0 && now > exp; let d = false; if (currentFilter === 'all') d = true; else if (currentFilter === 'active') d = (a && !e); else if (currentFilter === 'expired') d = e; else if (currentFilter === 'bound') d = b; if (d && kn) del.push(kn); });
+            if (!del.length) return showToast("Kosong", "error");
+            try { await callAdmin({ action: "delete-keys-batch", keys: del }); showToast(`${del.length} hapus`, "success"); fetchKeys(); loadStats(); } catch (e) { showToast(e.message, "error"); }
+        }
+
+        function setMaxDev(v, btn) { document.getElementById('mMaxDev').value = v; document.querySelectorAll('.dev-btn').forEach(b => b.classList.remove('border-primary')); btn.classList.add('border-primary'); document.getElementById('mDevLabel').innerText = `Selected: ${v === 0 ? 'UNLIMITED' : v + ' devices'}`; }
+        async function submitMultiKey() {
+            const k = document.getElementById('mKey').value.trim(), d = document.getElementById('mDur').value.trim(), md = parseInt(document.getElementById('mMaxDev').value);
+            if (!k || !d) return showToast("Isi key & durasi!", "error");
+            try { await callAdmin({ action: "create-key", key: k, duration_ms: parseInt(d) * 3600000, max_devices: md, assigned_to: "Admin-Multi" }); showToast("Multi Key dibuat", "success"); fetchMultiKeys(); loadStats(); } catch (e) { showToast(e.message, "error"); }
+        }
+        async function fetchMultiKeys() { try { const r = await callAdmin({ action: "list-keys" }); const c = document.getElementById('multiContainer'); if (!c) return; c.innerHTML = ''; const multi = r.data?.filter(o => o.max_devices > 1 || o.max_devices === 0) || []; if (!multi.length) c.innerHTML = '<p class="text-center text-textDark text-xs py-10">Belum ada multi key</p>'; else multi.forEach(o => c.innerHTML += cardKey(o, o.key, parseIso(o.expires_at), o.hwid || "", false, o.max_devices)); } catch (e) {} }
+
+        // --- MODUL: STORE ---
+        async function loadStore(f) {
+            f.innerHTML = `<div class="space-y-4"><button onclick="showStoreDialog()" class="w-full bg-primary text-bg font-bold text-sm py-3 rounded-btn">+ TAMBAH PRODUK</button><div id="storeContainer" class="space-y-3"></div></div>`;
+            try {
+                const r = await callAdmin({ action: "list-store" }); const c = document.getElementById('storeContainer'); const data = r.data || [];
+                if (!data.length) c.innerHTML = '<p class="text-center text-textDark text-xs py-10">Belum ada produk</p>';
+                else data.forEach(o => { c.innerHTML += `<div class="bg-card border ${o.is_active ? 'border-primary' : 'border-border'} p-4 rounded-card"><p class="text-[9px] font-bold text-[#06B6D4]">${o.is_active ? 'AKTIF' : 'OFF'} · ${o.category}</p><p class="font-bold text-sm mt-1">${o.name}</p><p class="text-primary font-bold text-xs">${o.price > 0 ? 'Rp ' + o.price : 'Nego'}</p>${o.description ? `<p class="text-[9px] text-textMuted mt-1">${o.description}</p>` : ''}<div class="grid grid-cols-3 gap-2 mt-3"><button onclick='showStoreDialog(${JSON.stringify(o).replace(/'/g, "&#39;")})' class="bg-primary/10 text-primary border border-primary text-[10px] font-bold py-2 rounded-btn">EDIT</button><button onclick="toggleStore('${o.id}',${!o.is_active})" class="bg-warning/10 text-warning border border-warning text-[10px] font-bold py-2 rounded-btn">${o.is_active ? 'OFF' : 'ON'}</button><button onclick="delStore('${o.id}')" class="bg-danger/10 text-danger border border-danger text-[10px] font-bold py-2 rounded-btn">DELETE</button></div></div>`; });
+            } catch (e) { showToast(e.message, "error"); }
+        }
+
+        function showStoreDialog(edit = null) {
+            const title = edit ? "Edit Produk" : "Tambah Produk";
+            const h = `<div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"><div class="bg-card p-5 rounded-card w-full max-w-sm"><h3 class="text-primary font-bold mb-4">${title}</h3><input id="sCat" value="${edit?.category || ''}" placeholder="Kategori" class="w-full bg-input border border-border rounded-btn p-3 text-sm mb-2"><input id="sName" value="${edit?.name || ''}" placeholder="Nama produk" class="w-full bg-input border border-border rounded-btn p-3 text-sm mb-2"><input id="sPrice" type="number" value="${edit?.price || ''}" placeholder="Harga (0 = Nego)" class="w-full bg-input border border-border rounded-btn p-3 text-sm mb-2"><textarea id="sDesc" placeholder="Deskripsi" class="w-full bg-input border border-border rounded-btn p-3 text-sm mb-4">${edit?.description || ''}</textarea><div class="grid grid-cols-2 gap-2"><button onclick="this.closest('.fixed').remove()" class="bg-input border border-border font-bold text-xs py-2 rounded-btn">BATAL</button><button onclick="saveStore('${edit?.id || ''}')" class="bg-primary text-bg font-bold text-xs py-2 rounded-btn">SIMPAN</button></div></div></div>`;
+            document.body.insertAdjacentHTML('beforeend', h);
+        }
+
+        async function saveStore(id) {
+            const cat = document.getElementById('sCat').value.trim(), name = document.getElementById('sName').value.trim(), price = parseInt(document.getElementById('sPrice').value) || 0, desc = document.getElementById('sDesc').value.trim();
+            if (!cat || !name) return showToast("Kategori & nama wajib", "error");
+            try {
+                if (id) { await callAdmin({ action: "edit-store", id, category: cat, name, price, description: desc }); }
+                else { await callAdmin({ action: "add-store", category: cat, name, price, price_text: "", description: desc, emoji: "", sort_order: 0 }); }
+                showToast("Tersimpan", "success"); document.querySelector('.fixed.inset-0').remove(); loadStore(document.getElementById('contentFrame'));
+            } catch (e) { showToast(e.message, "error"); }
+        }
+        async function toggleStore(id, act) { try { await callAdmin({ action: "toggle-store", id, is_active: act }); loadStore(document.getElementById('contentFrame')); } catch (e) { showToast(e.message, "error"); } }
+        async function delStore(id) { if (!confirm("Hapus produk?")) return; try { await callAdmin({ action: "delete-store", id }); loadStore(document.getElementById('contentFrame')); } catch (e) { showToast(e.message, "error"); } }
+        
+        // ==========================================
+// --- MODUL 3: APK FILE ---
+// ==========================================
+function loadApkSystem(f, subTab) {
+    if (subTab === 0) {
+        f.innerHTML = `<div class="space-y-4"><button onclick="showApkForm()" class="w-full bg-primary text-bg font-bold text-sm py-3 rounded-btn">+ TAMBAH APK</button><div id="apkContainer" class="space-y-3"></div></div>`;
+        fetchApkList();
+    } else if (subTab === 1) {
+        f.innerHTML = `<div id="commentsContainer" class="space-y-3"></div>`;
+        fetchComments();
+    } else if (subTab === 2) {
+        f.innerHTML = `<div class="space-y-4"><div class="flex gap-2"><input id="newCat" placeholder="Kategori baru..." class="flex-1 bg-input border border-border rounded-btn p-3 text-sm"><button onclick="addCategory()" class="bg-primary text-bg font-bold text-xs px-4 rounded-btn">+ TAMBAH</button></div><div id="catContainer" class="space-y-2"></div></div>`;
+        fetchCategories();
+    } else if (subTab === 3) {
+        f.innerHTML = `<div class="space-y-4"><div class="flex gap-2"><input id="newBadWord" placeholder="Kata kasar..." class="flex-1 bg-input border border-border rounded-btn p-3 text-sm"><button onclick="addBadWord()" class="bg-primary text-bg font-bold text-xs px-4 rounded-btn">+ TAMBAH</button></div><div id="badWordContainer" class="space-y-2"></div></div>`;
+        fetchBadWords();
+    }
+}
+
+async function fetchApkList() {
+    const c = document.getElementById('apkContainer'); if (!c) return;
+    try {
+        const r = await callAdmin({ action: "list-apk" }); const data = r.data || [];
+        if (!data.length) return c.innerHTML = '<p class="text-center text-textDark text-xs py-10">Belum ada APK</p>';
+        c.innerHTML = data.map(o => `<div class="bg-card border ${o.is_active ? 'border-[#06B6D4]' : 'border-border'} p-4 rounded-card"><p class="font-bold text-sm">${o.name}</p><p class="text-[10px] text-primary">${o.category} · ${o.version}</p><div class="grid grid-cols-2 gap-2 mt-3"><button onclick='showApkForm(${JSON.stringify(o).replace(/'/g, "&#39;")})' class="bg-primary/10 text-primary border border-primary text-[10px] font-bold py-2 rounded-btn">EDIT</button><button onclick="delApk('${o.id}')" class="bg-danger/10 text-danger border border-danger text-[10px] font-bold py-2 rounded-btn">DELETE</button></div></div>`).join('');
+    } catch (e) { showToast("Gagal load APK", "error"); }
+}
+
+function showApkForm(edit = null) {
+    const h = `<div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 overflow-y-auto"><div class="bg-card p-5 rounded-card w-full max-w-sm my-auto"><h3 class="text-primary font-bold mb-4">${edit ? 'Edit' : 'Tambah'} APK</h3><input id="aCat" value="${edit?.category || ''}" placeholder="Kategori" class="w-full bg-input border border-border rounded-btn p-2 text-xs mb-2"><input id="aName" value="${edit?.name || ''}" placeholder="Nama APK" class="w-full bg-input border border-border rounded-btn p-2 text-xs mb-2"><input id="aVer" value="${edit?.version || ''}" placeholder="Versi" class="w-full bg-input border border-border rounded-btn p-2 text-xs mb-2"><input id="aSize" value="${edit?.size || ''}" placeholder="Ukuran (15 MB)" class="w-full bg-input border border-border rounded-btn p-2 text-xs mb-2"><textarea id="aCh" placeholder="Changelog" class="w-full bg-input border border-border rounded-btn p-2 text-xs mb-2">${edit?.changelog || ''}</textarea><input id="aLink" value="${edit?.link || ''}" placeholder="Link Download" class="w-full bg-input border border-border rounded-btn p-2 text-xs mb-2"><input id="aGetkey" value="${edit?.getkey_link || ''}" placeholder="Link Getkey" class="w-full bg-input border border-border rounded-btn p-2 text-xs mb-2"><div class="grid grid-cols-2 gap-2 mt-4"><button onclick="this.closest('.fixed').remove()" class="bg-input border border-border font-bold text-xs py-2 rounded-btn">BATAL</button><button onclick="saveApk('${edit?.id || ''}')" class="bg-primary text-bg font-bold text-xs py-2 rounded-btn">SIMPAN</button></div></div></div>`;
+    document.body.insertAdjacentHTML('beforeend', h);
+}
+
+async function saveApk(id) {
+    const payload = { action: id ? "edit-apk" : "add-apk", category: document.getElementById('aCat').value, name: document.getElementById('aName').value, version: document.getElementById('aVer').value, size: document.getElementById('aSize').value, changelog: document.getElementById('aCh').value, link: document.getElementById('aLink').value, getkey_link: document.getElementById('aGetkey').value };
+    if (!payload.name) return showToast("Nama wajib", "error");
+    if (id) payload.id = id; else { payload.screenshot = ""; payload.sort_order = 0; }
+    try { await callAdmin(payload); showToast("Tersimpan", "success"); document.querySelector('.fixed.inset-0').remove(); fetchApkList(); } catch (e) { showToast(e.message, "error"); }
+}
+async function delApk(id) { if (!confirm("Hapus?")) return; try { await callAdmin({ action: "delete-apk", id }); fetchApkList(); } catch (e) { showToast(e.message, "error"); } }
+
+async function fetchComments() {
+    const c = document.getElementById('commentsContainer'); if (!c) return;
+    try {
+        const r = await callAdmin({ action: "list-comments", show_hidden: true }); const data = r.data || [];
+        if (!data.length) return c.innerHTML = '<p class="text-center text-textDark text-xs py-10">Belum ada komentar</p>';
+        c.innerHTML = data.map(o => `<div class="bg-card border border-border p-4 rounded-card"><p class="font-bold text-sm text-primary">${o.name} ${o.is_hidden ? '(HIDDEN)' : ''}</p><p class="text-xs text-textMain mt-2">${o.comment}</p><div class="grid grid-cols-2 gap-2 mt-3"><button onclick="toggleComment('${o.id}',${!o.is_hidden})" class="bg-warning/10 text-warning border border-warning text-[10px] font-bold py-2 rounded-btn">${o.is_hidden ? 'SHOW' : 'HIDE'}</button><button onclick="delComment('${o.id}')" class="bg-danger/10 text-danger border border-danger text-[10px] font-bold py-2 rounded-btn">DELETE</button></div></div>`).join('');
+    } catch (e) { showToast("Gagal load komentar", "error"); }
+}
+async function toggleComment(id, hide) { try { await callAdmin({ action: "hide-comment", id, is_hidden: hide }); fetchComments(); } catch (e) { showToast(e.message, "error"); } }
+async function delComment(id) { if (!confirm("Hapus?")) return; try { await callAdmin({ action: "delete-comment", id }); fetchComments(); } catch (e) { showToast(e.message, "error"); } }
+
+async function fetchCategories() {
+    const c = document.getElementById('catContainer'); if (!c) return;
+    try {
+        const r = await callAdmin({ action: "list-categories" }); const data = r.data || [];
+        c.innerHTML = data.map(o => `<div class="flex justify-between items-center bg-card border border-border p-3 rounded-card"><span class="text-sm">${o.name}</span><button onclick="delCategory('${o.id}')" class="text-danger text-[10px] font-bold">DELETE</button></div>`).join('');
+    } catch (e) {}
+}
+async function addCategory() { const n = document.getElementById('newCat').value.trim().toUpperCase(); if (!n) return; try { await callAdmin({ action: "add-category", name: n, sort_order: 0 }); document.getElementById('newCat').value = ''; fetchCategories(); } catch (e) {} }
+async function delCategory(id) { try { await callAdmin({ action: "delete-category", id }); fetchCategories(); } catch (e) {} }
+
+async function fetchBadWords() {
+    const c = document.getElementById('badWordContainer'); if (!c) return;
+    try {
+        const r = await callAdmin({ action: "list-bad-words" }); const data = r.data || [];
+        c.innerHTML = data.map(o => `<div class="flex justify-between items-center bg-card border border-border p-3 rounded-card"><span class="text-sm text-danger">${o.word}</span><button onclick="delBadWord('${o.id}')" class="text-danger text-[10px] font-bold">DELETE</button></div>`).join('');
+    } catch (e) {}
+}
+async function addBadWord() { const w = document.getElementById('newBadWord').value.trim().toLowerCase(); if (!w) return; try { await callAdmin({ action: "add-bad-word", word: w }); document.getElementById('newBadWord').value = ''; fetchBadWords(); } catch (e) {} }
+async function delBadWord(id) { try { await callAdmin({ action: "delete-bad-word", id }); fetchBadWords(); } catch (e) {} }
+
+// ==========================================
+// --- MODUL 4: SYSTEM ---
+// ==========================================
+function loadSysSystem(f, subTab) {
+    if (subTab === 0) {
+        f.innerHTML = `
+            <div class="space-y-4 max-w-2xl mx-auto">
+                <div class="bg-card p-4 rounded-card border border-border">
+                    <input id="bTitle" placeholder="Judul (e.g. UPDATE)" class="w-full bg-input border border-border rounded-btn p-3 text-sm mb-2">
+                    <textarea id="bMsg" placeholder="Pesan..." class="w-full bg-input border border-border rounded-btn p-3 text-sm mb-3" rows="3"></textarea>
+                    <p class="text-[10px] text-textMuted mb-2">Target:</p>
+                    <div class="space-y-1 mb-4">
+                        <label class="flex items-center text-sm text-textMain"><input type="checkbox" id="cbWeb" checked class="mr-2 accent-primary"> 🌐 Web Getkey</label>
+                        <label class="flex items-center text-sm text-textMain"><input type="checkbox" id="cbMain" checked class="mr-2 accent-primary"> 🏠 Website Utama</label>
+                        <label class="flex items-center text-sm text-textMain"><input type="checkbox" id="cbApk" checked class="mr-2 accent-primary"> 📱 APK User</label>
+                    </div>
+                    <button onclick="sendBcast()" class="w-full bg-primary text-bg font-bold text-sm py-3 rounded-btn">📢 SEND BROADCAST</button>
+                </div>
+                <div class="bg-card p-4 rounded-card border border-border">
+                    <h3 class="text-danger font-bold text-xs mb-3">🛠 MAINTENANCE</h3>
+                    <textarea id="mMsg" placeholder="Pesan maintenance (opsional)" class="w-full bg-input border border-border rounded-btn p-3 text-sm mb-3" rows="2"></textarea>
+                    <p class="text-[10px] text-textMuted mb-2">Target:</p>
+                    <div class="space-y-1 mb-4">
+                        <label class="flex items-center text-sm text-textMain"><input type="checkbox" id="mWeb" checked class="mr-2 accent-danger"> 🌐 Web Getkey</label>
+                        <label class="flex items-center text-sm text-textMain"><input type="checkbox" id="mMain" checked class="mr-2 accent-danger"> 🏠 Website Utama</label>
+                        <label class="flex items-center text-sm text-textMain"><input type="checkbox" id="mApk" checked class="mr-2 accent-danger"> 📱 APK User</label>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="setMaint(true)" class="bg-danger text-white font-bold text-xs py-3 rounded-btn">🛠 ON</button>
+                        <button onclick="setMaint(false)" class="bg-input border border-border text-textMain font-bold text-xs py-3 rounded-btn">✅ OFF</button>
+                    </div>
+                    <p id="mStatus" class="text-center text-[10px] text-textMuted mt-3">Status: checking...</p>
+                </div>
+                <div class="bg-card p-4 rounded-card border border-border">
+                    <h3 class="text-primary font-bold text-xs mb-3">📋 RECENT BROADCASTS</h3>
+                    <div id="bcastList" class="space-y-2"></div>
+                </div>
+            </div>`;
+        fetchBroadcasts(); fetchMaintStatus();
+    } else if (subTab === 1) {
+        f.innerHTML = `<div id="logsContainer" class="space-y-2"></div>`;
+        fetchLogs();
+    } else if (subTab === 2) {
+        f.innerHTML = `<div class="space-y-4"><input id="sSearch" oninput="renderSuspect()" placeholder="🔍 Cari fingerprint..." class="w-full bg-input border border-border rounded-btn p-3 text-sm"><div class="grid grid-cols-2 gap-2"><button onclick="filterSuspect('all')" id="sAll" class="bg-primary text-bg font-bold text-xs py-2 rounded-btn">ALL</button><button onclick="filterSuspect('blocked')" id="sBlocked" class="bg-input border border-border text-textMuted font-bold text-xs py-2 rounded-btn">BLOCKED</button></div><div id="suspectContainer" class="space-y-2"></div></div>`;
+        fetchSuspect();
+    } else if (subTab === 3) {
+        f.innerHTML = `<div class="space-y-4"><h3 id="linkTitle" class="text-xs font-bold text-textMuted">LINK LIST</h3><div class="grid grid-cols-3 gap-2"><button onclick="showLinkDialog()" class="bg-primary text-bg font-bold text-xs py-3 rounded-btn">+ ADD</button><button onclick="showBulkLinkDialog()" class="bg-primary/20 border border-primary text-primary font-bold text-xs py-3 rounded-btn">📦 BULK</button><button onclick="refreshLinks()" class="bg-[#7C3AED] text-white font-bold text-xs py-3 rounded-btn">🔄 REFRESH</button></div><div id="linksContainer" class="space-y-2"></div></div>`;
+        fetchLinks();
+    } else if (subTab === 4) {
+        f.innerHTML = `<div class="space-y-4"><div class="bg-card p-4 rounded-card border border-border"><h3 class="text-primary font-bold text-xs mb-2">🟢 LIVE USER</h3><p id="liveCount" class="text-success font-bold text-lg">Online: 0 user</p><p id="serverInfo" class="text-textMuted text-xs mt-1">Total: -</p></div><div><h3 class="text-xs font-bold text-textMuted mb-2">🔥 RATE LIMIT (per FP)</h3><div id="rateContainer" class="space-y-1 mb-4"></div><h3 class="text-xs font-bold text-textMuted mb-2">🔗 USED LINKS (per FP)</h3><div id="usedContainer" class="space-y-1"></div></div></div>`;
+        fetchMonitor();
+    } else if (subTab === 5) {
+        f.innerHTML = `<div class="space-y-4 max-w-2xl mx-auto"><div class="bg-card p-4 rounded-card border border-border"><h3 class="text-danger font-bold text-xs mb-3">🚫 BLOCK FINGERPRINT</h3><input id="blockFp" placeholder="Fingerprint (Fxxxx_xxxx)" class="w-full bg-input border border-border rounded-btn p-3 text-sm mb-2"><button onclick="blockFp()" class="w-full bg-danger text-white font-bold text-xs py-3 rounded-btn">🚫 BLOCK FP</button><h4 class="text-[10px] text-textMuted mt-4 mb-2">Blocked List</h4><div id="blockedContainer" class="space-y-2"></div></div><div class="bg-card p-4 rounded-card border border-border"><h3 class="text-warning font-bold text-xs mb-2">🧹 CLEANUP</h3><p class="text-[11px] text-textMuted mb-3">Hapus semua key yang expired</p><button onclick="cleanupExpired()" class="w-full bg-danger text-white font-bold text-xs py-3 rounded-btn">🧹 HAPUS KEY EXPIRED</button></div><div class="bg-card p-4 rounded-card border border-border"><h3 class="text-success font-bold text-xs mb-2">💚 EDGE FUNCTION HEALTH</h3><div id="healthContainer" class="space-y-1"></div></div></div>`;
+        fetchSecurity();
+    }
+}
+
+async function sendBcast() {
+    const t = document.getElementById('bTitle').value.trim(), m = document.getElementById('bMsg').value.trim();
+    const w = document.getElementById('cbWeb').checked, mn = document.getElementById('cbMain').checked, a = document.getElementById('cbApk').checked;
+    if (!t || !m) return showToast("Judul & pesan wajib", "error");
+    if (!w && !mn && !a) return showToast("Pilih target", "error");
+    try { await callAdmin({ action: "send-broadcast", title: t, message: m, show_web: w, show_main: mn, show_apk: a }); showToast("Broadcast terkirim", "success"); document.getElementById('bTitle').value = ''; document.getElementById('bMsg').value = ''; fetchBroadcasts(); } catch (e) { showToast(e.message, "error"); }
+}
+async function setMaint(on) {
+    const m = document.getElementById('mMsg').value.trim() || "Server maintenance, coba lagi nanti.";
+    const w = document.getElementById('mWeb').checked, mn = document.getElementById('mMain').checked, a = document.getElementById('mApk').checked;
+    if (!w && !mn && !a) return showToast("Pilih target", "error");
+    try { await callAdmin({ action: "set-maintenance", maintenance: on, message: m, apply_web: w, apply_main: mn, apply_apk: a }); showToast(`Maintenance ${on ? 'ON' : 'OFF'}`, "success"); fetchMaintStatus(); } catch (e) { showToast(e.message, "error"); }
+}
+async function fetchMaintStatus() {
+    try { const r = await callAdmin({ action: "get-maintenance" }); const s = document.getElementById('mStatus'); if (s) { s.innerText = `Status: ${r.data?.maintenance ? 'ON' : 'OFF'}`; s.className = `text-center text-[10px] mt-3 ${r.data?.maintenance ? 'text-danger font-bold' : 'text-success font-bold'}`; } } catch (e) {}
+}
+async function fetchBroadcasts() {
+    const c = document.getElementById('bcastList'); if (!c) return;
+    try { const r = await callAdmin({ action: "list-broadcasts" }); const data = r.data || []; if (!data.length) return c.innerHTML = '<p class="text-textDark text-xs">Belum ada</p>'; c.innerHTML = data.map(o => `<div class="bg-input border border-border p-3 rounded-btn"><p class="text-primary font-bold text-xs">${o.title}</p><p class="text-textMain text-[11px] mt-1">${o.message}</p><button onclick="delBcast('${o.id}')" class="text-danger text-[10px] font-bold mt-2">DELETE</button></div>`).join(''); } catch (e) {}
+}
+async function delBcast(id) { if (!confirm("Hapus?")) return; try { await callAdmin({ action: "delete-broadcast", id }); fetchBroadcasts(); } catch (e) {} }
+
+async function fetchLogs() {
+    const c = document.getElementById('logsContainer'); if (!c) return;
+    try { const r = await callAdmin({ action: "list-logs" }); const data = r.data || []; if (!data.length) return c.innerHTML = '<p class="text-textDark text-xs text-center py-10">Belum ada log</p>'; c.innerHTML = data.map(o => `<div class="bg-card border border-border p-3 rounded-card text-[11px] text-textMuted">[${new Date(parseIso(o.timestamp)).toLocaleTimeString()}] ${o.action}</div>`).join(''); } catch (e) {}
+}
+
+let cachedSuspect = [], cachedBlocked = [], suspectFilter = 'all';
+function filterSuspect(f) { suspectFilter = f; document.getElementById('sAll').className = f === 'all' ? 'bg-primary text-bg font-bold text-xs py-2 rounded-btn' : 'bg-input border border-border text-textMuted font-bold text-xs py-2 rounded-btn'; document.getElementById('sBlocked').className = f === 'blocked' ? 'bg-primary text-bg font-bold text-xs py-2 rounded-btn' : 'bg-input border border-border text-textMuted font-bold text-xs py-2 rounded-btn'; renderSuspect(); }
+async function fetchSuspect() { try { const s = await callAdmin({ action: "list-suspect" }); const b = await callAdmin({ action: "list-blocked" }); cachedSuspect = s.data || []; cachedBlocked = b.data || []; renderSuspect(); } catch (e) {} }
+function renderSuspect() {
+    const c = document.getElementById('suspectContainer'); if (!c) return; c.innerHTML = '';
+    const q = document.getElementById('sSearch').value.toLowerCase();
+    const blockedFps = cachedBlocked.map(b => b.fp);
+    let count = 0;
+    cachedSuspect.forEach(o => {
+        const fp = o.fp || "", isBlocked = blockedFps.includes(fp);
+        if (suspectFilter === 'blocked' && !isBlocked) return;
+        if (q && !fp.toLowerCase().includes(q)) return;
+        if (count >= 200) return; count++;
+        c.innerHTML += `<div class="bg-card border ${isBlocked ? 'border-danger' : 'border-border'} p-3 rounded-card"><p class="text-xs font-bold ${isBlocked ? 'text-danger' : 'text-warning'}">${fp.substring(0, 20)}</p><p class="text-[9px] text-textMuted mt-1">Reason: ${o.reason || 'unknown'} · IP: ${o.ip || '-'}</p><div class="grid grid-cols-2 gap-2 mt-2"><button onclick="navigator.clipboard.writeText('${fp}');showToast('Copied','success')" class="bg-primary/10 text-primary border border-primary text-[10px] font-bold py-1 rounded-btn">COPY FP</button><button onclick="${isBlocked ? `unblockFp('${fp}')` : `blockFpManual('${fp}')`}" class="bg-${isBlocked ? 'success' : 'danger'}/10 text-${isBlocked ? 'success' : 'danger'} border border-${isBlocked ? 'success' : 'danger'} text-[10px] font-bold py-1 rounded-btn">${isBlocked ? 'UNBLOCK' : 'BLOCK'}</button></div></div>`;
+    });
+    if (!count) c.innerHTML = '<p class="text-textDark text-xs text-center py-10">Tidak ada suspect</p>';
+}
+async function blockFpManual(fp) { try { await callAdmin({ action: "block-fp", fp, reason: "manual" }); showToast("Blocked", "success"); fetchSuspect(); } catch (e) {} }
+async function unblockFp(fp) { try { await callAdmin({ action: "unblock-fp", fp }); showToast("Unblocked", "success"); fetchSuspect(); } catch (e) {} }
+async function blockFp() { const fp = document.getElementById('blockFp').value.trim(); if (!fp) return; try { await callAdmin({ action: "block-fp", fp, reason: "manual" }); showToast("Blocked", "success"); document.getElementById('blockFp').value = ''; fetchSecurity(); } catch (e) {} }
+
+async function fetchLinks() {
+    const c = document.getElementById('linksContainer'); if (!c) return;
+    try {
+        const r = await callAdmin({ action: "list-links" }); const data = r.data || [];
+        const active = data.filter(o => o.is_active).length;
+        document.getElementById('linkTitle').innerText = `LINK LIST (${active}/${data.length} active)`;
+        c.innerHTML = data.map(o => `<div class="bg-card border ${o.is_active ? 'border-success' : 'border-border'} p-3 rounded-card"><p class="text-xs ${o.is_active ? 'text-textMain' : 'text-textDark'} truncate">${o.url}</p><div class="grid grid-cols-3 gap-2 mt-2"><button onclick="navigator.clipboard.writeText('${o.url}');showToast('Copied','success')" class="bg-primary/10 text-primary border border-primary text-[10px] font-bold py-1 rounded-btn">COPY</button><button onclick="toggleLink('${o.id}',${!o.is_active})" class="bg-warning/10 text-warning border border-warning text-[10px] font-bold py-1 rounded-btn">${o.is_active ? 'OFF' : 'ON'}</button><button onclick="delLink('${o.id}')" class="bg-danger/10 text-danger border border-danger text-[10px] font-bold py-1 rounded-btn">DEL</button></div></div>`).join('');
+    } catch (e) {}
+}
+function showLinkDialog() {
+    const h = `<div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"><div class="bg-card p-5 rounded-card w-full max-w-sm"><input id="newLink" placeholder="https://move2link.co/xxxxx" class="w-full bg-input border border-border rounded-btn p-3 text-sm mb-3"><div class="grid grid-cols-2 gap-2"><button onclick="this.closest('.fixed').remove()" class="bg-input border border-border font-bold text-xs py-2 rounded-btn">BATAL</button><button onclick="addLink()" class="bg-primary text-bg font-bold text-xs py-2 rounded-btn">TAMBAH</button></div></div></div>`;
+    document.body.insertAdjacentHTML('beforeend', h);
+}
+async function addLink() { const u = document.getElementById('newLink').value.trim(); if (!u.startsWith('http')) return showToast("URL tidak valid", "error"); try { await callAdmin({ action: "add-link", url: u }); document.querySelector('.fixed.inset-0').remove(); fetchLinks(); } catch (e) { showToast(e.message, "error"); } }
+function showBulkLinkDialog() {
+    const h = `<div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"><div class="bg-card p-5 rounded-card w-full max-w-sm"><textarea id="bulkLinks" placeholder="https://move2link.co/xxx1&#10;https://move2link.co/xxx2" rows="6" class="w-full bg-input border border-border rounded-btn p-3 text-xs mb-3"></textarea><div class="grid grid-cols-2 gap-2"><button onclick="this.closest('.fixed').remove()" class="bg-input border border-border font-bold text-xs py-2 rounded-btn">BATAL</button><button onclick="bulkImport()" class="bg-primary text-bg font-bold text-xs py-2 rounded-btn">IMPORT</button></div></div></div>`;
+    document.body.insertAdjacentHTML('beforeend', h);
+}
+async function bulkImport() {
+    const t = document.getElementById('bulkLinks').value.trim(), lines = t.split('\n'), uniq = new Set(), arr = [];
+    lines.forEach(l => { const c = l.trim(); if (c.startsWith('http') && !uniq.has(c)) { uniq.add(c); arr.push(c); } });
+    if (!arr.length) return showToast("Kosong", "error");
+    try { await callAdmin({ action: "bulk-add-links", urls: arr }); document.querySelector('.fixed.inset-0').remove(); fetchLinks(); } catch (e) { showToast(e.message, "error"); }
+}
+async function refreshLinks() { if (!confirm("Generate 100 link baru? Link lama akan dihapus.")) return; try { await callAdmin({ action: "refresh-links", count: 100, target_base: "https://bxit.my.id/getkey/" }); showToast("Refresh OK", "success"); fetchLinks(); } catch (e) { showToast(e.message, "error"); } }
+async function toggleLink(id, act) { try { await callAdmin({ action: "toggle-link", id, is_active: act }); fetchLinks(); } catch (e) {} }
+async function delLink(id) { if (!confirm("Hapus link?")) return; try { await callAdmin({ action: "delete-link", id }); fetchLinks(); } catch (e) {} }
+
+async function fetchMonitor() {
+    try {
+        const on = await callAdmin({ action: "live-users" }); const now = Date.now(); let a = 0; on.data?.forEach(x => { if (x.last_seen && (now - x.last_seen) <= 120000) a++; }); document.getElementById('liveCount').innerText = `Online: ${a} user`;
+        const si = await callAdmin({ action: "server-info" }); const d = si.data || {}; document.getElementById('serverInfo').innerText = `Total: ${d.total_keys || 0} · Active: ${d.active_keys || 0} · Expired: ${d.expired_keys || 0}`;
+        const rl = await callAdmin({ action: "rate-limit" }); document.getElementById('rateContainer').innerHTML = (rl.data || []).slice(0, 20).map(o => `<div class="flex justify-between bg-card p-2 rounded-btn border border-border text-[10px]"><span class="truncate">${o.fp}</span><span class="text-primary font-bold">${o.count}</span></div>`).join('') || '<p class="text-textDark text-xs">Kosong</p>';
+        const ul = await callAdmin({ action: "used-links" }); document.getElementById('usedContainer').innerHTML = (ul.data || []).slice(0, 30).map(o => `<div class="flex justify-between bg-card p-2 rounded-btn border border-border text-[10px]"><span class="truncate">${o.fp}</span><span class="text-primary font-bold">link: ${o.link_id}</span></div>`).join('') || '<p class="text-textDark text-xs">Kosong</p>';
+    } catch (e) {}
+}
+
+async function fetchSecurity() {
+    try {
+        const b = await callAdmin({ action: "list-blocked" }); document.getElementById('blockedContainer').innerHTML = (b.data || []).map(o => `<div class="flex justify-between bg-[#1F0A0A] border border-danger p-2 rounded-btn text-[10px]"><span class="truncate text-danger">${o.fp}</span><button onclick="unblockFp('${o.fp}')" class="text-success font-bold">UNBLOCK</button></div>`).join('') || '<p class="text-textDark text-xs">Kosong</p>';
+        const h = await callAdmin({ action: "health" }); const d = h.data || {}; document.getElementById('healthContainer').innerHTML = Object.keys(d).map(k => `<div class="flex justify-between bg-card p-2 rounded-btn border border-border text-[10px]"><span>${k}</span><span class="${d[k] >= 200 && d[k] < 500 ? 'text-success' : 'text-danger'}">HTTP ${d[k]}</span></div>`).join('');
+    } catch (e) {}
+}
+async function cleanupExpired() { if (!confirm("Hapus semua key expired?")) return; try { await callAdmin({ action: "cleanup-expired" }); showToast("Cleanup OK", "success"); loadStats(); } catch (e) { showToast(e.message, "error"); } }
+
+// ==========================================
+// --- MODUL 5: WEB UTAMA ---
+// ==========================================
+function loadWebSystem(f, subTab) {
+    if (subTab === 0) {
+        f.innerHTML = `<div class="space-y-4"><button onclick="showGameForm()" class="w-full bg-primary text-bg font-bold text-sm py-3 rounded-btn">+ TAMBAH GAME</button><div id="gamesContainer" class="space-y-3"></div></div>`;
+        fetchGames();
+    } else if (subTab === 1) {
+        f.innerHTML = `<div class="space-y-4"><div class="flex gap-2"><input id="newGameCat" placeholder="Kategori baru..." class="flex-1 bg-input border border-border rounded-btn p-3 text-sm"><button onclick="addGameCategory()" class="bg-primary text-bg font-bold text-xs px-4 rounded-btn">+ TAMBAH</button></div><div id="gameCatContainer" class="space-y-2"></div></div>`;
+        fetchGameCategories();
+    } else if (subTab === 2) {
+        f.innerHTML = `<div class="space-y-4"><input id="gidSearch" placeholder="🔍 Cari Game ID..." class="w-full bg-input border border-border rounded-btn p-3 text-sm"><button onclick="loadGameReviews()" class="w-full bg-primary text-bg font-bold text-xs py-3 rounded-btn">TARIK ULASAN</button><div id="reviewsContainer" class="space-y-2"></div></div>`;
+    } else if (subTab === 3) {
+        f.innerHTML = `
+            <div class="space-y-4 max-w-2xl mx-auto">
+                <div class="flex gap-2 overflow-x-auto no-scrollbar mb-4" id="wsTabs"></div>
+                <div id="wsPageInfo" class="space-y-2">
+                    <input id="wsTitle" placeholder="Site Title" class="w-full bg-input border border-border rounded-btn p-3 text-sm"><textarea id="wsAbout" placeholder="Teks About" rows="3" class="w-full bg-input border border-border rounded-btn p-3 text-sm"></textarea><input id="wsFooter" placeholder="Teks Footer" class="w-full bg-input border border-border rounded-btn p-3 text-sm"><input id="wsSearch" placeholder="Search Placeholder" class="w-full bg-input border border-border rounded-btn p-3 text-sm"><input id="wsAccent" placeholder="Warna Tema (Hex)" class="w-full bg-input border border-border rounded-btn p-3 text-sm">
+                </div>
+                <div id="wsPageWelcome" class="space-y-2 hidden">
+                    <label class="flex items-center text-sm text-textMain mb-2"><input type="checkbox" id="wsWelcomeActive" class="mr-2 accent-primary"> Tampilkan Welcome Modal</label>
+                    <input id="wsWTitle" placeholder="Welcome Title" class="w-full bg-input border border-border rounded-btn p-3 text-sm"><input id="wsWSub" placeholder="Welcome Subtitle" class="w-full bg-input border border-border rounded-btn p-3 text-sm"><input id="wsBtn1T" placeholder="Tombol 1 Teks" class="w-full bg-input border border-border rounded-btn p-3 text-sm"><input id="wsBtn1L" placeholder="Tombol 1 Link" class="w-full bg-input border border-border rounded-btn p-3 text-sm"><input id="wsBtn2T" placeholder="Tombol 2 Teks" class="w-full bg-input border border-border rounded-btn p-3 text-sm"><input id="wsBtn2L" placeholder="Tombol 2 Link" class="w-full bg-input border border-border rounded-btn p-3 text-sm">
+                </div>
+                <div id="wsPageSosmed" class="space-y-2 hidden">
+                    <input id="wsWa" placeholder="Link WA" class="w-full bg-input border border-border rounded-btn p-3 text-sm"><input id="wsTg" placeholder="Link Telegram" class="w-full bg-input border border-border rounded-btn p-3 text-sm"><input id="wsIg" placeholder="Link Instagram" class="w-full bg-input border border-border rounded-btn p-3 text-sm"><input id="wsWaReq" placeholder="Nomor WA Request" class="w-full bg-input border border-border rounded-btn p-3 text-sm">
+                </div>
+                <div id="wsPageSection" class="space-y-2 hidden">
+                    <label class="flex items-center text-sm text-textMain"><input type="checkbox" id="wsShowCarousel" class="mr-2 accent-primary"> Tampilkan Carousel</label>
+                </div>
+                <button onclick="saveWebSettings()" class="w-full bg-primary text-bg font-bold text-sm py-3 rounded-btn mt-4">SIMPAN SETTINGS</button>
+            </div>`;
+        setupWsTabs(); fetchWebSettings();
+    }
+}
+
+async function fetchGames() {
+    const c = document.getElementById('gamesContainer'); if (!c) return;
+    try { const r = await callRest("games?select=*&order=created_at.desc"); if (!r.length) return c.innerHTML = '<p class="text-center text-textDark text-xs py-10">Belum ada game</p>'; c.innerHTML = r.map(o => `<div class="bg-card border border-primary p-4 rounded-card"><p class="font-bold text-sm">${o.title}</p><p class="text-[9px] text-textMuted">${o.developer} · ${o.category} · ${o.game_id}</p><div class="grid grid-cols-2 gap-2 mt-3"><button onclick='showGameForm(${JSON.stringify(o).replace(/'/g, "&#39;")})' class="bg-warning/10 text-warning border border-warning text-[10px] font-bold py-2 rounded-btn">EDIT</button><button onclick="delGame('${o.game_id}')" class="bg-danger/10 text-danger border border-danger text-[10px] font-bold py-2 rounded-btn">DELETE</button></div></div>`).join(''); } catch (e) { showToast("Gagal load game", "error"); }
+}
+
+function showGameForm(edit = null) {
+    // Karena form game aslinya 3 step, kita gabung jadi 1 form scroll panjang biar simpel
+    const h = `<div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 overflow-y-auto"><div class="bg-card p-5 rounded-card w-full max-w-lg my-auto space-y-2"><h3 class="text-primary font-bold mb-2">${edit ? 'Edit' : 'Tambah'} Game</h3>
+        <input id="gId" value="${edit?.game_id || ''}" ${edit ? 'disabled' : ''} placeholder="Game ID (Unik)" class="w-full bg-input border border-border rounded-btn p-2 text-xs">
+        <input id="gTitle" value="${edit?.title || ''}" placeholder="Judul Game" class="w-full bg-input border border-border rounded-btn p-2 text-xs">
+        <input id="gDev" value="${edit?.developer || ''}" placeholder="Developer" class="w-full bg-input border border-border rounded-btn p-2 text-xs">
+        <select id="gType" class="w-full bg-input border border-border rounded-btn p-2 text-xs"><option value="game" ${edit?.app_type === 'game' ? 'selected' : ''}>Game</option><option value="app" ${edit?.app_type === 'app' ? 'selected' : ''}>App</option></select>
+        <input id="gVer" value="${edit?.version || ''}" placeholder="Versi (v1.0.0)" class="w-full bg-input border border-border rounded-btn p-2 text-xs">
+        <textarea id="gCh" placeholder="Changelog" class="w-full bg-input border border-border rounded-btn p-2 text-xs">${edit?.changelog || ''}</textarea>
+        <textarea id="gDesc" placeholder="Deskripsi" class="w-full bg-input border border-border rounded-btn p-2 text-xs">${edit?.desc_game || ''}</textarea>
+        <input id="gCat" value="${edit?.category || ''}" placeholder="Kategori" class="w-full bg-input border border-border rounded-btn p-2 text-xs">
+        <div class="grid grid-cols-2 gap-2"><input id="gLabel" value="${edit?.label_text || ''}" placeholder="Label (HOT)" class="bg-input border border-border rounded-btn p-2 text-xs"><input id="gLabelColor" value="${edit?.label_color || ''}" placeholder="Hex Color" class="bg-input border border-border rounded-btn p-2 text-xs"></div>
+        <input id="gBadge" value="${edit?.badge_text || ''}" placeholder="Badge Text" class="w-full bg-input border border-border rounded-btn p-2 text-xs">
+        <div class="flex gap-4 my-2"><label class="text-xs flex items-center"><input type="checkbox" id="gCarousel" ${edit?.is_carousel ? 'checked' : ''} class="mr-1"> Carousel</label><label class="text-xs flex items-center"><input type="checkbox" id="gFeatured" ${edit?.is_featured ? 'checked' : ''} class="mr-1"> Featured</label></div>
+        <input id="gSec" value="${edit?.security_info || ''}" placeholder="Info Keamanan" class="w-full bg-input border border-border rounded-btn p-2 text-xs">
+        <input id="gApk" value="${edit?.apk_url || ''}" placeholder="Link APK" class="w-full bg-input border border-border rounded-btn p-2 text-xs">
+        <input id="gShare" value="${edit?.share_url || ''}" placeholder="Custom Share URL" class="w-full bg-input border border-border rounded-btn p-2 text-xs">
+        <div class="grid grid-cols-2 gap-2 mt-4"><button onclick="this.closest('.fixed').remove()" class="bg-input border border-border font-bold text-xs py-2 rounded-btn">BATAL</button><button onclick="saveGame('${edit?.game_id || ''}')" class="bg-primary text-bg font-bold text-xs py-2 rounded-btn">SIMPAN</button></div></div></div>`;
+    document.body.insertAdjacentHTML('beforeend', h);
+}
+
+async function saveGame(id) {
+    const data = { game_id: document.getElementById('gId').value, title: document.getElementById('gTitle').value, developer: document.getElementById('gDev').value, app_type: document.getElementById('gType').value, version: document.getElementById('gVer').value, changelog: document.getElementById('gCh').value, desc_game: document.getElementById('gDesc').value, category: document.getElementById('gCat').value, label_text: document.getElementById('gLabel').value, label_color: document.getElementById('gLabelColor').value, badge_text: document.getElementById('gBadge').value, is_carousel: document.getElementById('gCarousel').checked, is_featured: document.getElementById('gFeatured').checked, security_info: document.getElementById('gSec').value, apk_url: document.getElementById('gApk').value, share_url: document.getElementById('gShare').value, is_active: true };
+    if (!data.game_id || !data.title) return showToast("ID & Judul wajib", "error");
+    try { if (id) await callRest(`games?game_id=eq.${id}`, 'PATCH', data, true); else await callRest(`games`, 'POST', data, true); showToast("Tersimpan", "success"); document.querySelector('.fixed.inset-0').remove(); fetchGames(); } catch (e) { showToast(e.message, "error"); }
+}
+async function delGame(id) { if (!confirm("Hapus?")) return; try { await callRest(`games?game_id=eq.${id}`, 'DELETE', null, true); fetchGames(); } catch (e) { showToast(e.message, "error"); } }
+
+async function fetchGameCategories() {
+    const c = document.getElementById('gameCatContainer'); if (!c) return;
+    try { const r = await callRest("game_categories?select=*&order=name.asc"); c.innerHTML = r.map(o => `<div class="flex justify-between bg-card border border-border p-3 rounded-card"><span class="text-sm">${o.name}</span><button onclick="delGameCategory('${o.id}')" class="text-danger text-[10px] font-bold">DELETE</button></div>`).join(''); } catch (e) {}
+}
+async function addGameCategory() { const n = document.getElementById('newGameCat').value.trim().toUpperCase(); if (!n) return; try { await callRest("game_categories", 'POST', { name: n }, true); document.getElementById('newGameCat').value = ''; fetchGameCategories(); } catch (e) { showToast(e.message, "error"); } }
+async function delGameCategory(id) { try { await callRest(`game_categories?id=eq.${id}`, 'DELETE', null, true); fetchGameCategories(); } catch (e) {} }
+
+async function loadGameReviews() {
+    const gid = document.getElementById('gidSearch').value.trim(); if (!gid) return showToast("Masukkan Game ID", "error");
+    const c = document.getElementById('reviewsContainer'); c.innerHTML = '<p class="text-primary animate-pulse text-xs">Loading...</p>';
+    try { const r = await callRest(`game_reviews?game_id=eq.${gid}&order=created_at.desc`); if (!r.length) return c.innerHTML = '<p class="text-textDark text-xs py-4">Belum ada ulasan</p>'; c.innerHTML = r.map(o => `<div class="bg-card border border-border p-3 rounded-card"><p class="text-primary font-bold text-xs">${o.name} • ${o.rating}★</p><p class="text-textMain text-[11px] mt-1 mb-2">${o.review_text}</p><button onclick="delReview('${o.id}')" class="bg-danger/10 text-danger border border-danger text-[10px] font-bold px-3 py-1 rounded-btn">HAPUS</button></div>`).join(''); } catch (e) { showToast(e.message, "error"); }
+}
+async function delReview(id) { try { await callRest(`game_reviews?id=eq.${id}`, 'DELETE', null, true); loadGameReviews(); } catch (e) {} }
+
+function setupWsTabs() {
+    const tabs = ['Info', 'Welcome', 'Sosmed', 'Section'], pages = ['wsPageInfo', 'wsPageWelcome', 'wsPageSosmed', 'wsPageSection'], c = document.getElementById('wsTabs');
+    c.innerHTML = tabs.map((t, i) => `<button onclick="switchWsTab(${i})" class="ws-tab whitespace-nowrap px-4 py-1.5 text-xs font-bold rounded-btn transition-colors ${i===0?'bg-primary text-bg':'bg-input text-textMuted border border-border'}" data-idx="${i}">${t}</button>`).join('');
+}
+function switchWsTab(idx) {
+    document.querySelectorAll('.ws-tab').forEach((b, i) => { b.className = `ws-tab whitespace-nowrap px-4 py-1.5 text-xs font-bold rounded-btn transition-colors ${i===idx?'bg-primary text-bg':'bg-input text-textMuted border border-border'}`; });
+    ['wsPageInfo', 'wsPageWelcome', 'wsPageSosmed', 'wsPageSection'].forEach((id, i) => { const el = document.getElementById(id); if (el) el.classList.toggle('hidden', i !== idx); });
+}
+
+async function fetchWebSettings() {
+    try {
+        const r = await callRest("web_settings?select=*"); const map = {}; r.forEach(o => map[o.key] = o.value);
+        const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+        const setChk = (id, val) => { const el = document.getElementById(id); if (el) el.checked = val === 'true'; };
+        setVal('wsTitle', map.site_title); setVal('wsAbout', map.about_text); setVal('wsFooter', map.footer_text); setVal('wsSearch', map.search_placeholder); setVal('wsAccent', map.accent_color);
+        setChk('wsWelcomeActive', map.welcome_active); setVal('wsWTitle', map.welcome_title); setVal('wsWSub', map.welcome_subtitle); setVal('wsBtn1T', map.welcome_btn1_text); setVal('wsBtn1L', map.welcome_btn1_link); setVal('wsBtn2T', map.welcome_btn2_text); setVal('wsBtn2L', map.welcome_btn2_link);
+        setVal('wsWa', map.wa_channel); setVal('wsTg', map.tg_channel); setVal('wsIg', map.ig_channel); setVal('wsWaReq', map.wa_request); setChk('wsShowCarousel', map.show_carousel);
+    } catch (e) {}
+}
+
+async function saveWebSettings() {
+    const updates = [
+        { key: 'site_title', value: document.getElementById('wsTitle').value }, { key: 'about_text', value: document.getElementById('wsAbout').value }, { key: 'footer_text', value: document.getElementById('wsFooter').value }, { key: 'search_placeholder', value: document.getElementById('wsSearch').value }, { key: 'accent_color', value: document.getElementById('wsAccent').value },
+        { key: 'welcome_active', value: document.getElementById('wsWelcomeActive').checked ? 'true' : 'false' }, { key: 'welcome_title', value: document.getElementById('wsWTitle').value }, { key: 'welcome_subtitle', value: document.getElementById('wsWSub').value }, { key: 'welcome_btn1_text', value: document.getElementById('wsBtn1T').value }, { key: 'welcome_btn1_link', value: document.getElementById('wsBtn1L').value }, { key: 'welcome_btn2_text', value: document.getElementById('wsBtn2T').value }, { key: 'welcome_btn2_link', value: document.getElementById('wsBtn2L').value },
+        { key: 'wa_channel', value: document.getElementById('wsWa').value }, { key: 'tg_channel', value: document.getElementById('wsTg').value }, { key: 'ig_channel', value: document.getElementById('wsIg').value }, { key: 'wa_request', value: document.getElementById('wsWaReq').value }, { key: 'show_carousel', value: document.getElementById('wsShowCarousel').checked ? 'true' : 'false' }
+    ];
+    try {
+        for (const u of updates) {
+            const existing = await callRest(`web_settings?key=eq.${u.key}`, 'GET');
+            if (existing.length > 0) await callRest(`web_settings?key=eq.${u.key}`, 'PATCH', u, true);
+            else await callRest('web_settings', 'POST', u, true);
+        }
+        showToast("Settings tersimpan", "success");
+    } catch (e) { showToast(e.message, "error"); }
+}
+
+        // --- BOOTSTRAP ---
+        document.addEventListener('DOMContentLoaded', () => { initSidebar(); openMenu(0); });
+    </script>
+</body>
+</html>
