@@ -46,13 +46,13 @@ nav.bnav{position:fixed;bottom:0;left:0;right:0;z-index:40;background:var(--nav-
 .page{display:none;animation:fadeUp 0.3s ease forwards}
 .page.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.grid-card{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.grid-card{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .card{background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;overflow:hidden;cursor:pointer;transition:0.2s;position:relative}
 .card:hover{border-color:var(--accent);transform:translateY(-2px)}
 .card-img{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--border-color)}
-.card-body{padding:12px}
-.card-title{font-size:13px;font-weight:800;margin-bottom:2px}
-.card-sub{font-size:11px;color:var(--text-muted);margin-bottom:8px}
+.card-body{padding:8px}
+.card-title{font-size:12px;font-weight:800;margin-bottom:2px}
+.card-sub{font-size:10px;color:var(--text-muted);margin-bottom:6px}
 .card-meta{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--text-muted)}
 .badge{position:absolute;top:8px;left:8px;font-size:10px;font-weight:900;padding:4px 8px;border-radius:6px;color:#fff;text-transform:uppercase}
 .btn-fav{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:#fff;z-index:10;cursor:pointer}
