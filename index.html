@@ -76,9 +76,11 @@ nav.bnav{position:fixed;bottom:0;left:0;right:0;z-index:40;background:var(--nav-
 #toast.err{background:var(--danger)}
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;color:var(--text-muted);font-size:12px;grid-column:1/-1}
 .empty-state svg{width:40px;height:40px;margin-bottom:8px;opacity:0.5}
-.carousel-wrap{overflow:hidden;border-radius:16px;margin-bottom:16px;position:relative;width:100%}
+.carousel-wrap{overflow:hidden;border-radius:16px;margin-bottom:16px;position:relative;width:100%;-webkit-mask-image:linear-gradient(to right,transparent,black 5%,black 95%,transparent);mask-image:linear-gradient(to right,transparent,black 5%,black 95%,transparent)}
 .carousel-track{display:flex;transition:transform 0.7s ease-in-out;will-change:transform;width:100%}
-.carousel-slide{flex:0 0 100%;padding:16px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;display:flex;align-items:center;gap:12px;box-sizing:border-box}
+.carousel-slide{flex:0 0 100%;padding:16px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;display:flex;align-items:center;gap:12px;box-sizing:border-box;position:relative;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.carousel-slide::after{content:"";position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(to right,rgba(255,255,255,0) 0%,rgba(255,255,255,0.15) 50%,rgba(255,255,255,0) 100%);transform:skewX(-25deg);animation:shimmer-slide 3s infinite}
+@keyframes shimmer-slide{0%{left:-100%}100%{left:200%}}
 .carousel-dots{display:flex;justify-content:center;gap:6px;padding:8px 0;position:absolute;bottom:0;left:0;right:0}
 .carousel-dot{width:6px;height:6px;border-radius:3px;background:var(--text-muted);transition:all 0.3s}
 .carousel-dot.active{width:16px;background:var(--accent)}
