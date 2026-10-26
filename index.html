@@ -14,7 +14,8 @@ html.dark{--bg-body:#050506;--text-main:#f8fafc;--text-muted:#94a3b8;--card-bg:#
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
 body{background-color:var(--bg-body);color:var(--text-main);font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:80px;overflow-x:hidden;transition:background-color 0.3s}
 input,textarea{-webkit-user-select:text;user-select:text}
-.container{max-width:600px;margin:0 auto;padding:0 16px}
+.container{max-width:1200px;margin:0 auto;padding:0 16px;transition:max-width 0.3s}
+@media(max-width:768px){.container{max-width:600px}}
 h1,h2,h3,h4{font-weight:800;line-height:1.2}
 .text-xs{font-size:12px}.text-sm{font-size:14px}.text-base{font-size:16px}.text-lg{font-size:18px}.text-xl{font-size:20px}
 .text-muted{color:var(--text-muted)}.text-accent{color:var(--accent)}.text-danger{color:var(--danger)}.text-white{color:#fff}
@@ -44,10 +45,12 @@ nav.bnav{position:fixed;bottom:0;left:0;right:0;z-index:40;background:var(--nav-
 .bnav-item{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
 .bnav-item svg{width:24px;height:24px}
 .bnav-item.active{color:var(--accent)}
-.page{display:none;animation:fadeUp 0.4s ease forwards}
+.page{display:none;animation:fadeIn 0.4s ease forwards}
 .page.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 .grid-card{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(min-width:769px){.grid-card{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}}
 .card{background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;overflow:hidden;cursor:pointer;transition:0.2s;position:relative;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
 .card:hover{border-color:var(--accent);transform:translateY(-2px)}
 .card-img{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--border-color)}
@@ -72,16 +75,14 @@ nav.bnav{position:fixed;bottom:0;left:0;right:0;z-index:40;background:var(--nav-
 .chip.active{background:var(--accent);color:#fff;border-color:transparent}
 .skeleton{background:linear-gradient(90deg,rgba(255,255,255,0.05) 25%,rgba(255,255,255,0.1) 50%,rgba(255,255,255,0.05) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:12px;aspect-ratio:1/1}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-#toast{position:fixed;top:20px;left:50%;transform:translate(-50%,-100px);background:var(--success);color:#fff;padding:12px 24px;border-radius:12px;font-weight:bold;font-size:14px;z-index:9999;opacity:0;transition:0.3s;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+#toast{position:fixed;top:20px;left:50%;transform:translate(-50%,-120px);background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:14px 24px;border-radius:14px;font-weight:800;font-size:13px;z-index:9999;opacity:0;transition:0.4s cubic-bezier(0.16,1,0.3,1);box-shadow:0 10px 30px rgba(16,185,129,0.4);display:flex;align-items:center;gap:8px;min-width:200px;justify-content:center}
 #toast.show{transform:translate(-50%,0);opacity:1}
-#toast.err{background:var(--danger)}
+#toast.err{background:linear-gradient(135deg,#ef4444,#b91c1c);box-shadow:0 10px 30px rgba(239,68,68,0.4)}
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;color:var(--text-muted);font-size:12px;grid-column:1/-1}
 .empty-state svg{width:40px;height:40px;margin-bottom:8px;opacity:0.5}
 .carousel-wrap{overflow:hidden;border-radius:16px;margin-bottom:16px;position:relative;width:100%;-webkit-mask-image:linear-gradient(to right,transparent,black 5%,black 95%,transparent);mask-image:linear-gradient(to right,transparent,black 5%,black 95%,transparent)}
 .carousel-track{display:flex;transition:transform 0.7s ease-in-out;will-change:transform;width:100%}
 .carousel-slide{flex:0 0 100%;padding:16px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;display:flex;align-items:center;gap:12px;box-sizing:border-box;position:relative;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
-.carousel-slide::after{content:"";position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(to right,rgba(255,255,255,0) 0%,rgba(255,255,255,0.15) 50%,rgba(255,255,255,0) 100%);transform:skewX(-25deg);animation:shimmer-slide 3s infinite}
-@keyframes shimmer-slide{0%{left:-100%}100%{left:200%}}
 .carousel-dots{display:flex;justify-content:center;gap:6px;padding:8px 0;position:absolute;bottom:0;left:0;right:0}
 .carousel-dot{width:6px;height:6px;border-radius:3px;background:var(--text-muted);transition:all 0.3s}
 .carousel-dot.active{width:16px;background:var(--accent)}
@@ -93,11 +94,13 @@ nav.bnav{position:fixed;bottom:0;left:0;right:0;z-index:40;background:var(--nav-
 .sosmed-toggle{width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;border-radius:8px;background:transparent;border:1px solid var(--border-color);color:var(--text-muted);cursor:pointer;font-size:11px;font-weight:700;margin-bottom:8px;transition:0.2s}
 .sosmed-toggle:hover{color:var(--accent);border-color:var(--accent)}
 .skeleton-search{background:linear-gradient(90deg,rgba(255,255,255,0.05) 25%,rgba(255,255,255,0.1) 50%,rgba(255,255,255,0.05) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:12px;height:60px;margin-bottom:8px}
+#watermark{position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.03;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:100px;overflow:hidden;transform:rotate(-25deg);font-size:24px;font-weight:900;color:#fff;white-space:nowrap}
 </style>
 </head>
 <body>
+<div id="watermark"></div>
 <div id="globalLoader" style="display:none; position:fixed; inset:0; background:var(--bg-body); z-index:9999; align-items:center; justify-content:center;"><div class="skeleton" style="width:50px; height:50px; border-radius:50%;"></div></div>
-<div id="toast">Pesan</div>
+<div id="toast"></div>
 <button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg></button>
 <header>
 <button onclick="toggleSidebar()" class="btn-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
@@ -139,6 +142,7 @@ nav.bnav{position:fixed;bottom:0;left:0;right:0;z-index:40;background:var(--nav-
 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
 <input type="text" id="searchPageInput" placeholder="Cari aplikasi atau game..." oninput="handleSearchPage(this.value)" onkeypress="if(event.key==='Enter'){saveSearchHistory(this.value);handleSearchPage(this.value)}" autocomplete="off">
 </div>
+<div id="searchFilterContainer" class="chips-wrap" style="display:none;"></div>
 <div id="searchHistoryContainer" class="mb-4"></div>
 <div id="searchSuggestionsWrap">
 <div class="sec-head mt-4"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><h2>Rekomendasi Pencarian</h2></div>
@@ -149,8 +153,14 @@ nav.bnav{position:fixed;bottom:0;left:0;right:0;z-index:40;background:var(--nav-
 <div class="flex-col gap-3" id="searchResultGrid"></div>
 </div>
 <div id="page-chat" class="page hidden">
-<div style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;overflow:hidden;height:500px;margin-top:16px;">
-<iframe src="https://www5.cbox.ws/box/?boxid=967298&boxtag=LBrRLM" width="100%" height="100%" frameborder="0" style="border:none;"></iframe>
+<div id="chatContainer" style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;overflow:hidden;height:500px;margin-top:16px;position:relative;">
+<div id="chatError" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;">
+<svg style="width:48px;height:48px;color:var(--text-muted);margin-bottom:12px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+<div style="font-size:14px;font-weight:700;color:var(--text-main);margin-bottom:4px;">Chat Offline</div>
+<div style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">Server chat sedang tidak tersedia atau koneksi terputus.</div>
+<button onclick="reloadChat()" style="background:var(--accent);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer;">Muat Ulang</button>
+</div>
+<iframe id="chatIframe" src="https://www5.cbox.ws/box/?boxid=967298&boxtag=LBrRLM" width="100%" height="100%" frameborder="0" style="border:none;" onerror="showChatError()"></iframe>
 </div>
 </div>
 <div id="page-request" class="page hidden">
@@ -240,14 +250,29 @@ nav.bnav{position:fixed;bottom:0;left:0;right:0;z-index:40;background:var(--nav-
 <a href="#" onclick="showPage('about');return false" data-nav="about" class="bnav-item"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>About</a>
 </nav>
 <script>
-const SB_URL='https://qlzwqbbvjscfjaicbhks.supabase.co',SB_KEY='sb_publishable_DRIOqI7O90TinECl4K6FJA_l0nIaPCY',HDR={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};let games=[],categories=[],stats=[],history=[],curGame=null,settings={},currentRating=0,favSet=new Set(),statMap={};
+const SB_URL='https://qlzwqbbvjscfjaicbhks.supabase.co',SB_KEY='sb_publishable_DRIOqI7O90TinECl4K6FJA_l0nIaPCY',HDR={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
+let games=[],categories=[],stats=[],history=[],curGame=null,settings={},currentRating=0,favSet=new Set(),statMap={},currentSearchQuery='';
 function gantiURL(path){window.history.pushState({},'',path)}
 window.addEventListener('popstate',function(){const path=window.location.pathname;if(path==='/'||path===''||path==='/index.html'){showPage('home')}else if(path.startsWith('/game/')){const id=path.split('/')[2];openDetail(id)}});
-function showToast(msg,isErr=false){let t=document.getElementById('toast');t.innerText=msg;t.className=isErr?'err show':'show';setTimeout(()=>{t.className=''},3000)}
+function showToast(msg,isErr=false){let t=document.getElementById('toast');t.innerHTML=(isErr?'❌ ':'✅ ')+msg;t.className=isErr?'err show':'show';setTimeout(()=>{t.className=''},3000)}
 function toggleTheme(){let isDark=document.documentElement.classList.contains('dark');if(isDark){document.documentElement.classList.remove('dark');localStorage.setItem('theme','light')}else{document.documentElement.classList.add('dark');localStorage.setItem('theme','dark')}}
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('show');document.getElementById('sidebarBg').classList.toggle('show')}
 function escapeHTML(str){return String(str).replace(/[&<>'"]/g,function(tag){return{'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[tag]})}
-function showPage(p){document.querySelectorAll('.page').forEach(el=>{el.classList.remove('active');el.classList.add('hidden')});document.querySelectorAll('.bnav-item').forEach(el=>el.classList.remove('active'));let target=document.getElementById('page-'+p);if(target){target.classList.remove('hidden');target.classList.add('active')}document.querySelectorAll(`[data-nav="${p}"]`).forEach(el=>el.classList.add('active'));window.scrollTo(0,0);if(p==='search'){setTimeout(()=>document.getElementById('searchPageInput').focus(),100);renderSearchSuggestions();renderSearchHistory();renderExploreCategories();document.getElementById('searchSuggestionsWrap').style.display='block'}if(p==='home'){gantiURL('/');setTimeout(()=>window.scrollTo(0,parseInt(sessionStorage.getItem('scrollPos')||0)),50)}else if(p!=='detail')gantiURL('/'+p)}
+function showPage(p){
+  document.querySelectorAll('.page').forEach(el=>{el.classList.remove('active');el.classList.add('hidden')});
+  document.querySelectorAll('.bnav-item').forEach(el=>el.classList.remove('active'));
+  let target=document.getElementById('page-'+p);if(target){target.classList.remove('hidden');target.classList.add('active')}
+  document.querySelectorAll(`[data-nav="${p}"]`).forEach(el=>el.classList.add('active'));
+  window.scrollTo(0,0);
+  if(p==='search'){
+    renderSearchSuggestions();renderSearchHistory();renderExploreCategories();
+    document.getElementById('searchSuggestionsWrap').style.display='block';
+    if(currentSearchQuery){handleSearchPage(currentSearchQuery,true)}
+  }
+  if(p==='chat'){reloadChat()}
+  if(p==='home'){gantiURL('/');setTimeout(()=>window.scrollTo(0,parseInt(sessionStorage.getItem('scrollPos')||0)),50)}
+  else if(p!=='detail'){gantiURL('/'+p)}
+}
 function getFp(){try{let p=[navigator.userAgent,navigator.language,screen.width+'x'+screen.height,(Intl.DateTimeFormat().resolvedOptions().timeZone)],raw=p.join('|'),h=5381;for(let i=0;i<raw.length;i++){h=((h<<5)+h)+raw.charCodeAt(i);h=h&h}return'F'+Math.abs(h).toString(36)}catch(e){return'F_fallback'}}
 const FP=getFp();
 async function sbGet(path){const r=await fetch(SB_URL+'/rest/v1/'+path,{headers:HDR});return r.ok?r.json():[]}
@@ -256,22 +281,136 @@ async function sbDel(path){const r=await fetch(SB_URL+'/rest/v1/'+path,{method:'
 function getStat(k){return statMap[k]||0}
 function formatNumber(num){if(num>=1000000)return(num/1000000).toFixed(1).replace('.0','')+'M';if(num>=1000)return(num/1000).toFixed(1).replace('.0','')+'K';return num.toString();}
 function renderCard(g,isFav){return`<div class="card" onclick="openDetail('${g.game_id}')"><img src="${g.img||'https://via.placeholder.com/150'}" class="card-img" loading="lazy">${g.label_text?`<span class="badge" style="background:${g.label_color||'#EF4444'}">${escapeHTML(g.label_text)}</span>`:''}<button class="btn-fav ${isFav?'active':''}" onclick="event.stopPropagation();toggleFav('${g.game_id}',this)"><svg fill="${isFav?'currentColor':'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button><div class="card-body"><h4 class="card-title truncate">${escapeHTML(g.title)}</h4><div class="card-sub truncate">${escapeHTML(g.developer||'Unknown')}</div><div class="card-meta"><span class="flex items-center gap-1"><svg style="width:12px;height:12px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> ${formatNumber(getStat(g.game_id))}</span><span class="flex items-center gap-1" style="color:#eab308;"><svg style="width:12px;height:12px;" fill="currentColor" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${g.rating_avg||'0.0'}</span></div></div></div>`}
-function renderSearchResultCard(g){return`<div class="card" style="display:flex;align-items:center;padding:12px;gap:12px;margin-bottom:8px;border-radius:16px;" onclick="openDetail('${g.game_id}')"><img src="${g.img||'https://via.placeholder.com/150'}" style="width:64px;height:64px;border-radius:12px;object-fit:cover;flex-shrink:0;"><div style="flex:1;min-width:0;"><h4 style="font-size:14px;font-weight:900;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(g.title)}</h4><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">${escapeHTML(g.developer||'Unknown')} • ${escapeHTML(g.category||'Game')}</div><div style="display:flex;gap:12px;font-size:11px;font-weight:700;color:var(--text-muted);"><span style="color:#eab308;">★ ${g.rating_avg||'0.0'}</span><span>${formatNumber(getStat(g.game_id))} Download</span></div></div><div style="background:var(--accent);color:#fff;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:700;flex-shrink:0;">Download</div></div>`}
+function renderSearchResultCard(g){
+  return`<div class="card" style="display:flex;align-items:center;padding:12px;gap:12px;margin-bottom:8px;border-radius:16px;" onclick="openDetail('${g.game_id}')">
+    <img src="${g.img||'https://via.placeholder.com/150'}" style="width:64px;height:64px;border-radius:12px;object-fit:cover;flex-shrink:0;">
+    <div style="flex:1;min-width:0;">
+      <h4 style="font-size:14px;font-weight:900;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(g.title)}</h4>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">${escapeHTML(g.developer||'Unknown')} • ${escapeHTML(g.category||'Game')}</div>
+      <div style="display:flex;gap:12px;font-size:11px;font-weight:700;color:var(--text-muted);"><span style="color:#eab308;">★ ${g.rating_avg||'0.0'}</span><span>${formatNumber(getStat(g.game_id))} Download</span></div>
+    </div>
+  </div>`
+}
 function renderEmptyState(containerId,msg){const c=document.getElementById(containerId);if(c)c.innerHTML=`<div class="empty-state"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><p>${msg}</p></div>`}
 async function loadFavs(){let f=await sbGet('favorites?fp_hash=eq.'+encodeURIComponent(FP)+'&select=game_key');favSet=new Set(f.map(x=>x.game_key))}
 async function toggleFav(id,el){if(favSet.has(id)){await sbDel(`favorites?game_key=eq.${id}&fp_hash=eq.${encodeURIComponent(FP)}`);favSet.delete(id);el.classList.remove('active');el.querySelector('svg').setAttribute('fill','none')}else{await sbPost('favorites',{game_key:id,fp_hash:FP});favSet.add(id);el.classList.add('active');el.querySelector('svg').setAttribute('fill','currentColor')}}
-async function initHome(){document.getElementById('mainGrid').innerHTML='<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';try{let settRows=await sbGet('web_settings?select=*');settRows.forEach(s=>settings[s.key]=s.value);document.querySelectorAll('.sb-title').forEach(el=>el.innerText=settings.site_title||'BXIT ID');if(settings.about_text)document.getElementById('abText1').innerText=settings.about_text;if(settings.footer_text)document.getElementById('abText2').innerText=settings.footer_text;if(settings.wa_channel){document.getElementById('abWa').href=settings.wa_channel;document.getElementById('sbWa').href=settings.wa_channel}if(settings.tg_channel){document.getElementById('abTg').href=settings.tg_channel;document.getElementById('sbTg').href=settings.tg_channel}document.getElementById('sbIg').href=settings.ig_channel||'#';if(settings.accent_color){document.documentElement.style.setProperty('--accent',settings.accent_color)}document.getElementById('searchPageInput').placeholder=settings.search_placeholder||'Cari aplikasi atau game...';document.getElementById('welTitle').innerText=settings.welcome_title||'WELCOME!';document.getElementById('welSub').innerText=settings.welcome_subtitle||'FREE TRIAL ACTIVE: ALL MODS INCLUDED';document.getElementById('welWa').innerText=settings.welcome_btn1_text||'WhatsApp Community';document.getElementById('welWa').href=settings.welcome_btn1_link||settings.wa_channel||'#';document.getElementById('welTg').innerText=settings.welcome_btn2_text||'Telegram Community';document.getElementById('welTg').href=settings.welcome_btn2_link||settings.tg_channel||'#';if(String(settings.show_carousel)==='false')document.getElementById('carouselContainer').style.display='none';games=await sbGet('games?is_active=eq.true&order=created_at.desc');let allRevs=await sbGet('game_reviews?select=game_id,rating');let ratingMap={};allRevs.forEach(r=>{if(!ratingMap[r.game_id])ratingMap[r.game_id]=[];ratingMap[r.game_id].push(r.rating)});games.forEach(g=>{let arr=ratingMap[g.game_id]||[];g.rating_avg=arr.length?(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1):'0.0'});categories=await sbGet('game_categories?select=*&order=name.asc');stats=await sbGet('stats?select=game_key,count&stat_type=eq.download').then(rows=>{let c={};(rows||[]).forEach(r=>{c[r.game_key]=(c[r.game_key]||0)+r.count});return Object.keys(c).map(k=>({game_key:k,download:c[k]}))});statMap={};stats.forEach(s=>{statMap[s.game_key]=s.download});await loadFavs();history=JSON.parse(localStorage.getItem('bx_hist')||'[]');await renderCarousel();renderFilters();if(games.length===0){renderEmptyState('mainGrid','Belum ada game tersedia.')}else{document.getElementById('mainGrid').innerHTML=games.map(g=>renderCard(g,favSet.has(g.game_id))).join('')}if(String(settings.welcome_active)==='true'){setTimeout(()=>{document.getElementById('welcomeModal').style.display='flex'},1500)}}catch(e){renderEmptyState('mainGrid','Gagal memuat data. Cek koneksi internet lu.');showToast('Gagal memuat data dari server',true)}return true}
+
+function buildWatermark(){
+  const wm=document.getElementById('watermark');
+  if(!wm)return;
+  let html='';
+  for(let i=0;i<40;i++){html+='<span>BXIT MY ID</span>';}
+  wm.innerHTML=html;
+}
+
+async function initHome(){
+  buildWatermark();
+  document.getElementById('mainGrid').innerHTML='<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
+  try{
+    let settRows=await sbGet('web_settings?select=*');settRows.forEach(s=>settings[s.key]=s.value);
+    document.querySelectorAll('.sb-title').forEach(el=>el.innerText=settings.site_title||'BXIT ID');
+    if(settings.about_text)document.getElementById('abText1').innerText=settings.about_text;
+    if(settings.footer_text)document.getElementById('abText2').innerText=settings.footer_text;
+    if(settings.wa_channel){document.getElementById('abWa').href=settings.wa_channel;document.getElementById('sbWa').href=settings.wa_channel}
+    if(settings.tg_channel){document.getElementById('abTg').href=settings.tg_channel;document.getElementById('sbTg').href=settings.tg_channel}
+    document.getElementById('sbIg').href=settings.ig_channel||'#';
+    if(settings.accent_color){document.documentElement.style.setProperty('--accent',settings.accent_color)}
+    document.getElementById('searchPageInput').placeholder=settings.search_placeholder||'Cari aplikasi atau game...';
+    document.getElementById('welTitle').innerText=settings.welcome_title||'WELCOME!';
+    document.getElementById('welSub').innerText=settings.welcome_subtitle||'FREE TRIAL ACTIVE: ALL MODS INCLUDED';
+    document.getElementById('welWa').innerText=settings.welcome_btn1_text||'WhatsApp Community';
+    document.getElementById('welWa').href=settings.welcome_btn1_link||settings.wa_channel||'#';
+    document.getElementById('welTg').innerText=settings.welcome_btn2_text||'Telegram Community';
+    document.getElementById('welTg').href=settings.welcome_btn2_link||settings.tg_channel||'#';
+    if(String(settings.show_carousel)==='false')document.getElementById('carouselContainer').style.display='none';
+    games=await sbGet('games?is_active=eq.true&order=created_at.desc');
+    let allRevs=await sbGet('game_reviews?select=game_id,rating');let ratingMap={};
+    allRevs.forEach(r=>{if(!ratingMap[r.game_id])ratingMap[r.game_id]=[];ratingMap[r.game_id].push(r.rating)});
+    games.forEach(g=>{let arr=ratingMap[g.game_id]||[];g.rating_avg=arr.length?(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1):'0.0'});
+    categories=await sbGet('game_categories?select=*&order=name.asc');
+    stats=await sbGet('stats?select=game_key,count&stat_type=eq.download').then(rows=>{let c={};(rows||[]).forEach(r=>{c[r.game_key]=(c[r.game_key]||0)+r.count});return Object.keys(c).map(k=>({game_key:k,download:c[k]}))});
+    statMap={};stats.forEach(s=>{statMap[s.game_key]=s.download});
+    await loadFavs();history=JSON.parse(localStorage.getItem('bx_hist')||'[]');
+    await renderCarousel();renderFilters();
+    if(games.length===0){renderEmptyState('mainGrid','Belum ada game tersedia.')}else{document.getElementById('mainGrid').innerHTML=games.map(g=>renderCard(g,favSet.has(g.game_id))).join('')}
+    if(String(settings.welcome_active)==='true'){setTimeout(()=>{document.getElementById('welcomeModal').style.display='flex'},1500)}
+  }catch(e){renderEmptyState('mainGrid','Gagal memuat data. Cek koneksi internet lu.');showToast('Gagal memuat data dari server',true)}
+  return true
+}
 async function renderCarousel(){let c=document.getElementById('carouselContainer');if(!c)return;try{let banners=await sbGet('banners?is_active=eq.true');if(!banners||!banners.length){c.style.display='none';return}c.style.display='block';c.innerHTML=`<div class="carousel-wrap"><div class="carousel-track" id="carTrack">${banners.map(b=>`<div class="carousel-slide" style="padding:0;overflow:hidden;position:relative;height:180px;" ${b.link_url?`onclick="window.open('${escapeHTML(b.link_url)}','_blank')"`:''}><img src="${escapeHTML(b.img_url)}" style="width:100%;height:100%;object-fit:cover;"></div>`).join('')}</div><div class="carousel-dots" id="carDots">${banners.map((_,i)=>`<div class="carousel-dot ${i===0?'active':''}"></div>`).join('')}</div></div>`;let currentSlide=0;const track=document.getElementById('carTrack');const dots=document.querySelectorAll('.carousel-dot');if(banners.length>1){setInterval(()=>{currentSlide=(currentSlide+1)%banners.length;track.style.transform=`translateX(-${currentSlide*100}%)`;dots.forEach((dot,i)=>{if(i===currentSlide)dot.classList.add('active');else dot.classList.remove('active')})},4000)}}catch(e){console.log('Banner belum siap atau error:',e);c.style.display='none';}}
+
 function renderFilters(){let h=`<button class="chip active" onclick="filterCat(this,'all')">All</button>`;categories.filter(c=>c.is_home_filter).forEach(c=>h+=`<button class="chip" onclick="filterCat(this,'${escapeHTML(c.name)}')">${escapeHTML(c.name)}</button>`);document.getElementById('filterContainer').innerHTML=h}
-function filterCat(el,cat){document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');let f=cat==='all'?games:games.filter(g=>g.category===cat);if(f.length===0){renderEmptyState('mainGrid','Tidak ada game di kategori ini.')}else{document.getElementById('mainGrid').innerHTML=f.map(g=>renderCard(g,favSet.has(g.game_id))).join('')}}
+function filterCat(el,cat){document.querySelectorAll('#filterContainer .chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');let f=cat==='all'?games:games.filter(g=>g.category===cat);if(f.length===0){renderEmptyState('mainGrid','Tidak ada game di kategori ini.')}else{document.getElementById('mainGrid').innerHTML=f.map(g=>renderCard(g,favSet.has(g.game_id))).join('')}}
 function renderGridAll(){document.getElementById('mainGrid').innerHTML=games.map(g=>renderCard(g,favSet.has(g.game_id))).join('')}
+
 function saveSearchHistory(q){if(!q||q.trim()==='')return;let h=JSON.parse(localStorage.getItem('bx_hist')||'[]');q=q.trim();h=h.filter(x=>x.toLowerCase()!==q.toLowerCase());h.unshift(q);localStorage.setItem('bx_hist',JSON.stringify(h.slice(0,10)));history=h;renderSearchHistory()}
 function renderSearchHistory(){let c=document.getElementById('searchHistoryContainer');if(!c)return;let h=JSON.parse(localStorage.getItem('bx_hist')||'[]');if(h.length===0){c.innerHTML='';return}c.innerHTML=`<div class="sec-head"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><h2>Riwayat Pencarian</h2></div>`+h.map(x=>`<div class="chip" style="display:block;margin-bottom:8px;text-align:left;" onclick="document.getElementById('searchPageInput').value='${escapeHTML(x)}';handleSearchPage('${escapeHTML(x)}')">${escapeHTML(x)}</div>`).join('')}
 function renderExploreCategories(){let c=document.getElementById('exploreCategories');if(!c)return;if(categories.length===0){c.innerHTML='';return}c.innerHTML=categories.map(cat=>`<div class="card tap-effect" style="padding:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="document.getElementById('searchPageInput').value='${escapeHTML(cat.name)}';handleSearchPage('${escapeHTML(cat.name)}');"><span style="font-size:13px;font-weight:700;">${escapeHTML(cat.name)}</span><svg style="width:16px;height:16px;color:var(--text-muted);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>`).join('')}
-function handleSearchPage(q){let hB=document.getElementById('searchHistoryContainer'),sB=document.getElementById('searchSuggestionsWrap'),rB=document.getElementById('searchResultGrid');if(!q||q.trim()===''){hB.style.display='block';sB.style.display='block';rB.innerHTML='';renderSearchHistory();return}hB.style.display='none';sB.style.display='none';rB.innerHTML='<div class="skeleton-search"></div><div class="skeleton-search"></div><div class="skeleton-search"></div>';setTimeout(()=>{let f=games.filter(g=>g.title.toLowerCase().includes(q.toLowerCase())||(g.developer||'').toLowerCase().includes(q.toLowerCase()));if(f.length===0){renderEmptyState('searchResultGrid','Game tidak ditemukan.')}else{rB.innerHTML=f.map(g=>renderSearchResultCard(g)).join('')}},300)}
+
+function renderSearchFilters(){
+  let c=document.getElementById('searchFilterContainer');if(!c)return;
+  let html=`<button class="chip active" onclick="setSearchFilter(this,'all')">All</button>`;
+  categories.forEach(cat=>{html+=`<button class="chip" onclick="setSearchFilter(this,'${escapeHTML(cat.name)}')">${escapeHTML(cat.name)}</button>`});
+  c.innerHTML=html;
+}
+function setSearchFilter(el,cat){
+  document.querySelectorAll('#searchFilterContainer .chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');
+  handleSearchPage(document.getElementById('searchPageInput').value||'',true,cat);
+}
+function handleSearchPage(q,skipFocus=false,forceCat=null){
+  currentSearchQuery=q;
+  let hB=document.getElementById('searchHistoryContainer'),sB=document.getElementById('searchSuggestionsWrap'),rB=document.getElementById('searchResultGrid'),fB=document.getElementById('searchFilterContainer');
+  if(!q||q.trim()===''){
+    if(hB)hB.style.display='block';if(sB)sB.style.display='block';if(rB)rB.innerHTML='';if(fB)fB.style.display='none';
+    renderSearchHistory();return;
+  }
+  if(hB)hB.style.display='none';if(sB)sB.style.display='none';
+  if(fB){fB.style.display='flex';renderSearchFilters();}
+  if(rB)rB.innerHTML='<div class="skeleton-search"></div><div class="skeleton-search"></div><div class="skeleton-search"></div>';
+  setTimeout(()=>{
+    let f=games.filter(g=>g.title.toLowerCase().includes(q.toLowerCase())||(g.developer||'').toLowerCase().includes(q.toLowerCase()));
+    let activeChip=document.querySelector('#searchFilterContainer .chip.active');
+    let activeCat=forceCat||(activeChip?activeChip.innerText:'all');
+    if(activeCat&&activeCat!=='all'){f=f.filter(g=>(g.category||'').toUpperCase().includes(activeCat.toUpperCase()))}
+    if(f.length===0){renderEmptyState('searchResultGrid','Game tidak ditemukan.')}else{rB.innerHTML=f.map(g=>renderSearchResultCard(g)).join('')}
+  },300)
+}
 function renderSearchSuggestions(){let sug=[...games].sort((a,b)=>getStat(b.game_id)-getStat(a.game_id)).slice(0,5);document.getElementById('searchSuggestions').innerHTML=sug.map(g=>`<div style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="document.getElementById('searchPageInput').value='${escapeHTML(g.title)}';handleSearchPage('${escapeHTML(g.title)}')"><div style="display:flex;align-items:center;gap:12px;min-width:0;"><img src="${g.img||'https://via.placeholder.com/50'}" style="width:36px;height:36px;border-radius:8px;object-fit:cover;flex-shrink:0;"><span style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(g.title)}</span></div><svg style="width:16px;height:16px;color:var(--text-muted);flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>`).join('')}
+
 async function logDownload(e){if(!curGame)return;try{await sbPost('stats',{game_key:curGame.game_id,stat_type:'download',count:1});statMap[curGame.game_id]=(statMap[curGame.game_id]||0)+1}catch(err){}}
-async function openDetail(id){sessionStorage.setItem('scrollPos',window.scrollY);gantiURL('/game/'+id);curGame=games.find(g=>g.game_id===id);if(!curGame)return;showPage('detail');document.getElementById('dImg').src=curGame.img||'https://via.placeholder.com/150';document.getElementById('dTitle').innerText=curGame.title;document.getElementById('dDev').innerText=curGame.developer||'Unknown';document.getElementById('dType').innerText=curGame.badge_text||'';document.getElementById('dDesc').innerText=curGame.desc_game||'Belum ada deskripsi.';document.getElementById('dChangelog').innerText=curGame.changelog||'Belum ada update terbaru.';document.getElementById('dSecurity').innerText=curGame.security_info||'Tidak ada data yang dibagikan ke pihak ketiga.';document.getElementById('dDownload').href=curGame.apk_url||'#';let lb=document.getElementById('dLabel');if(curGame.label_text){lb.innerText=curGame.label_text;lb.style.background=curGame.label_color||'#EF4444';lb.style.display='inline-block'}else lb.style.display='none';saveSearchHistory(curGame.title);let mBox=document.getElementById('dMedia');mBox.innerHTML='<div class="skeleton" style="width:260px;height:150px;flex-shrink:0;"></div>';try{let meds=await sbGet(`game_media?game_id=eq.${id}&order=sort_order.asc`);mBox.innerHTML=meds.map(m=>{if(m.media_type==='video'){let vidId='';const regExp=/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;const match=m.url.match(regExp);if(match&&match[2].length===11){vidId=match[2]}if(!vidId)return`<div style="flex-shrink:0;width:260px;height:150px;border-radius:12px;border:1px solid var(--border-color);background:var(--bg-body);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-muted);">Video Invalid</div>`;return`<div style="flex-shrink:0;width:260px;height:150px;border-radius:12px;overflow:hidden;border:1px solid var(--border-color);background:var(--bg-body);scroll-snap-align:start;"><iframe src="https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&loop=1&playlist=${vidId}" style="width:100%;height:100%;border:none;object-fit:cover;" allow="autoplay" allowfullscreen></iframe></div>`}return`<div style="flex-shrink:0;width:260px;height:150px;border-radius:12px;overflow:hidden;border:1px solid var(--border-color);background:var(--bg-body);scroll-snap-align:start;cursor:pointer;" onclick="openLightbox('${escapeHTML(m.url)}')"><img src="${escapeHTML(m.url)}" style="width:100%;height:100%;object-fit:cover;"></div>`}).join('')}catch(e){mBox.innerHTML=''}let chipsBox=document.getElementById('dChips');if(curGame.category){chipsBox.innerHTML=curGame.category.split(',').map(c=>`<span class="chip" style="cursor:pointer;" onclick="document.getElementById('searchPageInput').value='${escapeHTML(c.trim())}';handleSearchPage('${escapeHTML(c.trim())}');showPage('search')">${escapeHTML(c.trim())}</span>`).join('')}else chipsBox.innerHTML='';await loadReviews(id);let rec=games.filter(g=>g.category===curGame.category&&g.game_id!==id).slice(0,4);document.getElementById('recGrid').innerHTML=rec.map(g=>renderCard(g,favSet.has(g.game_id))).join('');return true}
+async function openDetail(id){
+  sessionStorage.setItem('scrollPos',window.scrollY);gantiURL('/game/'+id);curGame=games.find(g=>g.game_id===id);if(!curGame)return;
+  showPage('detail');
+  document.getElementById('dImg').src=curGame.img||'https://via.placeholder.com/150';
+  document.getElementById('dTitle').innerText=curGame.title;
+  document.getElementById('dDev').innerText=curGame.developer||'Unknown';
+  document.getElementById('dType').innerText=curGame.badge_text||'';
+  document.getElementById('dDesc').innerText=curGame.desc_game||'Belum ada deskripsi.';
+  document.getElementById('dChangelog').innerText=curGame.changelog||'Belum ada update terbaru.';
+  document.getElementById('dSecurity').innerText=curGame.security_info||'Tidak ada data yang dibagikan ke pihak ketiga.';
+  document.getElementById('dDownload').href=curGame.apk_url||'#';
+  let lb=document.getElementById('dLabel');if(curGame.label_text){lb.innerText=curGame.label_text;lb.style.background=curGame.label_color||'#EF4444';lb.style.display='inline-block'}else lb.style.display='none';
+  saveSearchHistory(curGame.title);
+  let mBox=document.getElementById('dMedia');mBox.innerHTML='<div class="skeleton" style="width:260px;height:150px;flex-shrink:0;"></div>';
+  try{
+    let meds=await sbGet(`game_media?game_id=eq.${id}&order=sort_order.asc`);
+    mBox.innerHTML=meds.map(m=>{
+      if(m.media_type==='video'){
+        let vidId='';const regExp=/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;const match=m.url.match(regExp);
+        if(match&&match[2].length===11){vidId=match[2]}
+        if(!vidId)return`<div style="flex-shrink:0;width:260px;height:150px;border-radius:12px;border:1px solid var(--border-color);background:var(--bg-body);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-muted);">Video Invalid</div>`;
+        return`<div style="flex-shrink:0;width:260px;height:150px;border-radius:12px;overflow:hidden;border:1px solid var(--border-color);background:var(--bg-body);scroll-snap-align:start;"><iframe src="https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&loop=1&playlist=${vidId}" style="width:100%;height:100%;border:none;object-fit:cover;" allow="autoplay" allowfullscreen onerror="this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:12px;\\'>Video gagal dimuat. Cek koneksi.</div>'"></iframe></div>`
+      }
+      return`<div style="flex-shrink:0;width:260px;height:150px;border-radius:12px;overflow:hidden;border:1px solid var(--border-color);background:var(--bg-body);scroll-snap-align:start;cursor:pointer;" onclick="openLightbox('${escapeHTML(m.url)}')"><img src="${escapeHTML(m.url)}" style="width:100%;height:100%;object-fit:cover;"></div>`
+    }).join('')
+  }catch(e){mBox.innerHTML=''}
+  let chipsBox=document.getElementById('dChips');
+  if(curGame.category){chipsBox.innerHTML=curGame.category.split(',').map(c=>`<span class="chip" style="cursor:pointer;" onclick="document.getElementById('searchPageInput').value='${escapeHTML(c.trim())}';handleSearchPage('${escapeHTML(c.trim())}');showPage('search')">${escapeHTML(c.trim())}</span>`).join('')}else chipsBox.innerHTML='';
+  await loadReviews(id);
+  let rec=games.filter(g=>g.category===curGame.category&&g.game_id!==id).slice(0,4);
+  document.getElementById('recGrid').innerHTML=rec.map(g=>renderCard(g,favSet.has(g.game_id))).join('');
+  return true
+}
 function shareGame(){if(!curGame)return;let urlToShare='https://bxit.my.id/game/'+curGame.game_id;if(navigator.share){navigator.share({title:curGame.title,text:'Download '+curGame.title+' di BAGASXIT!',url:urlToShare}).catch(()=>{})}else{navigator.clipboard.writeText(urlToShare);showToast('Link berhasil disalin!')}}
 function submitRequest(){let n=document.getElementById('rName').value,l=document.getElementById('rLink').value,d=document.getElementById('rDesc').value;if(!n){showToast('Nama wajib diisi!',true);return}let email=`mailto:${settings.wa_request||'bagassasth136@gmail.com'}?subject=Request Game/App: ${encodeURIComponent(n)}&body=${encodeURIComponent('Halo Admin BXIT,\n\nSaya ingin request:\n\nNama: '+n+'\nLink: '+l+'\nDeskripsi: '+d+'\n\nTerima kasih.')}`;window.location.href=email;showToast('Membuka aplikasi email...')}
 function setRating(n){currentRating=n;document.querySelectorAll('#starInput svg').forEach((s,i)=>{if(i<n){s.style.color='#eab308'}else{s.style.color='var(--border-color)'}})}
@@ -280,9 +419,46 @@ async function loadReviews(id){let revs=await sbGet(`game_reviews?game_id=eq.${i
 function openLightbox(url){document.getElementById('lightboxImg').src=url;document.getElementById('lightbox').style.display='flex'}
 function closeLightbox(){document.getElementById('lightbox').style.display='none'}
 function closeWelcome(){document.getElementById('welcomeModal').style.display='none'}
+function reloadChat(){
+  let iframe=document.getElementById('chatIframe');let err=document.getElementById('chatError');
+  if(!iframe)return;
+  err.style.display='none';iframe.style.display='block';
+  iframe.src='https://www5.cbox.ws/box/?boxid=967298&boxtag=LBrRLM&t='+Date.now();
+}
+function showChatError(){
+  let iframe=document.getElementById('chatIframe');let err=document.getElementById('chatError');
+  if(iframe)iframe.style.display='none';if(err)err.style.display='flex';
+}
 window.addEventListener('scroll',function(){let b=document.getElementById('backToTop');if(window.scrollY>300)b.classList.add('show');else b.classList.remove('show')});
-document.addEventListener('DOMContentLoaded',()=>{var urlParams=new URLSearchParams(window.location.search);var redirectPath=urlParams.get('redirect');if(redirectPath){window.history.replaceState({},'',redirectPath)}var currentPath=window.location.pathname;var currentSearch=new URLSearchParams(window.location.search);var isGamePage=currentSearch.has('id')||currentPath.startsWith('/game/');var validPages=['/search','/chat','/request','/about'];if(isGamePage){document.getElementById('globalLoader').style.display='flex';document.querySelectorAll('.page').forEach(el=>el.classList.add('hidden'));initHome().then(()=>{let id=currentSearch.get('id')||currentPath.split('/')[2];openDetail(id).then(()=>{document.getElementById('globalLoader').style.display='none'})})}else if(validPages.includes(currentPath)){initHome().then(()=>{showPage(currentPath.replace('/',''))})}else{initHome()}});
-document.addEventListener('contextmenu',e=>e.preventDefault());document.onkeydown=function(e){if(e.keyCode==123||(e.ctrlKey&&e.shiftKey&&e.keyCode==73)||(e.ctrlKey&&e.shiftKey&&e.keyCode==74)||(e.ctrlKey&&e.keyCode==85)||(e.ctrlKey&&e.keyCode==67))return!1};document.addEventListener('dragstart',function(e){if(e.target.nodeName.toUpperCase()=="IMG")e.preventDefault()});
+
+document.addEventListener('DOMContentLoaded',()=>{
+  var urlParams=new URLSearchParams(window.location.search);var redirectPath=urlParams.get('redirect');
+  if(redirectPath){window.history.replaceState({},'',redirectPath)}
+  var currentPath=window.location.pathname;var currentSearch=new URLSearchParams(window.location.search);
+  var isGamePage=currentSearch.has('id')||currentPath.startsWith('/game/');var validPages=['/search','/chat','/request','/about'];
+  if(isGamePage){
+    document.getElementById('globalLoader').style.display='flex';
+    document.querySelectorAll('.page').forEach(el=>el.classList.add('hidden'));
+    initHome().then(()=>{let id=currentSearch.get('id')||currentPath.split('/')[2];openDetail(id).then(()=>{document.getElementById('globalLoader').style.display='none'})})
+  } else if(validPages.includes(currentPath)){
+    initHome().then(()=>{showPage(currentPath.replace('/',''))})
+  } else { initHome() }
+});
+
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.onkeydown=function(e){
+  if(e.keyCode==123||(e.ctrlKey&&e.shiftKey&&e.keyCode==73)||(e.ctrlKey&&e.shiftKey&&e.keyCode==74)||(e.ctrlKey&&e.keyCode==85)||(e.ctrlKey&&e.keyCode==67)){e.preventDefault();return false;}
+};
+document.addEventListener('dragstart',function(e){if(e.target.nodeName.toUpperCase()=="IMG")e.preventDefault()});
+
+let devtoolsOpen=false;
+setInterval(function(){
+  const widthDiff=window.outerWidth-window.innerWidth;
+  const heightDiff=window.outerHeight-window.innerHeight;
+  if(widthDiff>160||heightDiff>160){ devtoolsOpen=true; location.reload(); }
+},1000);
+
+if(window.location.href.indexOf('view-source:')>-1){document.body.innerHTML='<h1 style="color:red;text-align:center;padding:50px;">AKSES DITOLAK</h1>';}
 </script>
 </body>
 </html>
