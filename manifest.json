@@ -1,8 +1,9 @@
 {
-  "name": "BXIT ID",
+  "name": "BXIT MY ID",
   "short_name": "BXIT",
-  "description": "Pusat download game & aplikasi mod, APK update, dan get key gratis.",
+  "description": "Discover games, Android apps, APK updates, digital tools, and more on BXIT MY ID.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#050506",
   "theme_color": "#A855F7",
@@ -11,13 +12,25 @@
       "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
