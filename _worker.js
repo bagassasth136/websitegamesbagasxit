@@ -40,7 +40,7 @@ export default {
       return new Response("Method Not Allowed", { status: 405 });
     }
 
-    // Kalau bukan /api (misal buka web game), biarin lewat
+    // Kalau bukan /api (misal buka web game), biarin lewat ke aset game lu
     return env.ASSETS.fetch(request);
   }
 }
