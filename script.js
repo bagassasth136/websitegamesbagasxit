@@ -39,10 +39,11 @@ function placeholder(w){return`data:image/svg+xml,%3Csvg xmlns='http://www.w3.or
 
 function renderCard(g,isFav){
     const img=safeUrl(g.img)||placeholder(150);
-    const badge=g.badge_text?`<span class="badge" style="background:var(--accent)">${escapeHTML(g.badge_text)}</span>`:'';
-    return`<div class="card" data-id="${escapeHTML(g.game_id)}"><img src="${escapeHTML(img)}" class="card-img" loading="lazy" alt="">${badge}<button class="btn-fav ${isFav?'active':''}" data-fav="${escapeHTML(g.game_id)}"><svg fill="${isFav?'currentColor':'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button><div class="card-body"><h4 class="card-title truncate">${escapeHTML(g.title)}</h4><div class="card-sub truncate">${escapeHTML(g.developer||'Unknown')}</div><div class="card-meta"><span class="flex items-center gap-1"><svg style="width:12px;height:12px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> ${formatNumber(getStat(g.game_id))}</span><span class="flex items-center gap-1" style="color:#eab308;"><svg style="width:12px;height:12px;" fill="currentColor" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${escapeHTML(g.rating_avg||'0.0')}</span></div></div></div>`
+    const badge=g.badge_text?`<span class="badge-left">${escapeHTML(g.badge_text)}</span>`:'';
+    const label=g.label_text?`<span class="badge-right">${escapeHTML(g.label_text)}</span>`:'';
+    return`<div class="card" data-id="${escapeHTML(g.game_id)}"><div class="card-img-wrap"><img src="${escapeHTML(img)}" loading="lazy" alt="">${badge}${label}<button class="btn-fav ${isFav?'active':''}" data-fav="${escapeHTML(g.game_id)}"><svg fill="${isFav?'currentColor':'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div><div class="card-body"><h4 class="card-title truncate">${escapeHTML(g.title)}</h4><div class="card-sub truncate">${escapeHTML(g.developer||'Unknown')}</div><div class="card-meta"><span class="flex items-center gap-1"><svg style="width:12px;height:12px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> ${formatNumber(getStat(g.game_id))}</span><span class="flex items-center gap-1" style="color:#eab308;"><svg style="width:12px;height:12px;" fill="currentColor" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${escapeHTML(g.rating_avg||'0.0')}</span></div></div></div>`
 }
-function renderSearchResultCard(g){const img=safeUrl(g.img)||placeholder(150);return`<div class="card" style="display:flex;align-items:center;padding:12px;gap:12px;margin-bottom:8px;border-radius:16px;" data-id="${escapeHTML(g.game_id)}"><img src="${escapeHTML(img)}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;flex-shrink:0;" alt="" loading="lazy"><div style="flex:1;min-width:0;"><h4 style="font-size:14px;font-weight:900;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(g.title)}</h4><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">${escapeHTML(g.developer||'Unknown')} • ${escapeHTML(g.category||'App')}</div><div style="display:flex;gap:12px;font-size:11px;font-weight:700;color:var(--text-muted);"><span style="color:#eab308;">★ ${escapeHTML(g.rating_avg||'0.0')}</span><span>${formatNumber(getStat(g.game_id))} Download</span></div></div></div>`}
+function renderSearchResultCard(g){const img=safeUrl(g.img)||placeholder(150);return`<div class="card" style="display:flex;align-items:center;padding:12px;gap:12px;margin-bottom:8px;border-radius:16px;" data-id="${escapeHTML(g.game_id)}"><img src="${escapeHTML(img)}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;flex-shrink:0;" alt="" loading="lazy"><div style="flex:1;min-width:0;"><h4 style="font-size:14px;font-weight:900;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(g.title)}</h4><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">${escapeHTML(g.developer||'Unknown')} • ${escapeHTML((g.category||'App').split(',')[0])}</div><div style="display:flex;gap:12px;font-size:11px;font-weight:700;color:var(--text-muted);"><span style="color:#eab308;">★ ${escapeHTML(g.rating_avg||'0.0')}</span><span>${formatNumber(getStat(g.game_id))} Download</span></div></div></div>`}
 function renderEmptyState(c,m){const el=$(c);if(el)el.innerHTML=`<div class="empty-state"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg><p>${escapeHTML(m)}</p></div>`}
 
 async function loadFavs(){try{const f=await sbGet('favorites?fp_hash=eq.'+enc(getFp())+'&select=game_key');if(Array.isArray(f)){favSet=new Set(f.map(x=>x.game_key));localStorage.setItem('bx_favs',JSON.stringify([...favSet]))}else{throw new Error('Offline')}}catch(e){try{const c=JSON.parse(localStorage.getItem('bx_favs')||'[]');favSet=new Set(c)}catch(_){}}}
@@ -214,15 +215,25 @@ async function openDetail(id){
     const urlPath = (curGame.app_type==='app') ? '/apps/' : '/game/';
     gantiURL(urlPath+id);
     
-    showPage('detail');$('dImg').src=safeUrl(curGame.img)||placeholder(150);
-    $('dTitle').innerText=curGame.title||'';$('dDev').innerText=curGame.developer||'Unknown';
-    $('dType').innerText=curGame.badge_text||'';
-    $('dDesc').innerText=curGame.desc_game||'No description available.';
-    $('dChangelog').innerText=curGame.changelog||'No recent updates.';
-    $('dSecurity').innerText=curGame.security_info||'Data is encrypted in transit. You can request data deletion.';
+    showPage('detail');
+    $('dImg').src=safeUrl(curGame.img)||placeholder(150);
+    $('dTitle').innerText=curGame.title||'';
+    $('dDev').innerText=curGame.developer||'Unknown';
+    $('dType').style.display = 'none'; 
     
     const dl=$('dDownload');if(curGame.apk_url){dl.href=safeUrl(curGame.apk_url)||'#';dl.style.opacity='1';dl.style.pointerEvents='auto'}else{dl.href='#';dl.style.opacity='0.5';dl.style.pointerEvents='none'}
-    const lb=$('dLabel');if(curGame.label_text){lb.innerText=curGame.label_text;lb.style.background=safeColor(null);lb.style.display='inline-block'}else lb.style.display='none';
+    
+    const lb=$('dLabel');
+    if(curGame.badge_text || curGame.label_text){
+        lb.innerHTML = (curGame.badge_text?`<span style="background:var(--accent);color:#fff;padding:4px 8px;border-radius:6px;font-size:10px;margin-right:4px;font-weight:900;">${escapeHTML(curGame.badge_text)}</span>`:'') + 
+                       (curGame.label_text?`<span style="background:#10b981;color:#fff;padding:4px 8px;border-radius:6px;font-size:10px;font-weight:900;">${escapeHTML(curGame.label_text)}</span>`:'');
+        lb.style.position = 'absolute';
+        lb.style.top = '80px';
+        lb.style.left = '16px';
+        lb.style.display = 'flex';
+    } else {
+        lb.style.display = 'none';
+    }
     
     const mBox=$('dMedia');mBox.innerHTML='<div class="skeleton" style="width:260px;height:150px;flex-shrink:0;"></div><div class="skeleton" style="width:260px;height:150px;flex-shrink:0;"></div>';
     try{
