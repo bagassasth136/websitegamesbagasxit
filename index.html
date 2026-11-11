@@ -332,11 +332,20 @@ async function openDetail(id){sessionStorage.setItem('scrollPos',window.scrollY)
 function shareGame(){
   if(!curGame) return;
   const pathType = (curGame.app_type === 'app') ? 'apps' : 'game';
-  const defaultUrl = 'https://bxit.my.id/' + pathType + '/' + curGame.game_id;
-  const url = safeUrl(curGame.apk_url) || defaultUrl;
-  if(navigator.share){ navigator.share({ title: curGame.title, text: 'Download ' + curGame.title + ' on BXIT MY ID', url: url }).catch(()=>{}); }
-  else if(navigator.clipboard){ navigator.clipboard.writeText(url).then(()=>showToast('Link download copied!')).catch(()=>showToast('Copy failed', true)); }
-  else { showToast(url); }
+  const url = 'https://bxit.my.id/' + pathType + '/' + curGame.game_id;  
+  if(navigator.share){
+    navigator.share({
+      title: curGame.title,
+      text: 'Download ' + curGame.title + ' on BXIT MY ID',
+      url: url
+    }).catch(()=>{});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(url)
+      .then(()=>showToast('Link website berhasil dicopy!'))
+      .catch(()=>showToast('Gagal copy link', true));
+  } else {
+    showToast(url);
+  }
 }
 function submitRequest(){const n=$('rName').value.trim(),l=$('rLink').value.trim(),d=$('rDesc').value.trim();if(!n){showToast('Name is required!',true);return}if(l&&!/^https?:\/\//i.test(l)){showToast('Link must start with http:// or https://',true);return}const email=settings.wa_request||'bagassasth136@gmail.com';const body='Hello BXIT Admin,\n\nI would like to request:\n\nName: '+n+'\nLink: '+l+'\nDescription: '+d+'\n\nThank you.';const mailto=`mailto:${email}?subject=${encodeURIComponent('Request Game/App: '+n)}&body=${encodeURIComponent(body)}`;const wa=`https://wa.me/?text=${encodeURIComponent(body)}`;try{window.location.href=mailto;showToast('Opening email app...');setTimeout(()=>{if(document.visibilityState==='visible'){window.open(wa,'_blank')}},1500)}catch(e){window.open(wa,'_blank')}}
 function setRating(n){currentRating=n;document.querySelectorAll('#starInput svg').forEach((s,i)=>{s.style.color=i<n?'#eab308':'var(--border-color)'})}
