@@ -113,16 +113,66 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .maint-block .ico{font-size:56px;margin-bottom:16px}
 .maint-block h2{font-size:20px;font-weight:900;color:var(--red);margin-bottom:12px}
 .maint-block p{font-size:14px;color:var(--txt-dim);line-height:1.6}
+/* BAGASXIT UI refresh — visual-only overrides */
+.ui-icon{width:14px;height:14px;display:inline-block;vertical-align:-2px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-right:5px}.ui-icon.big{width:48px;height:48px;margin:0;stroke-width:1.5}
+.bg-banner .ui-icon{color:inherit}
+.btn-copy{display:none;align-items:center;justify-content:center;gap:5px}
+
+:root{--bg:#070810;--bg2:#0a0c15;--card:#10121d;--card2:#151827;--border:rgba(151,164,197,.13);--border2:rgba(151,164,197,.22);--txt:#f5f7ff;--txt-dim:#a1a9c0;--txt-mute:#707991;--accent:#9b72ff;--accent2:#6d4ce8;--accent-glow:rgba(139,92,246,.25);--green:#36d9a2;--red:#ff647c;--yellow:#ffc66e;--cyan:#55d9ee}
+body{background-image:radial-gradient(ellipse at 12% 8%,rgba(110,75,205,.14),transparent 38%),radial-gradient(ellipse at 88% 92%,rgba(30,160,190,.11),transparent 38%),linear-gradient(180deg,#080910,#070810 55%,#090b13)}
+#bgCanvas{opacity:.22}
+.aurora::before,.aurora::after{filter:blur(135px);opacity:.17;width:62%;height:62%}
+.aurora::before{animation-duration:20s}.aurora::after{animation-duration:24s}
+.main{padding-top:max(20px,env(safe-area-inset-top));padding-bottom:max(28px,env(safe-area-inset-bottom))}
+.container{max-width:456px;background:linear-gradient(160deg,rgba(19,22,35,.94),rgba(12,14,23,.95));border-radius:26px;padding:24px 20px 22px;border:1px solid rgba(165,153,210,.18);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 28px 80px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.035)}
+.head-row{margin-bottom:20px;min-height:48px}
+.back-btn{padding:9px 12px;border-radius:12px;background:rgba(255,255,255,.025);border-color:var(--border);letter-spacing:.2px}
+.back-btn:hover{color:var(--txt);border-color:rgba(155,114,255,.4);background:rgba(155,114,255,.06)}
+.brand-mark{width:34px;height:34px;border-radius:11px;background:linear-gradient(140deg,#a88aff,#67d9ee);box-shadow:0 6px 22px rgba(126,95,232,.23)}
+.brand-txt{background:linear-gradient(110deg,#fff 8%,#c9bcff 56%,#83e6f3 100%);background-clip:text}
+.subtitle{color:#79839d;letter-spacing:3.2px;font-weight:800}
+.status{padding:7px 12px;background:rgba(54,217,162,.07);border-color:rgba(54,217,162,.17);font-size:9px;letter-spacing:1px;margin-bottom:16px}
+.status.off{background:rgba(255,100,124,.08);border-color:rgba(255,100,124,.22)}
+.status .dot{box-shadow:0 0 9px rgba(54,217,162,.6);animation-duration:2s}.status.off .dot{box-shadow:0 0 9px rgba(255,100,124,.6)}
+.steps{gap:7px;margin-bottom:20px}.step-dot{width:28px;background:rgba(151,164,197,.16)}.step-dot.on{box-shadow:0 0 12px rgba(139,92,246,.24)}
+.key-box{background:linear-gradient(155deg,rgba(7,9,15,.88),rgba(15,18,28,.82));border-radius:19px;padding:23px 15px;border-color:rgba(151,164,197,.16)}
+.key-box::before{height:1px;background:linear-gradient(90deg,transparent,rgba(155,114,255,.7),rgba(85,217,238,.55),transparent);opacity:.65}
+.key-box.active{border-color:rgba(54,217,162,.34);box-shadow:0 0 32px rgba(54,217,162,.07),inset 0 0 0 1px rgba(54,217,162,.05)}
+.shine{background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.06) 50%,transparent 65%)}
+.key-label{color:#7d879f;letter-spacing:2.7px;margin-bottom:12px}
+.term .line.dim{color:#788197}
+.key-value{font-size:clamp(19px,5.8vw,25px);letter-spacing:1.5px;text-shadow:0 0 18px rgba(54,217,162,.18)}
+.key-value.locked{color:#596177}
+.timer .bg{stroke:rgba(151,164,197,.18)}.timer .fg{filter:drop-shadow(0 0 4px rgba(54,217,162,.35))}
+.timer .txt .lbl,.key-timer{color:#788198}
+.turnstile-box{background:rgba(7,9,15,.55);border-color:rgba(151,164,197,.14);border-radius:14px}
+.btn{border-radius:13px;font-size:12px;transition:transform .18s,filter .2s,box-shadow .2s}.btn:active{transform:scale(.975)}
+.btn-primary{background:linear-gradient(120deg,#8e67f3,#684ce0 62%,#3e9bb8);box-shadow:0 8px 25px rgba(108,76,224,.2)}.btn-primary:hover{filter:brightness(1.06)}
+.btn-copy{background:linear-gradient(120deg,#2dc995,#159a76);color:#04150f;box-shadow:0 8px 24px rgba(40,190,137,.15)}
+.info-txt{color:#a1a9c0;line-height:1.6;margin-top:15px}
+.guide{margin-top:20px;padding:16px 15px;background:linear-gradient(155deg,rgba(255,255,255,.025),rgba(255,255,255,.008));border-color:rgba(151,164,197,.13);border-radius:15px}
+.guide h4{color:#b8a1ff;font-size:10px;letter-spacing:1.3px;margin-bottom:13px}.guide .step{gap:11px;margin-bottom:10px}.guide .step:last-child{margin-bottom:0}
+.guide .n{width:22px;height:22px;border-radius:7px;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);color:#c3adff}
+.guide .t{font-size:11px;line-height:1.5;padding-top:3px}
+.bottom{border-color:rgba(151,164,197,.11);background:rgba(7,8,12,.58);backdrop-filter:blur(12px)}
+.bottom .links{gap:18px;margin-bottom:9px}.bottom .links a{color:#8790a8}.bottom .links a:hover{color:#c2adff}.bottom .cp{color:#626b83}
+#toast{border-radius:13px;box-shadow:0 12px 34px rgba(40,190,137,.2)}#toast.err{box-shadow:0 12px 34px rgba(255,100,124,.2)}
+.desk-block{background:rgba(7,8,12,.97)}.desk-block-inner{border-color:rgba(255,100,124,.35);border-radius:22px;box-shadow:0 20px 60px rgba(255,100,124,.12)}
+.bg-banner{box-shadow:0 4px 20px rgba(0,0,0,.25)}.bg-banner.maint{background:linear-gradient(120deg,#d63f55,#a9283d)}.bg-banner.bcast{background:linear-gradient(120deg,#7653d9,#9b72f4)}
+.maint-block{background:rgba(7,8,12,.98)}.maint-block-inner{border-color:rgba(255,100,124,.35);border-radius:25px;box-shadow:0 20px 60px rgba(255,100,124,.15)}
+@media(max-width:380px){.container{padding:20px 15px 18px;border-radius:22px}.head-row{margin-bottom:17px}.brand-mark{width:30px;height:30px;border-radius:9px}.brand-txt{font-size:17px}.back-btn{padding:8px 9px;font-size:10px}.key-box{padding:20px 12px}.guide{padding:14px 12px}}
+@media(max-height:700px){.main{align-items:flex-start;padding-top:max(14px,env(safe-area-inset-top))}.container{padding-top:18px;padding-bottom:16px}.key-box{padding-top:18px;padding-bottom:18px}.guide{margin-top:15px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 <canvas id="bgCanvas"></canvas>
 <div class="aurora"></div>
 <div id="toast"></div>
-<div class="bg-banner maint" id="bgMaint"><div class="bg-title">🛠 MAINTENANCE</div><div class="bg-msg" id="bgMaintMsg">Server sedang maintenance, coba lagi nanti.</div></div>
+<div class="bg-banner maint" id="bgMaint"><div class="bg-title"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4.2 4.2 0 0 0-5.6 5.6L3.8 17.2a2.1 2.1 0 0 0 3 3l5.3-5.3a4.2 4.2 0 0 0 5.6-5.6L14.3 12l-2.3-2.3z"/></svg> MAINTENANCE</div><div class="bg-msg" id="bgMaintMsg">Server sedang maintenance, coba lagi nanti.</div></div>
 <div class="bg-banner bcast" id="bgBcast"><div class="bg-title" id="bgBcastTitle">📢 PENGUMUMAN</div><div class="bg-msg" id="bgBcastMsg">Ada info baru untuk kamu!</div></div>
-<div class="maint-block" id="maintBlock"><div class="maint-block-inner"><div class="ico">🛠</div><h2>MAINTENANCE</h2><p id="maintBlockMsg">Server sedang maintenance, coba lagi nanti.</p></div></div>
-<div class="desk-block" id="deskBlock"><div class="desk-block-inner"><div class="ico">📱</div><h2>MOBILE ONLY</h2><p>This page can only be accessed from an Android phone or iPhone.<br><br>Please open it from your mobile phone</p></div></div>
+<div class="maint-block" id="maintBlock"><div class="maint-block-inner"><div class="ico"><svg class="ui-icon big" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4.2 4.2 0 0 0-5.6 5.6L3.8 17.2a2.1 2.1 0 0 0 3 3l5.3-5.3a4.2 4.2 0 0 0 5.6-5.6L14.3 12l-2.3-2.3z"/></svg></div><h2>MAINTENANCE</h2><p id="maintBlockMsg">Server sedang maintenance, coba lagi nanti.</p></div></div>
+<div class="desk-block" id="deskBlock"><div class="desk-block-inner"><div class="ico"><svg class="ui-icon big" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><path d="M10 5h4M11 18.5h2"/></svg></div><h2>MOBILE ONLY</h2><p>This page can only be accessed from an Android phone or iPhone.<br><br>Please open it from your mobile phone</p></div></div>
 <main class="main">
   <div class="container">
     <div class="head-row">
@@ -138,7 +188,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
     </div>
     <div class="turnstile-box" id="turnstileBox"><div id="cf-turnstile"></div></div>
     <button class="btn btn-primary" id="btnGet">CONTINUE →</button>
-    <button class="btn btn-copy" id="btnCopy">📋 COPY KEY</button>
+    <button class="btn btn-copy" id="btnCopy"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3"/></svg> COPY KEY</button>
     <div class="info-txt" id="infoTxt">Complete the verification above to continue.</div>
     <div class="guide">
       <h4>How to Use</h4>
